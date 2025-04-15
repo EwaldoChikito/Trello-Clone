@@ -4,9 +4,7 @@ body {
     background-color: #dddddd;
     margin: 0;
     padding: 0;
-    display: flex;/*
-    justify-content: center;
-    */
+    display: flex;
     align-items: center;
     height: 100vh;
 }
@@ -36,7 +34,7 @@ body {
 
 .login-container h1 {
     font-size: 30px;
-    width: bolder;
+    width: bold;
     margin-bottom: 20px;
     color: #333333;
     text-align: center;
