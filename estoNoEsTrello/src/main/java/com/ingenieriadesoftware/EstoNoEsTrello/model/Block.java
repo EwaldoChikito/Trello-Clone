@@ -2,18 +2,18 @@ package com.ingenieriadesoftware.EstoNoEsTrello.model;
 
 import java.util.Arrays;
 
-public class Board {
+public class Block {
     private Long id;
     private String name;
-    private List[] lists;
+    private Card[] cards;
 
-    public Board() {
+    public Block() {
     }
 
-    public Board(Long id, String name, List[] lists) {
+    public Block(Long id, String name, Card[] cards) {
         this.id = id;
         this.name = name;
-        this.lists = lists;
+        this.cards = cards;
     }
 
     public Long getId() {
@@ -24,8 +24,8 @@ public class Board {
         return name;
     }
 
-    public List[] getLists() {
-        return lists;
+    public Card[] getCards() {
+        return cards;
     }
 
     public void setId(Long id) {
@@ -36,16 +36,20 @@ public class Board {
         this.name = name;
     }
 
-    public void setLists(List[] lists) {
-        this.lists = lists;
+    public void setCards(Card[] cards) {
+        this.cards = cards;
+    }
+
+    public void crearBloque(String name, Long id, WorkSpace workSpace){
+
     }
 
     @Override
     public String toString() {
-        return "Board{" +
+        return "List{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", lists=" + Arrays.toString(lists) +
+                ", cards=" + Arrays.toString(cards) +
                 '}';
     }
 }

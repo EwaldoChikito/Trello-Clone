@@ -5,15 +5,15 @@ import java.util.Arrays;
 public class WorkSpace {
     private Long id;
     private String name;
-    private Board[] boards;
+    private Block[] blocks;
 
     public WorkSpace() {
     }
 
-    public WorkSpace(Long id, String name, Board[] boards) {
+    public WorkSpace(Long id, String name, Block[] boards) {
         this.id = id;
         this.name = name;
-        this.boards = boards;
+        this.blocks = boards;
     }
 
     public Long getId() {
@@ -24,8 +24,8 @@ public class WorkSpace {
         return name;
     }
 
-    public Board[] getBoards() {
-        return boards;
+    public Block[] getBoards() {
+        return blocks;
     }
 
     public void setId(Long id) {
@@ -36,8 +36,8 @@ public class WorkSpace {
         this.name = name;
     }
 
-    public void setBoards(Board[] boards) {
-        this.boards = boards;
+    public void setBoards(Block[] boards) {
+        this.blocks = boards;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class WorkSpace {
         return "WorkSpace{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", boards=" + Arrays.toString(boards) +
+                ", boards=" + Arrays.toString(blocks) +
                 '}';
     }
 }
