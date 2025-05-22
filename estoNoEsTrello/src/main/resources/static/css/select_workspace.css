@@ -1,0 +1,110 @@
+
+body { 
+    margin: 0; 
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #eee8db; 
+}
+
+.topbar {
+    height: 56px;
+    background: #034a73;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    justify-content: space-between;
+}
+
+.sidebar {
+    width: 220px;
+    background: #172b4d;
+    color: #fff;
+    height: 100vh;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    padding: 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sidebar a {
+    color: #b6c2cf;
+    text-decoration: none;
+    padding: 12px 24px;
+    display: block;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.sidebar a:hover {
+    background: #253858;
+    color: #fff;
+}
+
+.main-content {
+    margin-left: 220px;
+    margin-top: 56px;
+    padding: 32px;
+}
+
+.user-name {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.boards-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-bar input {
+    padding: 8px 12px;
+    border: 1px solid #dfe1e6;
+    border-radius: 4px;
+    font-size: 1em;
+    width: 220px;
+}
+
+.boards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
+}
+
+.board-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(9,30,66,0.1);
+    padding: 24px 16px;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.board-card:hover {
+    box-shadow: 0 4px 12px rgba(9,30,66,0.15);
+}
+
+.board-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #172b4d;
+    margin-bottom: 8px;
+}
+
+.board-desc {
+    color: #5e6c84;
+    font-size: 0.95em;
+}
