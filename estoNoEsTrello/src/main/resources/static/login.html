@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/login.css?v=1.0.1">
     <meta charset="UTF-8" />
     <title>Login Page</title>
 </head>
@@ -17,7 +17,10 @@
         <label>
             <input type="password" placeholder="******">
         </label>
-        <button type="submit" class="login-button">Iniciar Sesión</button>
+        <div class="buttons">
+            <button type="button" class="return-button" onclick="window.location.href='index.html'">Regresar</button>
+            <button type="submit" class="login-button">Iniciar Sesión</button>
+        </div>
     </form>
 </div>
 </body>

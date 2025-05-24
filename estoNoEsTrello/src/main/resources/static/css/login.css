@@ -30,7 +30,7 @@ body {
 
 .login-container h1 {
     font-size: 30px;
-    width: bold;
+    width: 100%;
     margin-bottom: 20px;
     color: #333333;
     text-align: center;
@@ -77,4 +77,10 @@ body {
 
 .login-container button:hover {
     background-color: #0056b3;
+}
+
+.buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
