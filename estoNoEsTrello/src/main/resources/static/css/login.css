@@ -30,7 +30,7 @@ body {
 
 .login-container h1 {
     font-size: 30px;
-    width: bold;
+    width: 100%;
     margin-bottom: 20px;
     color: #333333;
     text-align: center;
