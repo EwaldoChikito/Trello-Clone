@@ -5,6 +5,7 @@
     <title>Seleccionar Tablero - Esto No Es Trello</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/select_workspace.css?v=1.0.1">
+
 </head>
 <body>
     <div class="topbar">
@@ -12,70 +13,32 @@
             <span style="font-weight:bold; font-size:1.2em;">Esto No Es Trello</span>
         </div>
         <div class="user-name">
-            <!-- Aquí va el nombre del usuario -->
+            <!-- Users name is going to display here -->
             Hola, <span id="userName">Usuario</span>
         </div>
     </div>
+
     <nav class="sidebar">
         <a href="#">Tableros</a>
         <a href="#">Plantillas</a>
         <a href="#">Configuración</a>
         <a href="#">Cerrar sesión</a>
     </nav>
+
     <main class="main-content">
         <div class="boards-header">
             <h2>Selecciona un tablero</h2>
             <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Buscar tableros...">
+                <label>
+                    <input type="text" id="searchInput" placeholder="Buscar tableros...">
+                </label>
             </div>
         </div>
         <div class="boards-grid" id="boardsGrid">
-            <!-- Los tableros se cargarán dinámicamente aquí -->
+            <!-- Boards are going display here -->
         </div>
     </main>
-    <script>
-        // Array de ejemplo con los tableros
-        const boards = [
-            { title: "Proyecto Web", desc: "Tareas y seguimiento del proyecto web." },
-            { title: "Marketing", desc: "Campañas y estrategias de marketing." },
-            { title: "Personal", desc: "Organiza tus tareas personales." },
-            { title: "Pendings", desc: "Organiza tus tareas personales." },
-            { title: "University", desc: "Organiza tus tareas personales." },
-            { title: "Mamalo Ricardo", desc: "Organiza tus tareas personales." }
-        ];
 
-        // Función para renderizar los tableros
-        function renderBoards(boardsToRender) {
-            const boardsGrid = document.getElementById('boardsGrid');
-            boardsGrid.innerHTML = ""; // Limpiar contenido anterior
-            boardsToRender.forEach(board => {
-                const card = document.createElement('div');
-                card.className = 'board-card';
-                card.innerHTML = `
-                    <div class="board-title">${board.title}</div>
-                    <div class="board-desc">${board.desc}</div>
-                `;
-                boardsGrid.appendChild(card);
-            });
-        }
-
-        // Renderizar todos los tableros al cargar la página
-        renderBoards(boards);
-
-        // Filtrado de tableros
-        const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('input', function() {
-            const filter = searchInput.value.toLowerCase();
-            const filteredBoards = boards.filter(board =>
-                board.title.toLowerCase().includes(filter) ||
-                board.desc.toLowerCase().includes(filter)
-            );
-            renderBoards(filteredBoards);
-        });
-
-        // Cambiar el nombre del usuario dinámicamente
-        const userName = "Juan Pérez"; // Aquí puedes poner el nombre obtenido de tu backend o lógica
-        document.getElementById('userName').textContent = userName;
-    </script>
+    <script src="js/select_workspace.js?v=1.0.1"></script>
 </body>
 </html>
