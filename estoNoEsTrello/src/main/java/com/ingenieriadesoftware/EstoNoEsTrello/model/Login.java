@@ -4,11 +4,11 @@ import com.ingenieriadesoftware.EstoNoEsTrello.model.Exceptions.*;
 
 public class Login {
 
-    public User singIn (String username, String password, UsersAdministrator usersAdministrator){
+    public User singIn (String email, String password, UsersAdministrator usersAdministrator){
         try{
-            if (!Validation.isUsernameEmpty(username)){
-                if (Validation.isDataValid(username, password,usersAdministrator.getUsers())){
-                    return usersAdministrator.giveUser(username);
+            if (!Validation.isEmailEmpty(email)){
+                if (Validation.isDataValid(email, password,usersAdministrator.getUsers())){
+                    return usersAdministrator.giveUser(email);
                 }
             }
         }catch(EmptyUsername | InvalidPassword | InvalidUsername err){
@@ -17,22 +17,18 @@ public class Login {
         return null;
     }
 
-    public static void register(String username, String email, String password, UsersAdministrator usersAdministrator){
+    public static void register(String email, String password, UsersAdministrator usersAdministrator){
         try{
-            if (!Validation.isUsernameEmpty(username)){
-                if (!Validation.isUsernameAlreadyUsed(email, usersAdministrator)){
-                    if (!Validation.isEmailEmpty(email)){
-                        if (Validation.emailValidation(email)){
-                            if (!Validation.isEmailAlreadyUsed(email,usersAdministrator)) {
-                                if (!Validation.isPasswordEmpty(password)) {
-                                    usersAdministrator.getUsers().addFirst(new User(username,email,password));
-                                }
-                            }
+            if (!Validation.isEmailEmpty(email)){
+                if (Validation.emailValidation(email)){
+                    if (!Validation.isEmailAlreadyUsed(email,usersAdministrator)) {
+                        if (!Validation.isPasswordEmpty(password)) {
+                            usersAdministrator.getUsers().addFirst(new User(email,password));
                         }
                     }
                 }
             }
-        }catch (EmptyUsername | UsernameAlreadyUsed | EmptyEmail | InvalidEmail | EmailAlreadyUsed | EmptyPassword err){
+        }catch (EmptyEmail | InvalidEmail | EmailAlreadyUsed | EmptyPassword err){
             System.err.println(err.toString());
         }
     }

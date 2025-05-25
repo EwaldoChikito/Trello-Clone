@@ -53,7 +53,7 @@ public class UsersAdministrator {
 
     public User giveUser(String username){
         int i=0;
-        while (!username.equals(users.get(i).getUsername())){
+        while (!username.equals(users.get(i).getEmail())){
             i++;
         }
         return users.get(i);
