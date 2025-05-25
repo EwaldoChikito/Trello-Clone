@@ -1,0 +1,156 @@
+/* workspace_detail.css */
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f5f7;
+    margin: 0;
+    padding: 0;
+}
+
+.topbar {
+    background: #2a387c;
+    color: #fff;
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2em;
+}
+
+.logo {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 56px);
+}
+
+.sidebar {
+    background: #23305a;
+    color: #fff;
+    width: 220px;
+    padding: 32px 0;
+    min-height: 100%;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar li {
+    margin: 24px 0;
+}
+
+.sidebar a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1em;
+    padding: 8px 32px;
+    display: block;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.sidebar a:hover {
+    background: #2a387c;
+}
+
+.main-content {
+    flex: 1;
+    padding: 32px;
+    overflow-y: auto;
+}
+
+.board {
+    display: flex;
+    gap: 24px;
+}
+
+.list {
+    background: #ebecf0;
+    border-radius: 8px;
+    padding: 16px;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.list-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+}
+
+.card {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    padding: 12px;
+    margin-bottom: 6px;
+    font-size: 1em;
+}
+
+.card-drop-indicator {
+    height: 36px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    background: #b3c6ff;
+    border: 2px dashed #2a387c;
+    opacity: 0.7;
+    transition: background 0.2s;
+}
+
+.add-workspace-card {
+    border: 2px dashed #2a387c;
+    color: #2a387c;
+    background: #eee8db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background 0.2s, border-color 0.2s;
+    font-size: 2em;
+    font-weight: bold;
+    gap: 0;
+    box-shadow: none !important;
+}
+.add-workspace-card:hover {
+    background: #e6edff;
+    border-color: #1a255c;
+}
+.add-plus {
+    margin: 0;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    display: block;
+}
+
+.add-card-ghost {
+    border: 2px dashed #2a387c !important;
+    background: transparent !important;
+    color: #2a387c !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-top: 6px;
+    font-weight: bold;
+    box-shadow: none !important;
+}
+.add-card-ghost:hover {
+    background: #e6edff !important;
+    border-color: #1a255c !important;
+}
+.add-card-ghost .add-plus {
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    display: block;
+}
