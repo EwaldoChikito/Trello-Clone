@@ -11,7 +11,7 @@ public class Login {
                     return usersAdministrator.giveUser(email);
                 }
             }
-        }catch(EmptyUsername | InvalidPassword | InvalidUsername err){
+        }catch(EmptyEmail | InvalidPassword | InvalidEmail err){
             System.err.println(err.toString());
         }
         return null;
