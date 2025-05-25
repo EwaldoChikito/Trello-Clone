@@ -112,7 +112,7 @@ body {
 .add-workspace-card {
     border: 2px dashed #2a387c;
     color: #2a387c;
-    background: #f7faff;
+    background: #eee8db;
     display: flex;
     flex-direction: column;
     align-items: center;

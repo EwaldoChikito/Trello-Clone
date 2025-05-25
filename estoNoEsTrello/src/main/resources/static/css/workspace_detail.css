@@ -103,3 +103,54 @@ body {
     opacity: 0.7;
     transition: background 0.2s;
 }
+
+.add-workspace-card {
+    border: 2px dashed #2a387c;
+    color: #2a387c;
+    background: #eee8db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background 0.2s, border-color 0.2s;
+    font-size: 2em;
+    font-weight: bold;
+    gap: 0;
+    box-shadow: none !important;
+}
+.add-workspace-card:hover {
+    background: #e6edff;
+    border-color: #1a255c;
+}
+.add-plus {
+    margin: 0;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    display: block;
+}
+
+.add-card-ghost {
+    border: 2px dashed #2a387c !important;
+    background: transparent !important;
+    color: #2a387c !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-top: 6px;
+    font-weight: bold;
+    box-shadow: none !important;
+}
+.add-card-ghost:hover {
+    background: #e6edff !important;
+    border-color: #1a255c !important;
+}
+.add-card-ghost .add-plus {
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    display: block;
+}
