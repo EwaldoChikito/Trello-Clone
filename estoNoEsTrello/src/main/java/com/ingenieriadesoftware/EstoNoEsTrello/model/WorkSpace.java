@@ -1,51 +1,48 @@
 package com.ingenieriadesoftware.EstoNoEsTrello.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class WorkSpace {
     private Long id;
     private String name;
-    private Block[] blocks;
+    private ArrayList<Block> blocks;
 
     public WorkSpace() {
     }
 
-    public WorkSpace(Long id, String name, Block[] boards) {
+    public WorkSpace(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.blocks = boards;
+    }
+
+    public WorkSpace(Long id, String name, ArrayList<Block> blocks) {
+        this.id = id;
+        this.name = name;
+        this.blocks = blocks;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Block[] getBoards() {
-        return blocks;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setBoards(Block[] boards) {
-        this.blocks = boards;
+    public ArrayList<Block> getBlocks() {
+        return blocks;
     }
 
-    @Override
-    public String toString() {
-        return "WorkSpace{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", boards=" + Arrays.toString(blocks) +
-                '}';
+    public void setBlocks(ArrayList<Block> blocks) {
+        this.blocks = blocks;
     }
 }

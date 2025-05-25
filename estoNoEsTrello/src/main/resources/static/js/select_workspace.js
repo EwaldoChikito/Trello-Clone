@@ -9,6 +9,8 @@ const boards = [
     { title: "Mamalo Ricardo", desc: "Organiza tus tareas personales." }
 ];
 
+let name;
+
 // Renders the boards in the grid as an array of Board objects
 function renderBoards(boardsToRender) {
     const boardsGrid = document.getElementById('boardsGrid');
@@ -29,7 +31,7 @@ function renderBoards(boardsToRender) {
     addCard.className = 'board-card add-workspace-card';
     addCard.innerHTML = `<div class="add-plus">+</div><div>Nuevo Workspace</div>`;
     addCard.onclick = function() {
-        const name = prompt("Ingrese el nombre del nuevo workspace:");
+        name = prompt("Ingrese el nombre del nuevo workspace:");
         if (name && name.trim() !== "") {
             boards.push({ title: name.trim(), desc: "Sin descripción." });
             renderBoards(boards);
@@ -37,6 +39,12 @@ function renderBoards(boardsToRender) {
     };
     boardsGrid.appendChild(addCard);
 }
+
+let workspace = {
+    id:
+    nombre: name;
+    blocks: localStorage.getItem("")
+};
 
 // Renders the initial boards
 renderBoards(boards);
@@ -55,3 +63,5 @@ searchInput.addEventListener('input', function() {
 // change the username dynamically
 const userName = "Juan Pérez"; // we are going to get this from the backend
 document.getElementById('userName').textContent = userName;
+
+

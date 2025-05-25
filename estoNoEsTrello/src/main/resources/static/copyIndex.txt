@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a EstoNoEsTrello</title>
+    <link rel="stylesheet" href="css/index.css?v=1.0.1">
+</head>
+<body>
+    <div class="container">
+        <h1>EstoNoEsTrello</h1>
+        <p class="sub">Gestiona tareas y proyectos con eficiencia</p>
+        <div class="container2">
+            <p class="please">Inicia sesión o regístrate si aún no tienes una cuenta.</p>
+            <div class="Buttons">
+                <a href="login.html" class="button-login">Iniciar sesión</a>
+                <a href="register.html" class="button-register">Registrarse</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
