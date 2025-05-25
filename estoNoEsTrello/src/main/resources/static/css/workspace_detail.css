@@ -1,19 +1,24 @@
-/* workspace_detail.css */
+
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f5f7;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #eee8db;
     margin: 0;
     padding: 0;
 }
 
 .topbar {
-    background: #2a387c;
+    background: #034a73;
     color: #fff;
-    padding: 16px 32px;
+    padding: 0 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.2em;
+    min-height: 56px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
 .logo {
@@ -24,14 +29,29 @@ body {
 .container {
     display: flex;
     height: calc(100vh - 56px);
+    margin-top: 56px;
+    margin-left: 220px;
 }
 
 .sidebar {
-    background: #23305a;
-    color: #fff;
     width: 220px;
-    padding: 32px 0;
-    min-height: 100%;
+    background: #172b4d;
+    color: #fff;
+    height: 100vh;
+    position: fixed;
+    top: 56px; /* debajo de la topbar */
+    left: 0;
+    padding: 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 900;
+}
+
+.sidebar h2{
+    color: #fff;
+    font-size: 1.1em;
+    margin: 0 0 6px 0;
 }
 
 .sidebar ul {
@@ -58,10 +78,21 @@ body {
     background: #2a387c;
 }
 
+.sidebar-username {
+    margin-top: 100%;
+    padding: 170% 32px 0 32px;
+    color: #b6c2cf;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-align: left;
+}
+
 .main-content {
     flex: 1;
     padding: 32px;
     overflow-y: auto;
+    margin-top: 0;
+    margin-left: 0;
 }
 
 .board {
@@ -70,6 +101,7 @@ body {
 }
 
 .list {
+    border: 2px solid rgba(42, 56, 124, 0.31);
     background: #ebecf0;
     border-radius: 8px;
     padding: 16px;
@@ -92,6 +124,55 @@ body {
     padding: 12px;
     margin-bottom: 6px;
     font-size: 1em;
+}
+
+.card .card-arrows {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.card .card-arrows button {
+    background: #e6edff;
+    border: none;
+    border-radius: 4px;
+    color: #1a255c;
+    font-size: 1em;
+    width: 28px;
+    height: 24px;
+    cursor: pointer;
+    transition: background 0.2s;
+    padding: 0;
+    margin: 0;
+}
+
+.card .card-arrows button {
+    background: #e6edff;
+    border: 1px solid #b3c6ff;
+    border-radius: 50%;
+    color: #1a255c;
+    font-size: 1em;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card .card-arrows button:disabled {
+    background: #f0f0f0;
+    border-color: #e0e0e0;
+    color: #b3b3b3;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.card .card-arrows button:hover:not(:disabled) {
+    background: #8393b9;
 }
 
 .card-drop-indicator {
@@ -154,3 +235,98 @@ body {
     width: 100%;
     display: block;
 }
+
+.card.placeholder {
+    background: #e6edff;
+    border: 2px dashed #1a255c;
+    min-height: 36px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    opacity: 0.7;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(23, 43, 77, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+.modal-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(9,30,66,0.25);
+    padding: 32px 24px 24px 24px;
+    min-width: 340px;
+    min-height: 380px; /* Más alto */
+    max-width: 90vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 18px; /* Espacio entre elementos */
+}
+.modal-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    flex: 1;
+}
+
+
+.close-modal {
+    position: absolute;
+    top: 12px; right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #888;
+    cursor: pointer;
+}
+
+#cardTitleInput {
+    resize: none;
+    width: 100%;
+    box-sizing: border-box;
+    height: 32px; /* Ajusta según el alto del botón */
+
+    padding: 10px 0 10px 25px;
+    border: 1px solid #cccccc;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+#cardDescInput {
+    resize: none;
+    width: 100%;
+    min-width: 250px;
+    box-sizing: border-box;
+    height: 64px; /* Ajusta según el alto del botón */
+
+    padding: 10px 0 10px 25px;
+    margin-bottom: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+#createCardForm button[type="submit"] {
+    background-color: #2a387c;
+    border: none;
+    border-radius: 20px;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    font-size: 16px;
+    justify-content: center;
+    margin : auto auto 16px auto;
+    max-width: 120px;
+    padding: 10px;
+    width: 100%;
+}
+

@@ -12,16 +12,15 @@
     <div>
         <span style="font-weight:bold; font-size:1.2em;">Esto No Es Trello</span>
     </div>
-    <div class="user-name">
-        Hola, <span id="userName">Usuario</span>
-    </div>
 </div>
 <div class="container">
     <nav class="sidebar">
-        <a href="#">Tableros</a>
-        <a href="#">Plantillas</a>
-        <a href="#">Configuración</a>
+        <a href="#">Espacios de Trabajo</a>
         <a href="#">Cerrar sesión</a>
+        <div class="sidebar-username">
+            <h2>Usuario Actual:</h2>
+            <span id="userName"></span>
+        </div>
     </nav>
     <div class="main-content">
         <div class="board" id="board">
@@ -31,5 +30,20 @@
 </div>
 
 <script src="js/workspace_detail.js?v=1.0.1"></script>
+<div id="cardModal" class="modal-overlay" style="display:none;">
+    <div class="modal-card">
+        <button class="close-modal" onclick="closeCardModal()">×</button>
+        <h2>Crear nueva tarjeta</h2>
+        <form id="createCardForm">
+            <label>
+                <input id="cardTitleInput" type="text" placeholder="Título de la tarjeta" required>
+            </label>
+            <label>
+                <textarea id="cardDescInput" placeholder="Descripción"></textarea>
+            </label>
+            <button type="submit">Crear</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

@@ -2,35 +2,33 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Seleccionar Tablero - Esto No Es Trello</title>
+    <title>Seleccionar Espacio - Esto No Es Trello</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/select_workspace.css?v=1.0.1">
 
 </head>
 <body>
+
     <div class="topbar">
         <div>
             <span style="font-weight:bold; font-size:1.2em;">Esto No Es Trello</span>
         </div>
-        <div class="user-name">
-            <!-- Users name is going to display here -->
-            Hola, <span id="userName">Usuario</span>
-        </div>
     </div>
 
     <nav class="sidebar">
-        <a href="#">Tableros</a>
-        <a href="#">Plantillas</a>
-        <a href="#">Configuración</a>
         <a href="#">Cerrar sesión</a>
+        <div class="sidebar-username">
+            <h2>Usuario Actual:</h2>
+            <span id="userName"></span>
+        </div>
     </nav>
 
     <main class="main-content">
         <div class="boards-header">
-            <h2>Selecciona un tablero</h2>
+            <h2>Selecciona un Espacio de Trabajo</h2>
             <div class="search-bar">
                 <label>
-                    <input type="text" id="searchInput" placeholder="Buscar tableros...">
+                    <input type="text" id="searchInput" placeholder="Buscar Espacios de trabajo...">
                 </label>
             </div>
         </div>
