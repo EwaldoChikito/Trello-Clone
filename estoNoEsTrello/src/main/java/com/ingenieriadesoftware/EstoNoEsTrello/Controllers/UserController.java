@@ -25,13 +25,13 @@ public class UserController {
     public UserController() {
     }
 
-    public void registerUser (String password, String email){
+    public void registerUser (String email, String password){
         ArrayList<User> usersList = new ArrayList<User>();
         usersList = UserJsonController.findTotalUsers();
         if (usersList == null){
             usersList = new ArrayList<User>();
         }
-        User newUser = new User(password,email);
+        User newUser = new User(email,password);
         usersList.add(newUser);
         UserJsonController.saveUser(newUser);
     }
@@ -40,7 +40,7 @@ public class UserController {
 
     @PostMapping("/createWorkSpace")
     public ResponseEntity<String> createWorkSpace(@RequestBody WorkSpace workSpace, @RequestParam("email") String email) throws IOException{
-        User user = new User("",email);
+        User user = new User(email,"");
 
         WorkSpaceController.addWorkSpace(workSpace, email);
         return new ResponseEntity<String>("Espacio de Trabajo Agregado", HttpStatus.OK);
