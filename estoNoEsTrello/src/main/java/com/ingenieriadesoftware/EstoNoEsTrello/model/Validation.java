@@ -26,15 +26,6 @@ public class Validation {
         }
     }
 
-    public static boolean isUsernameEmpty(String username) throws EmptyUsername{
-        if (username.isEmpty()){
-            throw new EmptyUsername();
-        }
-        else {
-            return false;
-        }
-    }
-
     public static boolean isPasswordEmpty(String password) throws EmptyPassword{
         if (password.isEmpty()){
             throw new EmptyPassword();
@@ -42,15 +33,6 @@ public class Validation {
         else{
             return false;
         }
-    }
-
-    public static boolean isUsernameAlreadyUsed(String username, UsersAdministrator usersList) throws UsernameAlreadyUsed {
-        for (User user : usersList.getUsers()) {
-            if (user.getUsername().equals(username)) {
-                throw new UsernameAlreadyUsed();
-            }
-        }
-        return false;
     }
 
     public static boolean isEmailAlreadyUsed(String email, UsersAdministrator usersList) throws EmailAlreadyUsed {
@@ -62,15 +44,15 @@ public class Validation {
         return false;
     }
 
-    public static boolean isDataValid(String username, String password, LinkedList<User> usersList) throws InvalidUsername, InvalidPassword {
+    public static boolean isDataValid(String email, String password, LinkedList<User> usersList) throws InvalidEmail, InvalidPassword {
         for (User user : usersList) {
-            if (user.getUsername().equals(username)) {
+            if (user.getEmail().equals(email)) {
                 if (user.getPassword().equals(password)){
                     return true;
                 }
                 throw new InvalidPassword();
             }
         }
-        throw new InvalidUsername();
+        throw new InvalidEmail();
     }
 }

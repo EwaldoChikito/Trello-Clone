@@ -5,13 +5,11 @@ import com.ingenieriadesoftware.EstoNoEsTrello.JsonControllers.UserJsonControlle
 import java.util.ArrayList;
 
 public class User {
-    private String password;
     private String email;
+    private String password;
     private ArrayList<WorkSpace> workspaces;
 
-
-    public User(String password, String email, ArrayList<WorkSpace> workspaces) {
-        this.password = password;
+    public User(String email, String password, ArrayList<WorkSpace> workspaces) {
         this.email = email;
         this.workspaces = findUser(email).workspaces;
 
@@ -20,9 +18,9 @@ public class User {
         }
     }
 
-    public User(String password, String email) {
-        this.password = password;
+    public User(String email, String password) {
         this.email = email;
+        this.password = password;
     }
 
     public User() {
@@ -36,6 +34,7 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
 
     public String getEmail() {
         return email;
@@ -68,7 +67,6 @@ public class User {
         if (usersList == null){
             usersList = new ArrayList<User>();
         }
-
         for (int i=0;i<usersList.size();i++)
         {
             if (usersList.get(i).getEmail().equals(email))
@@ -76,5 +74,12 @@ public class User {
         }
         return userSelected;
     }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "email: " + email + '\'' +
+//                "Workspaces=" + Arrays.toString(workspaces) +
+//                '}';
+
 
 }
