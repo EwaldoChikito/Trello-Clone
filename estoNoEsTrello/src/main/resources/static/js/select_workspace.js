@@ -1,5 +1,4 @@
-// Sample Array of Boards
-// This should be replaced with a fetch call from backend
+// Array de boards (puedes reemplazarlo por fetch en el futuro)
 const boards = [
     { title: "Proyecto Web", desc: "Tareas y seguimiento del proyecto web." },
     { title: "Marketing", desc: "Campañas y estrategias de marketing." },
@@ -9,9 +8,7 @@ const boards = [
     { title: "Mamalo Ricardo", desc: "Organiza tus tareas personales." }
 ];
 
-let name;
-
-// Renders the boards in the grid as an array of Board objects
+// Renderiza los boards y el botón de agregar
 function renderBoards(boardsToRender) {
     const boardsGrid = document.getElementById('boardsGrid');
     boardsGrid.innerHTML = "";
@@ -19,49 +16,65 @@ function renderBoards(boardsToRender) {
         const card = document.createElement('div');
         card.className = 'board-card';
         card.innerHTML = `
-                <div class="board-title">${board.title}</div>
-                <div class="board-desc">${board.desc}</div>
-            `;
+            <div class="board-title">${board.title}</div>
+            <div class="board-desc">${board.desc}</div>
+        `;
         boardsGrid.appendChild(card);
     });
 
-    // Add a new board card button
-    // It permanently stays at the end of the grid
+    // Botón para agregar nuevo workspace (abre el modal)
     const addCard = document.createElement('div');
     addCard.className = 'board-card add-workspace-card';
     addCard.innerHTML = `<div class="add-plus">+</div><div>Nuevo Workspace</div>`;
     addCard.onclick = function() {
-        name = prompt("Ingrese el nombre del nuevo workspace:");
-        if (name && name.trim() !== "") {
-            boards.push({ title: name.trim(), desc: "Sin descripción." });
-            renderBoards(boards);
-        }
+        openWorkspaceModal();
     };
     boardsGrid.appendChild(addCard);
 }
 
-let workspace = {
-    id:
-    nombre: name;
-    blocks: localStorage.getItem("")
-};
+// Abre el modal
+function openWorkspaceModal() {
+    document.getElementById('workspaceModal').style.display = 'flex';
+    document.getElementById('workspaceTitleInput').value = '';
+    document.getElementById('workspaceDescInput').value = '';
+    document.getElementById('workspaceTitleInput').focus();
+}
 
-// Renders the initial boards
-renderBoards(boards);
+// Cierra el modal
+function closeWorkspaceModal() {
+    document.getElementById('workspaceModal').style.display = 'none';
+}
 
-// Filter the boards based on the search input
-const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('input', function() {
-    const filter = searchInput.value.toLowerCase();
-    const filteredBoards = boards.filter(board =>
-        board.title.toLowerCase().includes(filter) ||
-        board.desc.toLowerCase().includes(filter)
-    );
-    renderBoards(filteredBoards);
+// Maneja el submit del modal
+document.addEventListener('DOMContentLoaded', function() {
+    renderBoards(boards);
+
+    const form = document.getElementById('workspaceForm');
+    if (form) {
+        form.onsubmit = function(e) {
+            e.preventDefault();
+            const name = document.getElementById('workspaceTitleInput').value.trim();
+            const desc = document.getElementById('workspaceDescInput').value.trim() || "Sin descripción.";
+            if (name !== "") {
+                boards.push({ title: name, desc });
+                closeWorkspaceModal();
+                renderBoards(boards);
+            }
+        };
+    }
+
+    // Filtro de búsqueda
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function() {
+        const filter = searchInput.value.toLowerCase();
+        const filteredBoards = boards.filter(board =>
+            board.title.toLowerCase().includes(filter) ||
+            board.desc.toLowerCase().includes(filter)
+        );
+        renderBoards(filteredBoards);
+    });
+
+    // Nombre de usuario dinámico
+    const userName = "Juan Pérez"; // se obtiene del backend
+    document.getElementById('userName').textContent = userName;
 });
-
-// change the username dynamically
-const userName = "Juan Pérez"; // we are going to get this from the backend
-document.getElementById('userName').textContent = userName;
-
-
