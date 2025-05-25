@@ -1,18 +1,28 @@
 
-body { 
-    margin: 0; 
+body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: #eee8db; 
+    background: #eee8db;
+    margin: 0;
+    padding: 0;
+}
+
+.blank-space {
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .topbar {
-    height: 56px;
     background: #034a73;
     color: #fff;
+    padding: 0 24px;
     display: flex;
     align-items: center;
-    padding: 0 24px;
-    justify-content: space-between;
+    min-height: 56px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
 .sidebar {
@@ -27,6 +37,21 @@ body {
     display: flex;
     flex-direction: column;
     gap: 16px;
+}
+
+.sidebar-username {
+    margin-top: 100%;
+    padding: 150% 32px 0 32px;
+    color: #b6c2cf;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-align: left;
+}
+
+.sidebar h2{
+    color: #fff;
+    font-size: 1.1em;
+    margin: 0 0 6px 0;
 }
 
 .sidebar a {
@@ -52,6 +77,10 @@ body {
 .user-name {
     font-weight: bold;
     font-size: 1.1em;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .boards-header {
