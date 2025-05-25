@@ -158,3 +158,72 @@ body {
     font-weight: bold;
     margin-bottom: 8px;
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(23, 43, 77, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+.modal-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(9,30,66,0.25);
+    padding: 32px 24px 24px 24px;
+    min-width: 340px;
+    min-height: 280px;
+    max-width: 90vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+}
+.modal-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    flex: 1;
+}
+.close-modal {
+    position: absolute;
+    top: 12px; right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #888;
+    cursor: pointer;
+}
+#workspaceTitleInput, #workspaceDescInput {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #cccccc;
+    border-radius: 15px;
+    font-size: 14px;
+    padding: 10px 0 10px 25px;
+}
+#workspaceTitleInput {
+    height: 32px;
+}
+#workspaceDescInput {
+    min-height: 64px;
+    margin-bottom: 15px;
+    resize: none;
+}
+#workspaceForm button[type="submit"] {
+    background-color: #2a387c;
+    border: none;
+    border-radius: 20px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 16px;
+    margin: auto auto 16px auto;
+    max-width: 120px;
+    padding: 10px;
+    width: 100%;
+}
