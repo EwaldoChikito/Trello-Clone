@@ -1,10 +1,12 @@
 package com.ingenieriadesoftware.EstoNoEsTrello.model;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -48,6 +50,16 @@ public class UsersAdministrator {
     }
 
     public void pushUsers(){
+        try {
+            new FileWriter(FILE, false).close();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            FileWriter writer = new FileWriter(FILE);
+            gson.toJson(users, writer);
+            writer.close();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
     }
 
