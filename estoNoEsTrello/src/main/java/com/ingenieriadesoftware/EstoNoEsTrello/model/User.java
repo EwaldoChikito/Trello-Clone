@@ -13,7 +13,7 @@ public class User {
         this.email = email;
         this.workspaces = findUser(email).workspaces;
 
-        if (workspaces == null) {
+        if (workspaces == null){
             workspaces = new ArrayList<WorkSpace>();
         }
     }
@@ -48,8 +48,8 @@ public class User {
 
     public ArrayList<WorkSpace> getWorkspaces(String correo) {
         this.workspaces = findUser(correo).workspaces;
-        if (workspaces == null) {
-            workspaces = new ArrayList<WorkSpace>();
+        if (workspaces==null){
+            workspaces=new ArrayList<WorkSpace>();
         }
         return workspaces;
     }
@@ -60,7 +60,7 @@ public class User {
 
     public User findUser(String email) {
         ArrayList<User> usersList = new ArrayList<User>();
-        User userSelected = new User("", "");
+        User userSelected = new User("","");
         usersList = UserJsonController.findTotalUsers();
         if (usersList == null) {
             usersList = new ArrayList<User>();

@@ -43,13 +43,13 @@ public class UserJsonController extends User {
     static public void saveUser(User user){
         try {
             Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
-            JsonReader reader = new JsonReader(new FileReader("src/main/resources/JSONs/Users.json"));
+            JsonReader reader = new JsonReader(new FileReader("C://Users//alber//Documents//GitHub//Trello-Clone//estoNoEsTrello//src//main//resources//JSONs//Users.json"));
             User[] users = gson.fromJson(reader, User[].class);
             List<User> userList= new ArrayList<>(Arrays.asList(users));
 
             userList.add(user);
 
-            FileWriter fw = new FileWriter("src/main/resources/JSONs/Users.json");
+            FileWriter fw = new FileWriter("C://Users//alber//Documents//GitHub//Trello-Clone//estoNoEsTrello//src//main//resources//JSONs//Users.json");
             StringWriter sw = new StringWriter();
             sw.write(gson.toJson(userList));
             fw.write(sw.toString());
@@ -63,7 +63,7 @@ public class UserJsonController extends User {
     static public ArrayList<User> findTotalUsers(){
         try {
             Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
-            JsonReader reader = new JsonReader(new FileReader("src/main/resources/JSONs/Users.json"));
+            JsonReader reader = new JsonReader(new FileReader("C://Users//alber//Documents//GitHub//Trello-Clone//estoNoEsTrello//src//main//resources//JSONs//Users.json"));
             User[] users = gson.fromJson(reader, User[].class);
             return new ArrayList<>(Arrays.asList(users));
         } catch (IOException e) {

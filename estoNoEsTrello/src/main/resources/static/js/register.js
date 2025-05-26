@@ -20,13 +20,14 @@ let botonRegistrarse = document.getElementById('boton-registrar');
                         body: JSON.stringify(user)
                     });
                 if (petition.ok){
-                    localStorage.clean();
+//                    localStorage.clear();
                     localStorage.setItem('email', document.getElementById('input_email').value);
                     document.getElementById('input_email').value = '';
                     document.getElementById('input_password').value = '';
                     document.getElementById('input_password_confirm').value = '';
                     localStorage.setItem('login','true');
-                    window.location.href = "index.html";
+                    // botonRegistrarse.style.setProperty('color','red','important');
+                    window.location.href = "../index.html";
                 }
                 else{
                     const errorRespuesta = await petition.text();
