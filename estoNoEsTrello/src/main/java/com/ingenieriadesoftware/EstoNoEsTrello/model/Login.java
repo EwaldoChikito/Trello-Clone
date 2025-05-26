@@ -4,7 +4,7 @@ import com.ingenieriadesoftware.EstoNoEsTrello.model.Exceptions.*;
 
 public class Login {
 
-    public User singIn (String email, String password, UsersAdministrator usersAdministrator){
+    public static User singIn (String email, String password, UsersAdministrator usersAdministrator){
         try{
             if (!Validation.isEmailEmpty(email)){
                 if (Validation.isDataValid(email, password,usersAdministrator.getUsers())){
