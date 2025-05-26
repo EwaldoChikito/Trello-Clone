@@ -2,23 +2,38 @@ package com.ingenieriadesoftware.EstoNoEsTrello.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.UUID;
 
 public class WorkSpace {
     private Long id;
     private String name;
+    private String description;
     private ArrayList<Block> blocks;
 
     public WorkSpace() {
     }
 
-    public WorkSpace(Long id, String name) {
-        this.id = id;
+    public WorkSpace(Long id, String name, String description) {
+        if (id == null){
+            this.id = 2L;
+        }
+        else{
+            this.id = id;
+        }
         this.name = name;
+        this.description = description;
     }
 
-    public WorkSpace(Long id, String name, ArrayList<Block> blocks) {
-        this.id = id;
+    public WorkSpace(Long id, String name, String description, ArrayList<Block> blocks) {
+
+        if (id == null){
+            this.id = 1L;
+        }
+        else{
+            this.id = id;
+        }
         this.name = name;
+        this.description = description;
         this.blocks = blocks;
     }
 
@@ -26,7 +41,7 @@ public class WorkSpace {
         return id;
     }
 
-    public void setId(Long id) {
+    private void setId(Long id) {
         this.id = id;
     }
 
@@ -36,6 +51,14 @@ public class WorkSpace {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public ArrayList<Block> getBlocks() {

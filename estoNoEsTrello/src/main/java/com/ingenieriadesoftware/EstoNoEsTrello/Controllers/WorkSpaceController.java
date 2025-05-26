@@ -12,18 +12,18 @@ public class WorkSpaceController {
     public WorkSpaceController() {
     }
 
-    static public void addWorkSpace(WorkSpace workSpace , String email) throws IOException {
+    static public void addWorkSpace(WorkSpace workSpace , User user) throws IOException {
         ArrayList<User> usersList = UserJsonController.findTotalUsers();
         User currentUser = new User();
         for (int i=0;i<usersList.size();i++)
         {
-            if (usersList.get(i).getEmail().equals(email))
+            if (usersList.get(i).getEmail().equals(user.getEmail()))
             {
                 currentUser=usersList.get(i);
-                UserJsonController.deleteUser(email);
+                UserJsonController.deleteUser(user.getEmail());
             }
         }
-        currentUser.getWorkspaces(email).add(workSpace);
+        currentUser.getWorkspaces(user.getEmail()).add(workSpace);
         UserJsonController.saveUser(currentUser);
     }
 }

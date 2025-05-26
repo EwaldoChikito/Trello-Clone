@@ -48,12 +48,22 @@ public class UserController {
         return new ResponseEntity<ArrayList<WorkSpace>>(user.getWorkspaces(),HttpStatus.OK);
     }
 
+//    @PostMapping("/createWorkSpace")
+//    public ResponseEntity<String> createWorkSpace(@RequestBody WorkSpace workSpace, @RequestParam("email") String email) throws IOException{
+//        User user = new User(email,"");
+//
+//        WorkSpaceController.addWorkSpace(workSpace, email);
+//        return new ResponseEntity<String>("Espacio de Trabajo Agregado", HttpStatus.OK);
+//    }
+
     @PostMapping("/createWorkSpace")
     public ResponseEntity<String> createWorkSpace(@RequestBody WorkSpace workSpace, @RequestParam("email") String email) throws IOException{
-        User user = new User(email,"");
+        User user = new User().findUser(email);
 
-        WorkSpaceController.addWorkSpace(workSpace, email);
-        return new ResponseEntity<String>("Espacio de Trabajo Agregado", HttpStatus.OK);
+        WorkSpace workSpace1 = new WorkSpace(null, workSpace.getName(), workSpace.getDescription(), workSpace.getBlocks());
+        WorkSpaceController.addWorkSpace(workSpace1, user);
+
+        return new ResponseEntity<String>("Diseño agregado", HttpStatus.OK);
     }
 
     @PostMapping("/registro")

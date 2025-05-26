@@ -72,8 +72,8 @@ public class UserJsonController extends User {
     }
 
     static public void deleteUser(String email) throws IOException{
-        Gson gson = new Gson();
-        List<User> users = gson.fromJson(new FileReader("src/main/resources/JSONs/Users.json"), new TypeToken<List<User>>() {}.getType());
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+        List<User> users = gson.fromJson(new FileReader("C://Users//alber//Documents//GitHub//Trello-Clone//estoNoEsTrello//src//main//resources//JSONs//Users.json"), new TypeToken<List<User>>() {}.getType());
 
         // Eliminar el producto
         List<User> updatedClients = new ArrayList<>();
@@ -84,7 +84,7 @@ public class UserJsonController extends User {
         }
 
         // Escribir el JSON actualizado
-        try (FileWriter writer = new FileWriter("src/main/resources/JSONs/Users.json")) {
+        try (FileWriter writer = new FileWriter("C://Users//alber//Documents//GitHub//Trello-Clone//estoNoEsTrello//src//main//resources//JSONs//Users.json")) {
             gson.toJson(updatedClients, writer);
         }
     }
