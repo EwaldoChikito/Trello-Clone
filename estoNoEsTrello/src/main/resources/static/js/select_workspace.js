@@ -27,6 +27,7 @@ function renderBoards(boardsToRender) {
     boardsToRender.forEach(board => {
         const card = document.createElement('div');
         card.className = 'board-card';
+//        card.id = idAux;
         card.innerHTML = `
             <div class="board-title">${board.title}</div>
             <div class="board-desc">${board.desc}</div>
@@ -56,7 +57,8 @@ function openWorkspaceModal() {
 function closeWorkspaceModal() {
     document.getElementById('workspaceModal').style.display = 'none';
 }
-
+var name;
+var desc;
 const emailUser = localStorage.getItem("email");
 var login = comprobarLogIn();
 
@@ -90,8 +92,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (form) {
             form.onsubmit = function(e) {
                 e.preventDefault();
-                const name = document.getElementById('workspaceTitleInput').value.trim();
-                const desc = document.getElementById('workspaceDescInput').value.trim() || "Sin descripción.";
+                name = document.getElementById('workspaceTitleInput').value.trim();
+                desc = document.getElementById('workspaceDescInput').value.trim() || "Sin descripción.";
                 if (name !== "") {
 
                     let crearWorkSpace = async() => {
@@ -112,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             body: JSON.stringify(workspace)
                         });
                         if(petition.ok){
-                            alert ("Chill de cojones")
+                            alert (petition.body)
                         }
                         else{
                             const errorRespuesta = await petition.text();
@@ -128,6 +130,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             };
         }
+
+
     }
 
 //    renderBoards(boards);

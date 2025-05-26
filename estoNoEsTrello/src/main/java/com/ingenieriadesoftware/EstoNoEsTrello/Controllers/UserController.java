@@ -4,6 +4,7 @@ import ch.qos.logback.core.net.server.Client;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.ingenieriadesoftware.EstoNoEsTrello.JsonControllers.UserJsonController;
+import com.ingenieriadesoftware.EstoNoEsTrello.model.Block;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.User;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.WorkSpace;
 import org.springframework.http.HttpStatus;
@@ -57,13 +58,14 @@ public class UserController {
 //    }
 
     @PostMapping("/createWorkSpace")
-    public ResponseEntity<String> createWorkSpace(@RequestBody WorkSpace workSpace, @RequestParam("email") String email) throws IOException{
+    public ResponseEntity<Long> createWorkSpace(@RequestBody WorkSpace workSpace, @RequestParam("email") String email) throws IOException{
         User user = new User().findUser(email);
 
         WorkSpace workSpace1 = new WorkSpace(null, workSpace.getName(), workSpace.getDescription(), workSpace.getBlocks());
+        workSpace1.setBlocks(new ArrayList<Block>());
         WorkSpaceController.addWorkSpace(workSpace1, user);
 
-        return new ResponseEntity<String>("Diseño agregado", HttpStatus.OK);
+        return new ResponseEntity<Long>(workSpace1.getId(), HttpStatus.OK);
     }
 
     @PostMapping("/registro")
