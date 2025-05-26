@@ -6,8 +6,6 @@ let botonRegistrarse = document.getElementById('boton-registrar');
             if (document.getElementById('input_password').value == document.getElementById('input_password_confirm').value){
                 user.password = document.getElementById('input_password').value;
                 user.workSpaces = [];
-//                user.blocks = [];
-//                user.cards = [];
 
                 const petition = await fetch ("/user/registro",
                     {
@@ -20,13 +18,15 @@ let botonRegistrarse = document.getElementById('boton-registrar');
                         body: JSON.stringify(user)
                     });
                 if (petition.ok){
-//                    localStorage.clear();
+                    localStorage.clear();
                     localStorage.setItem('email', document.getElementById('input_email').value);
                     document.getElementById('input_email').value = '';
                     document.getElementById('input_password').value = '';
                     document.getElementById('input_password_confirm').value = '';
                     localStorage.setItem('login','true');
                     // botonRegistrarse.style.setProperty('color','red','important');
+
+                    //que lo envie a el WorkSpace Selector del usuario en cuestión
                     window.location.href = "../index.html";
                 }
                 else{

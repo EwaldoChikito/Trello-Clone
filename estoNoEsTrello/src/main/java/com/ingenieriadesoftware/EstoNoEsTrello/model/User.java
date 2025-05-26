@@ -59,9 +59,8 @@ public class User {
     }
 
     public User findUser(String email) {
-        ArrayList<User> usersList = new ArrayList<User>();
+        ArrayList<User> usersList = UserJsonController.findTotalUsers();
         User userSelected = new User("","");
-        usersList = UserJsonController.findTotalUsers();
         if (usersList == null) {
             usersList = new ArrayList<User>();
         }
@@ -84,6 +83,20 @@ public class User {
          }
      }
      return verificationResult;
+    }
+
+    public boolean verifyLogIn(String email, String password){
+        ArrayList<User> usersList = UserJsonController.findTotalUsers();
+        boolean verificationResult = false;
+        if(usersList == null){
+            usersList = new ArrayList<User>();
+        }
+        for (int i=0; i<usersList.size();i++){
+            if(usersList.get(i).getEmail().equals(email) && usersList.get(i).getPassword().equals(password)){
+                verificationResult = true;
+            }
+        }
+        return verificationResult;
     }
 
 //    @Override

@@ -36,7 +36,16 @@ public class UserController {
         UserJsonController.saveUser(newUser);
     }
 
-
+    @GetMapping("/loadWorkSpaces")
+    public ResponseEntity<ArrayList<WorkSpace>> loadWorkSpaces(@RequestParam("correo") String email){
+        User user = new User().findUser(email);
+        if(user.getWorkspaces().isEmpty()){
+            return new ResponseEntity<ArrayList<WorkSpace>>(user.getWorkspaces(),HttpStatus.BAD_REQUEST);
+        }
+        else{
+            return new ResponseEntity<ArrayList<WorkSpace>>(user.getWorkspaces(),HttpStatus.OK);
+        }
+    }
 
     @PostMapping("/createWorkSpace")
     public ResponseEntity<String> createWorkSpace(@RequestBody WorkSpace workSpace, @RequestParam("email") String email) throws IOException{
@@ -58,5 +67,13 @@ public class UserController {
         }
         else
             return new ResponseEntity<String>("Correo Invalido",HttpStatus.CONFLICT);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody User user) {
+        if (user.verifyLogIn(user.getEmail(), user.getPassword()))
+            return new ResponseEntity<String>("Inicio de sesion valido", HttpStatus.OK);
+        else
+            return new ResponseEntity<String>("Datos invalidos", HttpStatus.BAD_REQUEST);
     }
 }
