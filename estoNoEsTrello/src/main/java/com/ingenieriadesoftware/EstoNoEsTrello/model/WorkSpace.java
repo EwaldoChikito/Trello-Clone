@@ -14,7 +14,12 @@ public class WorkSpace {
     public WorkSpace() {
     }
 
-    public WorkSpace(Long id, String name, String description) {
+    public WorkSpace( String name, String description) {
+//
+        this.id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE; // Generate a random ID
+        this.name = name;
+        this.description = description;
+
 //        if (id == null){
 //            this.id = 2L;
 //        }

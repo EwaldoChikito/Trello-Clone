@@ -15,12 +15,15 @@ public class WorkSpaceController {
     static public void addWorkSpace(WorkSpace workSpace , User user) throws IOException {
         ArrayList<User> usersList = UserJsonController.findTotalUsers();
         User currentUser = new User();
-        for (int i=0;i<usersList.size();i++)
-        {
-            if (usersList.get(i).getEmail().equals(user.getEmail()))
-            {
-                currentUser=usersList.get(i);
-                UserJsonController.deleteUser(user.getEmail());
+        for (User u : usersList) {
+            if (u.getEmail().equals(user.getEmail())) {
+                ArrayList<WorkSpace> workspaces = u.getWorkspaces();
+                if (workspaces == null) workspaces = new ArrayList<>();
+                workspaces.add(workSpace);
+                u.setWorkspaces(workspaces);
+                UserJsonController.deleteUser(u.getEmail());
+                UserJsonController.saveUser(u);
+                break;
             }
         }
         currentUser.getWorkspaces(user.getEmail()).add(workSpace);

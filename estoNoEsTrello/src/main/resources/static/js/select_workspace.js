@@ -27,11 +27,16 @@ function renderBoards(boardsToRender) {
     boardsToRender.forEach(board => {
         const card = document.createElement('div');
         card.className = 'board-card';
-//        card.id = idAux;
+        card.id = board.id; // Asigna el id único del workspace
         card.innerHTML = `
-            <div class="board-title">${board.title}</div>
-            <div class="board-desc">${board.desc}</div>
+            <div class="board-title">${board.title || board.name}</div>
+            <div class="board-desc">${board.desc || board.description}</div>
         `;
+        // Ejemplo de eventListener usando el id
+        card.addEventListener('click', () => {
+            console.log('Workspace seleccionado:', card.id);
+            // Aquí puedes manejar la lógica al hacer click
+        });
         boardsGrid.appendChild(card);
     });
 
@@ -96,41 +101,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 desc = document.getElementById('workspaceDescInput').value.trim() || "Sin descripción.";
                 if (name !== "") {
 
-                    let crearWorkSpace = async() => {
-                        workspace = {
+                    let crearWorkSpace = async () => {
+                        const workspace = {
                             id: null,
                             name: name,
                             description: desc
                         };
                         let emailUser = localStorage.getItem("email");
-                        const petition = await fetch (`/user/createWorkSpace?email=${emailUser}`,
-                        {
-                            method:'POST',
-                            headers:
-                            {
+                        const petition = await fetch(`/user/createWorkSpace?email=${emailUser}`, {
+                            method: 'POST',
+                            headers: {
                                 'Accept': 'application/json',
                                 'Content-Type': 'application/json',
                             },
                             body: JSON.stringify(workspace)
                         });
-                        if(petition.ok){
-                            alert (petition.body)
-                        }
-                        else{
+                        if (petition.ok) {
+                            const id = await petition.json(); // El backend retorna el id
+                            // Agrega el nuevo workspace al array con su id
+                            boards.push({
+                                id: id,
+                                name: name,
+                                description: desc
+                            });
+                            closeWorkspaceModal();
+                            renderBoards(boards);
+                        } else {
                             const errorRespuesta = await petition.text();
-                            alert ("Un error inesperado",errorRespuesta,"error");
+                            alert("Un error inesperado", errorRespuesta, "error");
                         }
-                    }
+                    };
 
                     crearWorkSpace();
-
-                    boards.push({ title: name, desc });
-                    closeWorkspaceModal();
-                    renderBoards(boards);
                 }
             };
         }
-
 
     }
 

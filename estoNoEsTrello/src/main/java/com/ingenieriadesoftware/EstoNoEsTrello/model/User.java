@@ -75,17 +75,17 @@ public class User {
     }
 
     public boolean verifyEmail(String email){
-     ArrayList<User> usersList = UserJsonController.findTotalUsers();
-     boolean verificationResult = false;
-     if(usersList == null){
-         usersList = new ArrayList<User>();
-     }
-     for (int i=0; i<usersList.size();i++){
-         if(usersList.get(i).getEmail().equals(email)){
-             verificationResult = true;
-         }
-     }
-     return verificationResult;
+        ArrayList<User> usersList = UserJsonController.findTotalUsers();
+        boolean verificationResult = false;
+        if(usersList == null){
+        usersList = new ArrayList<User>();
+    }
+    for (int i=0; i<usersList.size();i++){
+        if(usersList.get(i).getEmail().equals(email)){
+            verificationResult = true;
+        }
+    }
+    return verificationResult;
     }
 
     public boolean verifyLogIn(String email, String password){
