@@ -1,3 +1,15 @@
+function comprobarLogIn()
+{
+    if (localStorage.getItem("login") !== null)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 // Array de boards (puedes reemplazarlo por fetch en el futuro)
 const boards = [
     { title: "Proyecto Web", desc: "Tareas y seguimiento del proyecto web." },
@@ -45,9 +57,36 @@ function closeWorkspaceModal() {
     document.getElementById('workspaceModal').style.display = 'none';
 }
 
+var login = comprobarLogIn();
+
 // Maneja el submit del modal
 document.addEventListener('DOMContentLoaded', function() {
-    renderBoards(boards);
+    if(login){
+        let pedirWorkSpaces = async() => {
+            event.preventDefault();
+            let emailUser = localStorage.getItem("email");
+            const respuesta = await fetch(`/user/loadWorkSpaces?email=${emailUser}`,
+            {
+                method: "GET",
+                headers:
+                {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                }
+            });
+            if (respuesta.ok)
+            {
+                const workspaces = await respuesta.json();
+                renderBoards(workspaces);
+            }
+            else{
+                alert ("Un error inesperado","No sé que","error");
+            }
+        }
+        pedirWorkSpaces();
+    }
+
+//    renderBoards(boards);
 
     const form = document.getElementById('workspaceForm');
     if (form) {

@@ -22,7 +22,7 @@ let botonIniciarSesion = document.getElementById('start_sesion_button');
             localStorage.setItem('login','true');
 
             //lo manda a WorkSpace Selector
-            window.location.href = "../index.html";
+            window.location.href = "../select_workspace.html";
         }
         else{
             const errorRespuesta = await petition.text();

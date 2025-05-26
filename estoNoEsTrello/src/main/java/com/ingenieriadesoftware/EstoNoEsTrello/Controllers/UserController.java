@@ -25,26 +25,27 @@ public class UserController {
     public UserController() {
     }
 
-    public void registerUser (String email, String password){
-        ArrayList<User> usersList = new ArrayList<User>();
-        usersList = UserJsonController.findTotalUsers();
-        if (usersList == null){
-            usersList = new ArrayList<User>();
-        }
-        User newUser = new User(email,password);
-        usersList.add(newUser);
-        UserJsonController.saveUser(newUser);
-    }
+//    public void registerUser (String email, String password){
+//        ArrayList<User> usersList = new ArrayList<User>();
+//        usersList = UserJsonController.findTotalUsers();
+//        if (usersList == null){
+//            usersList = new ArrayList<User>();
+//        }
+//        User newUser = new User(email,password);
+//        usersList.add(newUser);
+//        UserJsonController.saveUser(newUser);
+//    }
 
     @GetMapping("/loadWorkSpaces")
-    public ResponseEntity<ArrayList<WorkSpace>> loadWorkSpaces(@RequestParam("correo") String email){
+    public ResponseEntity<ArrayList<WorkSpace>> loadWorkSpaces(@RequestParam("email") String email){
         User user = new User().findUser(email);
-        if(user.getWorkspaces().isEmpty()){
-            return new ResponseEntity<ArrayList<WorkSpace>>(user.getWorkspaces(),HttpStatus.BAD_REQUEST);
-        }
-        else{
-            return new ResponseEntity<ArrayList<WorkSpace>>(user.getWorkspaces(),HttpStatus.OK);
-        }
+//        if(user.getWorkspaces().isEmpty()){
+//            return new ResponseEntity<ArrayList<WorkSpace>>(user.getWorkspaces(),HttpStatus.BAD_REQUEST);
+//        }
+//        else{
+//            return new ResponseEntity<ArrayList<WorkSpace>>(user.getWorkspaces(),HttpStatus.OK);
+//        }
+        return new ResponseEntity<ArrayList<WorkSpace>>(user.getWorkspaces(),HttpStatus.OK);
     }
 
     @PostMapping("/createWorkSpace")
@@ -62,6 +63,7 @@ public class UserController {
         }
         if(!user.verifyEmail(user.getEmail()))
         {
+            user.setWorkspaces(new ArrayList<WorkSpace>());
             UserJsonController.saveUser(user);
             return new ResponseEntity<String>("Datos Ingresados",HttpStatus.OK);
         }

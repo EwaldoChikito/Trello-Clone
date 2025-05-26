@@ -43,11 +43,14 @@ public class User {
     }
 
     public ArrayList<WorkSpace> getWorkspaces() {
+        if (this.workspaces == null){
+            return workspaces = new ArrayList<WorkSpace>();
+        }
         return workspaces;
     }
 
-    public ArrayList<WorkSpace> getWorkspaces(String correo) {
-        this.workspaces = findUser(correo).workspaces;
+    public ArrayList<WorkSpace> getWorkspaces(String email) {
+        this.workspaces = findUser(email).workspaces;
         if (workspaces==null){
             workspaces=new ArrayList<WorkSpace>();
         }

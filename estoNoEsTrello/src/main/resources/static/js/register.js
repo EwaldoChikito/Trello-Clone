@@ -5,7 +5,7 @@ let botonRegistrarse = document.getElementById('boton-registrar');
             user.email = document.getElementById('input_email').value;
             if (document.getElementById('input_password').value == document.getElementById('input_password_confirm').value){
                 user.password = document.getElementById('input_password').value;
-                user.workSpaces = [];
+                user.workSpaces = [""];
 
                 const petition = await fetch ("/user/registro",
                     {
