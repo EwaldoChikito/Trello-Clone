@@ -1,14 +1,41 @@
 let botonRegistrarse = document.getElementById('boton-registrar');
         botonRegistrarse.addEventListener('click',async()=>{
             event.preventDefault();
-            let cliente = {}
-            cliente.email = document.getElementById('input_email').value;
+            let user = {}
+            user.email = document.getElementById('input_email').value;
             if (document.getElementById('input_password').value == document.getElementById('input_password_confirm').value){
-                cliente.
-            }
-            }
-            else{
-                swal ("Un error inesperado","Las contraseñas no coinciden","error");
+                user.password = document.getElementById('input_password').value;
+                user.workSpaces = [];
+//                user.blocks = [];
+//                user.cards = [];
+
+                const petition = await fetch ("/user/registro",
+                    {
+                        method:'POST',
+                        headers:
+                        {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(user)
+                    });
+                if (petition.ok){
+                    localStorage.clean();
+                    localStorage.setItem('email', document.getElementById('input_email').value);
+                    document.getElementById('input_email').value = '';
+                    document.getElementById('input_password').value = '';
+                    document.getElementById('input_password_confirm').value = '';
+                    localStorage.setItem('login','true');
+                    window.location.href = "index.html";
+                }
+                else{
+                    const errorRespuesta = await petition.text();
+                    alert ("Un error inesperado",errorRespuesta,"error");
+                }
             }
 
-        }
+            else{
+                alert ("Un error inesperado","Las contraseñas no coinciden","error");
+            }
+
+        });

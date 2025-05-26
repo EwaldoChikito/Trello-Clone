@@ -45,4 +45,18 @@ public class UserController {
         WorkSpaceController.addWorkSpace(workSpace, email);
         return new ResponseEntity<String>("Espacio de Trabajo Agregado", HttpStatus.OK);
     }
+
+    @PostMapping("/registro")
+    public ResponseEntity<String> registro (@RequestBody User user) {
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Datos de usuario no proporcionados");
+        }
+        if(!user.verifyEmail(user.getEmail()))
+        {
+            UserJsonController.saveUser(user);
+            return new ResponseEntity<String>("Datos Ingresados",HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<String>("Correo Invalido",HttpStatus.CONFLICT);
+    }
 }

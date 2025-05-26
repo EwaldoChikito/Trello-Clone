@@ -18,20 +18,20 @@ import java.io.StringWriter;
 
 public class UserJsonController extends User {
 
-    public UserJsonController(String username, String password, String email, ArrayList<WorkSpace> workspaces) {
-        super(username, password, email, workspaces);
+    public UserJsonController(String email, String password, ArrayList<WorkSpace> workspaces) {
+        super(email, password, workspaces);
     }
 
     static public void saveUser(User user){
         try {
             Gson gson = new Gson();
-            JsonReader reader = new JsonReader(new FileReader("../Json/user.json"));
+            JsonReader reader = new JsonReader(new FileReader("C://Users//alber//Documents//GitHub//Trello-Clone//estoNoEsTrello//src//main//java//com//ingenieriadesoftware//EstoNoEsTrello//Json//user.json"));
             User[] users = gson.fromJson(reader, User[].class);
             List<User> userList= new ArrayList<>(Arrays.asList(users));
 
             userList.add(user);
 
-            FileWriter fw = new FileWriter("../Json/user.json");
+            FileWriter fw = new FileWriter("C://Users//alber//Documents//GitHub//Trello-Clone//estoNoEsTrello//src//main//java//com//ingenieriadesoftware//EstoNoEsTrello//Json//user.json");
             StringWriter sw = new StringWriter();
             sw.write(gson.toJson(userList));
             fw.write(sw.toString());
@@ -45,7 +45,8 @@ public class UserJsonController extends User {
     static public ArrayList<User> findTotalUsers(){
         try {
             Gson gson = new Gson();
-            JsonReader reader = new JsonReader(new FileReader("../Json/user.json"));
+            JsonReader reader = new JsonReader(new FileReader("C://Users//alber//Documents//GitHub//Trello-Clone//estoNoEsTrello//src//main//java//com//ingenieriadesoftware//EstoNoEsTrello//Json//user.json"));
+            reader.toString();
             User[] users = gson.fromJson(reader, User[].class);
 
             if (users == null || users.length == 0) {

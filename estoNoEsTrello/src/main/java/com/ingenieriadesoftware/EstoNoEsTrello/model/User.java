@@ -26,7 +26,6 @@ public class User {
     public User() {
     }
 
-
     public String getPassword() {
         return password;
     }
@@ -34,7 +33,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     public String getEmail() {
         return email;
@@ -73,6 +71,21 @@ public class User {
         }
         return userSelected;
     }
+
+    public boolean verifyEmail(String email){
+     ArrayList<User> usersList = UserJsonController.findTotalUsers();
+     boolean verificationResult = false;
+     if(usersList == null){
+         usersList = new ArrayList<User>();
+     }
+     for (int i=0; i<usersList.size();i++){
+         if(usersList.get(i).getEmail().equals(email)){
+             verificationResult = true;
+         }
+     }
+     return verificationResult;
+    }
+
 //    @Override
 //    public String toString() {
 //        return "User{" +
