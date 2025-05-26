@@ -1,4 +1,12 @@
-{
-  "email": "sdartiles.24@est.ucab.edu.ve",
-  "workspaces": [null]
-}
+[
+  {
+    "email":"user1@example.com",
+    "password":"pass12"
+  },
+  {
+    "email":"user2@example.com",
+    "password":"pass456"},
+  {
+    "email":"pain@gmail.com",
+    "password":"1234"}
+]
