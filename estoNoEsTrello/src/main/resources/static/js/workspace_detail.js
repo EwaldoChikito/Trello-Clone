@@ -12,12 +12,12 @@ function formatDateToDDMMYYYY(dateStr) {
     return `${day}/${month}/${year}`;
 }
 function formatDateToYYYYMMDD(dateStr) {
-    // Formats DD/MM/YYYY into YYYY-MM-DD
     if (!dateStr) return '';
     const [day, month, year] = dateStr.split('/');
     return `${year}-${month}-${day}`;
 }
 
+// --- Initial data with dates in DD/MM/YYYY ---
 let blocks = [
     { title: "Pendientes", cards: [
             {title: "Tarea 1", desc: "", createdAt: "01/06/2024", dueDate: "10/06/2024"},
@@ -41,6 +41,16 @@ let currentAddBlockIdx = null;
 let editingBlockIdx = null;
 let editingCardIdx = null;
 
+// --- Modal logic for creating a new block ---
+function openBlockModal() {
+    document.getElementById('blockModal').style.display = 'flex';
+    document.getElementById('blockTitleInput').value = '';
+    document.getElementById('blockTitleInput').focus();
+}
+function closeBlockModal() {
+    document.getElementById('blockModal').style.display = 'none';
+}
+
 function clearPlaceholder() {
     if (placeholder.parentNode) {
         placeholder.parentNode.removeChild(placeholder);
@@ -61,8 +71,64 @@ function renderBoard(blocks) {
     blocks.forEach((list, blockIdx) => {
         const listDiv = document.createElement('div');
         listDiv.className = 'list';
-        listDiv.innerHTML = `<div class="list-title">${list.title}</div>`;
 
+        // --- Block title bar and edit button ---
+        const listTitleBar = document.createElement('div');
+        listTitleBar.style.display = "flex";
+        listTitleBar.style.justifyContent = "space-between";
+        listTitleBar.style.alignItems = "center";
+
+        // Block title
+        const listTitle = document.createElement('div');
+        listTitle.className = 'list-title';
+        listTitle.textContent = list.title;
+        listTitle.style.flex = "1";
+
+        // Edit button
+        const editBtn = document.createElement('button');
+        editBtn.textContent = "✎";
+        editBtn.title = "Edit block name";
+        editBtn.className = 'edit-block-title-btn';
+        editBtn.style.marginLeft = "8px";
+        editBtn.style.background = "none";
+        editBtn.style.border = "none";
+        editBtn.style.cursor = "pointer";
+        editBtn.style.fontSize = "1.1em";
+        editBtn.onclick = function(e) {
+            e.stopPropagation();
+            // Replace title with input
+            const input = document.createElement('input');
+            input.type = "text";
+            input.value = list.title;
+            input.className = "edit-block-title-input";
+            input.style.flex = "1";
+            input.style.fontSize = "1em";
+            input.style.padding = "2px 6px";
+            input.style.borderRadius = "6px";
+            input.style.border = "1px solid #ccc";
+            listTitleBar.replaceChild(input, listTitle);
+            input.focus();
+            input.select();
+
+            // Save on blur or Enter
+            input.onblur = save;
+            input.onkeydown = function(ev) {
+                if (ev.key === "Enter") {
+                    save();
+                }
+            };
+            function save() {
+                const newTitle = input.value.trim() || "Sin título";
+                blocks[blockIdx].title = newTitle;
+                renderBoard(blocks);
+            }
+        };
+
+        listTitleBar.appendChild(listTitle);
+        listTitleBar.appendChild(editBtn);
+        listDiv.appendChild(listTitleBar);
+
+        // --- Cards ---
         list.cards.forEach((card, cardIdx) => {
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card';
@@ -70,7 +136,7 @@ function renderBoard(blocks) {
             cardDiv.style.flexDirection = "column";
             cardDiv.style.justifyContent = "space-between";
 
-            // Preview principal
+            // Card header
             const cardHeader = document.createElement('div');
             cardHeader.style.display = "flex";
             cardHeader.style.alignItems = "center";
@@ -81,7 +147,7 @@ function renderBoard(blocks) {
             cardText.style.flex = "1";
             cardText.style.cursor = "pointer";
 
-            // Flechas de mover
+            // Move arrows
             const arrows = document.createElement('div');
             arrows.className = 'card-arrows';
             arrows.style.display = "flex";
@@ -112,7 +178,7 @@ function renderBoard(blocks) {
             cardHeader.appendChild(cardText);
             cardHeader.appendChild(arrows);
 
-            // Due Date
+            // Due date
             const dueDateDiv = document.createElement('div');
             dueDateDiv.className = 'card-due-date';
             dueDateDiv.textContent = card.dueDate ? `Finaliza: ${card.dueDate}` : "Sin fecha de finalización";
@@ -120,7 +186,7 @@ function renderBoard(blocks) {
             cardDiv.appendChild(cardHeader);
             cardDiv.appendChild(dueDateDiv);
 
-            // Drag & drop and event listeners
+            // Drag & drop and events
             cardDiv.draggable = true;
             cardDiv.addEventListener('click', (e) => {
                 if (e.target.closest('.card-arrows')) return;
@@ -141,7 +207,7 @@ function renderBoard(blocks) {
             listDiv.appendChild(cardDiv);
         });
 
-        // New Card button
+        // Add card button
         const addCardDiv = document.createElement('div');
         addCardDiv.className = 'card add-card-ghost';
         addCardDiv.innerHTML = `<span class="add-plus">+</span>`;
@@ -151,7 +217,7 @@ function renderBoard(blocks) {
         };
         listDiv.appendChild(addCardDiv);
 
-        // Drag & drop to drop cards into this list
+        // Drag & drop for dropping cards from other blocks
         listDiv.addEventListener('dragover', e => { e.preventDefault(); });
         listDiv.addEventListener('dragenter', e => {
             if (
@@ -179,27 +245,41 @@ function renderBoard(blocks) {
 
         board.appendChild(listDiv);
     });
+
+    // --- Add block ghost button at the end ---
+    const addBlockDiv = document.createElement('div');
+    addBlockDiv.className = 'list add-block-ghost';
+    addBlockDiv.style.display = 'flex';
+    addBlockDiv.style.alignItems = 'center';
+    addBlockDiv.style.justifyContent = 'center';
+    addBlockDiv.style.border = '2px dashed #2a387c';
+    addBlockDiv.style.background = 'transparent';
+    addBlockDiv.style.color = '#2a387c';
+    addBlockDiv.style.cursor = 'pointer';
+    addBlockDiv.style.minWidth = '220px';
+    addBlockDiv.style.height = '60px';
+    addBlockDiv.style.marginLeft = '8px';
+    addBlockDiv.innerHTML = `<span class="add-plus" style="font-size:2em;">+</span>`;
+    addBlockDiv.onclick = openBlockModal;
+    board.appendChild(addBlockDiv);
 }
 
-// Modal logic for creating/editing cards
+// Modal logic for create/edit cards
 function openCardModal(blockIdx = null, cardIdx = null) {
     document.getElementById('cardModal').style.display = 'flex';
     const modalTitle = document.querySelector('#cardModal h2');
     const dueDateInput = document.getElementById('cardDueDateInput');
     const createdAtDiv = document.getElementById('cardCreatedAt');
     if (blockIdx !== null && cardIdx !== null) {
-        // Addition mode
         editingBlockIdx = blockIdx;
         editingCardIdx = cardIdx;
         const card = blocks[blockIdx].cards[cardIdx];
         document.getElementById('cardTitleInput').value = card.title;
         document.getElementById('cardDescInput').value = card.desc || '';
-        // Show due date if exists
         dueDateInput.value = formatDateToYYYYMMDD(card.dueDate);
         createdAtDiv.textContent = card.createdAt ? `Creada: ${card.createdAt}` : '';
         modalTitle.textContent = card.title;
     } else {
-        // Create new card mode
         editingBlockIdx = null;
         editingCardIdx = null;
         document.getElementById('cardTitleInput').value = '';
@@ -211,9 +291,29 @@ function openCardModal(blockIdx = null, cardIdx = null) {
     document.getElementById('cardTitleInput').focus();
 }
 
-// Close the modal card
 function closeCardModal() {
     document.getElementById('cardModal').style.display = 'none';
+}
+
+// --- Modal for new block (add at the end of your HTML if not present) ---
+if (!document.getElementById('blockModal')) {
+    const modal = document.createElement('div');
+    modal.id = 'blockModal';
+    modal.className = 'modal-overlay';
+    modal.style.display = 'none';
+    modal.innerHTML = `
+        <div class="modal-card" style="min-height:180px;">
+            <button class="close-modal" onclick="closeBlockModal()">×</button>
+            <h2>Crear nuevo bloque</h2>
+            <form id="createBlockForm">
+                <label>
+                    <input id="blockTitleInput" type="text" placeholder="Título del bloque" required>
+                </label>
+                <button type="submit">Crear</button>
+            </form>
+        </div>
+    `;
+    document.body.appendChild(modal);
 }
 
 // Modal form handler
@@ -224,19 +324,16 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const title = document.getElementById('cardTitleInput').value.trim();
             const desc = document.getElementById('cardDescInput').value.trim();
-            const dueDateRaw = document.getElementById('cardDueDateInput').value; // YYYY-MM-DD
+            const dueDateRaw = document.getElementById('cardDueDateInput').value;
             const dueDate = dueDateRaw ? formatDateToDDMMYYYY(dueDateRaw) : '';
             const today = getTodayFormatted();
             if (title) {
                 if (editingBlockIdx !== null && editingCardIdx !== null) {
-                    // Edit existing card
                     let card = blocks[editingBlockIdx].cards[editingCardIdx];
                     card.title = title;
                     card.desc = desc;
                     card.dueDate = dueDate;
-                    // Does not change createdAt
                 } else if (currentAddBlockIdx !== null) {
-                    // New card in existing block
                     blocks[currentAddBlockIdx].cards.push({
                         title,
                         desc,
@@ -246,6 +343,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 closeCardModal();
                 renderBoard(blocks);
+            }
+        };
+    }
+    // --- Handle new block form ---
+    const blockForm = document.getElementById('createBlockForm');
+    if (blockForm) {
+        blockForm.onsubmit = function(e) {
+            e.preventDefault();
+            const title = document.getElementById('blockTitleInput').value.trim();
+            if (title) {
+                blocks.push({ title, cards: [] });
+                closeBlockModal();
+                renderBoard(blocks);
+            } else {
+                document.getElementById('blockTitleInput').focus();
             }
         };
     }

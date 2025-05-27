@@ -293,7 +293,7 @@ body {
     resize: none;
     width: 100%;
     box-sizing: border-box;
-    height: 32px; /* Ajusta según el alto del botón */
+    height: 32px;
 
     padding: 10px 0 10px 25px;
     border: 1px solid #cccccc;
@@ -306,7 +306,7 @@ body {
     width: 100%;
     min-width: 250px;
     box-sizing: border-box;
-    height: 64px; /* Ajusta según el alto del botón */
+    height: 64px;
 
     padding: 10px 0 10px 25px;
     margin-bottom: 15px;
@@ -355,5 +355,69 @@ body {
     padding: 4px;
     margin-top: 2px;
     box-sizing: border-box;
+}
+
+.edit-block-title-btn {
+    color: #2a387c;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+.edit-block-title-btn:hover {
+    opacity: 1;
+    background: #e6edff;
+}
+.edit-block-title-input {
+    font-weight: bold;
+    width: 90%;
+    margin-left: 0;
+}
+
+.add-block-ghost {
+    border: 2px dashed #2a387c !important;
+    background: transparent !important;
+    color: #2a387c !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: none !important;
+    min-width: 220px;
+    min-height: 340px;
+    height: auto;
+    margin-top: 6px;
+    margin-left: 8px;
+    border-radius: 12px;
+    transition: background 0.2s, border-color 0.2s;
+}
+.add-block-ghost:hover {
+    background: #e6edff !important;
+    border-color: #1a255c !important;
+}
+
+#blockTitleInput {
+    resize: none;
+    width: 100%;
+    box-sizing: border-box;
+    height: 32px;
+    padding: 10px 0 10px 25px;
+    border: 1px solid #cccccc;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+#createBlockForm button[type="submit"] {
+    background-color: #2a387c;
+    border: none;
+    border-radius: 20px;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    font-size: 16px;
+    justify-content: center;
+    margin: auto auto 16px auto;
+    max-width: 120px;
+    padding: 10px;
+    width: 100%;
 }
 
