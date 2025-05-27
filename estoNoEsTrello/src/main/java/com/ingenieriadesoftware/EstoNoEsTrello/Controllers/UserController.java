@@ -26,36 +26,18 @@ public class UserController {
     public UserController() {
     }
 
-//    public void registerUser (String email, String password){
-//        ArrayList<User> usersList = new ArrayList<User>();
-//        usersList = UserJsonController.findTotalUsers();
-//        if (usersList == null){
-//            usersList = new ArrayList<User>();
-//        }
-//        User newUser = new User(email,password);
-//        usersList.add(newUser);
-//        UserJsonController.saveUser(newUser);
-//    }
 
     @GetMapping("/loadWorkSpaces")
     public ResponseEntity<ArrayList<WorkSpace>> loadWorkSpaces(@RequestParam("email") String email){
         User user = new User().findUser(email);
-//        if(user.getWorkspaces().isEmpty()){
-//            return new ResponseEntity<ArrayList<WorkSpace>>(user.getWorkspaces(),HttpStatus.BAD_REQUEST);
-//        }
-//        else{
-//            return new ResponseEntity<ArrayList<WorkSpace>>(user.getWorkspaces(),HttpStatus.OK);
-//        }
         return new ResponseEntity<ArrayList<WorkSpace>>(user.getWorkspaces(),HttpStatus.OK);
     }
 
-//    @PostMapping("/createWorkSpace")
-//    public ResponseEntity<String> createWorkSpace(@RequestBody WorkSpace workSpace, @RequestParam("email") String email) throws IOException{
-//        User user = new User(email,"");
-//
-//        WorkSpaceController.addWorkSpace(workSpace, email);
-//        return new ResponseEntity<String>("Espacio de Trabajo Agregado", HttpStatus.OK);
-//    }
+    @GetMapping("/loadBlocks")
+    public ResponseEntity<ArrayList<Block>> loadBlocks(@RequestBody Long id, @RequestParam("email") String email){
+        User user = new User().findUser(email);
+
+    }
 
     @PostMapping("/createWorkSpace")
     public ResponseEntity<Long> createWorkSpace(@RequestBody WorkSpace workSpace, @RequestParam("email") String email) throws IOException{
