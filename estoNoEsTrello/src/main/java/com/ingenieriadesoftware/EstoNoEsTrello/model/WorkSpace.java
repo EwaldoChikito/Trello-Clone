@@ -9,8 +9,12 @@ public class WorkSpace {
     private String name;
     private String description;
     private ArrayList<Block> blocks;
-    private static long idCounter = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+    private static long idCounter = generate12DigitId();
 
+    private static long generate12DigitId() {
+        long id = UUID.randomUUID().getMostSignificantBits();
+        return Math.abs(id % 999_999_999_999L) + 1; // +1 para evitar cero
+    }
 
     public WorkSpace() {
     }

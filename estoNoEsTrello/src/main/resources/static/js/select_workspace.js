@@ -33,10 +33,10 @@ function renderBoards(boardsToRender) {
             <div class="board-desc">${board.desc || board.description}</div>
         `;
         // Ejemplo de eventListener usando el id
-        card.addEventListener('click', () => {
-            console.log('Workspace seleccionado:', card.id);
-            // Aquí puedes manejar la lógica al hacer click
-        });
+//        card.addEventListener('click', () => {
+//            console.log('Workspace seleccionado:', card.id);
+//            // Aquí puedes manejar la lógica al hacer click
+//        });
         boardsGrid.appendChild(card);
     });
 
@@ -66,6 +66,9 @@ var name;
 var desc;
 const emailUser = localStorage.getItem("email");
 var login = comprobarLogIn();
+
+const buttonContainer = document.querySelector('.boards-grid') || document.body;
+let idSaver = null;
 
 // Maneja el submit del modal
 document.addEventListener('DOMContentLoaded', function() {
@@ -138,6 +141,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             };
         }
+
+        buttonContainer.addEventListener('click', (event) => {
+            if (event.target.classList.contains('board-card')) {
+                idSaver = event.target.id;
+                if(idSaver != ""){
+                    localStorage.setItem('workSpaceID',idSaver);
+                    window.location.href = "../workspace_detail.html";
+                }
+            }
+
+
+
+
+
+        })
 
     }
 
