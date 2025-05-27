@@ -18,7 +18,6 @@ public class UserController {
     public UserController() {
     }
 
-
     @GetMapping("/loadWorkSpaces")
     public ResponseEntity<ArrayList<WorkSpace>> loadWorkSpaces(@RequestParam("email") String email){
         User user = new User().findUser(email);
@@ -30,6 +29,14 @@ public class UserController {
         User user = new User().findUser(email);
         WorkSpace workSpace = WorkSpaceController.findWorkSpace(id, user);
         return new ResponseEntity<ArrayList<Block>>(workSpace.getBlocks(),HttpStatus.OK);
+
+    }
+
+    @GetMapping("/loadCards")
+    public ResponseEntity<ArrayList<Card>> loadCards(@RequestParam("email") String email, @RequestParam("blockId") Long id, @RequestParam("workspaceid") Long workSpaceId) throws IOException {
+        User user = new User().findUser(email);
+        Block block = BlockController.findBlock(id, user, workSpaceId);
+        return new ResponseEntity<ArrayList<Card>>(block.getCards(),HttpStatus.OK);
 
     }
 
