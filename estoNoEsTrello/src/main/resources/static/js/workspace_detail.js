@@ -262,6 +262,7 @@ function openCardModal(blockIdx = null, cardIdx = null) {
     if (blockIdx !== null && cardIdx !== null) {
         editingBlockIdx = blockIdx;
         editingCardIdx = cardIdx;
+        currentAddBlockIdx = null; // <-- IMPORTANTE: resetea para evitar conflictos
         const card = blocks[blockIdx].cards[cardIdx];
         document.getElementById('cardTitleInput').value = card.title;
         document.getElementById('cardDescInput').value = card.desc || '';
@@ -271,6 +272,7 @@ function openCardModal(blockIdx = null, cardIdx = null) {
     } else {
         editingBlockIdx = null;
         editingCardIdx = null;
+        // currentAddBlockIdx se setea desde el botón "+"
         document.getElementById('cardTitleInput').value = '';
         document.getElementById('cardDescInput').value = '';
         dueDateInput.value = '';
@@ -282,6 +284,10 @@ function openCardModal(blockIdx = null, cardIdx = null) {
 
 function closeCardModal() {
     document.getElementById('cardModal').style.display = 'none';
+    // Limpia los índices para evitar efectos residuales
+    editingBlockIdx = null;
+    editingCardIdx = null;
+    currentAddBlockIdx = null;
 }
 
 // --- Modal for new block (add at the end of your HTML if not present) ---
@@ -350,11 +356,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else if (currentAddBlockIdx !== null) {
                         // Crear tarjeta en backend y obtener id
                         const cardData = {
-                            id:null,
-                            title:title,
-                            desc:desc,
+                            id: null,
+                            title: title,
+                            desc: desc,
                             createdAt: today,
-                            dueDate:dueDate
+                            dueDate: dueDate
                         };
                         const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
                             method: 'POST',
