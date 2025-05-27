@@ -55,6 +55,18 @@ public class UserController {
         return new ResponseEntity<Long>(block1.getId(), HttpStatus.OK);
     }
 
+    @PostMapping("/createCard")
+    public ResponseEntity<Long> createCard(@RequestBody Card card, @RequestParam("blockId") Long blockID, @RequestParam("email") String email, @RequestParam("workspaceid") Long workSpaceId) throws IOException{
+        User user = new User().findUser(email);
+
+//        Block block1 = new Block(null, block.getName(), block.getCards());
+        Card card1 = new Card(null,card.getName(),card.getDescription(),card.getCreationDate(),card.getFinalDate());
+
+        CardController.addCard(card1, user, blockID,workSpaceId);
+
+        return new ResponseEntity<Long>(card1.getId(), HttpStatus.OK);
+    }
+
     @PostMapping("/registro")
     public ResponseEntity<String> registro (@RequestBody User user) {
         if (user == null) {

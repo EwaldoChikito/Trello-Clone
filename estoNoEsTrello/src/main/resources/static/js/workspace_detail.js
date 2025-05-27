@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const dueDateRaw = document.getElementById('cardDueDateInput').value;
                 const dueDate = dueDateRaw ? formatDateToDDMMYYYY(dueDateRaw) : '';
                 const today = getTodayFormatted();
-                if (title !== "") {
+                if (title) {
                     if (editingBlockIdx !== null && editingCardIdx !== null) {
                         let card = blocks[editingBlockIdx].cards[editingCardIdx];
                         card.title = title;
@@ -350,12 +350,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else if (currentAddBlockIdx !== null) {
                         // Crear tarjeta en backend y obtener id
                         const cardData = {
-                            title,
-                            desc,
+                            id:null,
+                            title:title,
+                            desc:desc,
                             createdAt: today,
-                            dueDate
+                            dueDate:dueDate
                         };
-                        const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}`, {
+                        const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/json',
@@ -387,6 +388,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 const title = document.getElementById('blockTitleInput').value.trim();
                 if (title !== "") {
+
                     let crearBlock = async () => {
                         const Block = {
                             id: null,
@@ -415,7 +417,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             alert("CREAR BLOQUE FALLO", errorRespuesta, "error");
                         }
                     }
+
                     crearBlock();
+
                 } else {
                     document.getElementById('blockTitleInput').focus();
                 }

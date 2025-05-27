@@ -16,6 +16,14 @@ public class Card {
     public Card() {
     }
 
+    public Card(Long id, String name, String description, LocalDate creationDate, LocalDate finalDate) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.creationDate = creationDate;
+        this.finalDate = finalDate;
+    }
+
     public Card(Long id, String name, String description, LocalDate creationDate, LocalDate finalDate, boolean status) {
         this.id = id;
         this.name = name;

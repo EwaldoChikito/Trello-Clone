@@ -13,9 +13,9 @@ public class BlockController {
     public BlockController() {
     }
 
+//        ArrayList<Block> blockArrayList = WorkSpaceController.findWorkSpace(workSpaceId,user).getBlocks();
 
     public static void addBlock(Block block, User user, Long workSpaceId) throws IOException {
-//        ArrayList<Block> blockArrayList = WorkSpaceController.findWorkSpace(workSpaceId,user).getBlocks();
         ArrayList<User> usersList = UserJsonController.findTotalUsers();
         User currentUser = new User();
         for (int i=0;i<usersList.size();i++)
@@ -27,8 +27,18 @@ public class BlockController {
             }
         }
         WorkSpaceController.findWorkSpace(workSpaceId,currentUser).getBlocks().add(block);
-//        currentUser.getWorkspaces().add(workSpace);
         UserJsonController.saveUser(currentUser);
+    }
 
+    static public Block findBlock(Long id, User user, Long workSpaceId) throws IOException {
+       ArrayList<Block> blockArrayList = WorkSpaceController.findWorkSpace(workSpaceId,user).getBlocks();
+       Block blockAux = new Block();
+        for (int i=0;i<blockArrayList.size();i++) {
+            if (blockArrayList.get(i).getId().equals(id)){
+                blockAux = blockArrayList.get(i);
+                return blockAux;
+            }
+        }
+        return blockAux;
     }
 }
