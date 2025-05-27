@@ -18,20 +18,7 @@ function formatDateToYYYYMMDD(dateStr) {
 }
 
 // --- Initial data with dates in DD/MM/YYYY ---
-let blocks = [
-//    { title: "Pendientes", cards: [
-//            {title: "Tarea 1", desc: "", createdAt: "01/06/2024", dueDate: "10/06/2024"},
-//            {title: "Tarea 2", desc: "", createdAt: "02/06/2024", dueDate: "12/06/2024"},
-//            {title: "Tarea 3", desc: "", createdAt: "03/06/2024", dueDate: "15/06/2024"}
-//        ] },
-//    { title: "En Progreso", cards: [
-//            {title: "Tarea 4", desc: "", createdAt: "04/06/2024", dueDate: "16/06/2024"},
-//            {title: "Tarea 5", desc: "", createdAt: "05/06/2024", dueDate: "18/06/2024"}
-//        ] },
-//    { title: "Completadas", cards: [
-//            {title: "Tarea 6", desc: "", createdAt: "06/06/2024", dueDate: "20/06/2024"}
-//        ] }
-];
+let blocks = [];
 
 let dragged = { blockIdx: null, cardIdx: null, cardElem: null };
 let placeholder = document.createElement('div');
@@ -78,10 +65,10 @@ function renderBoard(blocks) {
         listTitleBar.style.justifyContent = "space-between";
         listTitleBar.style.alignItems = "center";
 
-        // Block title
+        // Block title (soporta title o name)
         const listTitle = document.createElement('div');
         listTitle.className = 'list-title';
-        listTitle.textContent = list.title;
+        listTitle.textContent = list.title || list.name || "Sin título";
         listTitle.style.flex = "1";
 
         // Edit button
@@ -99,7 +86,7 @@ function renderBoard(blocks) {
             // Replace title with input
             const input = document.createElement('input');
             input.type = "text";
-            input.value = list.title;
+            input.value = list.title || list.name || "";
             input.className = "edit-block-title-input";
             input.style.flex = "1";
             input.style.fontSize = "1em";
@@ -128,84 +115,86 @@ function renderBoard(blocks) {
         listTitleBar.appendChild(editBtn);
         listDiv.appendChild(listTitleBar);
 
-//        // --- Cards ---
-//        list.cards.forEach((card, cardIdx) => {
-//            const cardDiv = document.createElement('div');
-//            cardDiv.className = 'card';
-//            cardDiv.style.display = "flex";
-//            cardDiv.style.flexDirection = "column";
-//            cardDiv.style.justifyContent = "space-between";
-//
-//            // Card header
-//            const cardHeader = document.createElement('div');
-//            cardHeader.style.display = "flex";
-//            cardHeader.style.alignItems = "center";
-//            cardHeader.style.justifyContent = "space-between";
-//
-//            const cardText = document.createElement('span');
-//            cardText.textContent = card.title;
-//            cardText.style.flex = "1";
-//            cardText.style.cursor = "pointer";
-//
-//            // Move arrows
-//            const arrows = document.createElement('div');
-//            arrows.className = 'card-arrows';
-//            arrows.style.display = "flex";
-//            arrows.style.flexDirection = "column";
-//            arrows.style.gap = "2px";
-//
-//            const upBtn = document.createElement('button');
-//            upBtn.textContent = "↑";
-//            upBtn.disabled = cardIdx === 0;
-//            upBtn.style.cursor = upBtn.disabled ? "not-allowed" : "pointer";
-//            upBtn.onclick = e => {
-//                e.stopPropagation();
-//                moveCard(blockIdx, cardIdx, -1);
-//            };
-//
-//            const downBtn = document.createElement('button');
-//            downBtn.textContent = "↓";
-//            downBtn.disabled = cardIdx === list.cards.length - 1;
-//            downBtn.style.cursor = downBtn.disabled ? "not-allowed" : "pointer";
-//            downBtn.onclick = e => {
-//                e.stopPropagation();
-//                moveCard(blockIdx, cardIdx, 1);
-//            };
-//
-//            arrows.appendChild(upBtn);
-//            arrows.appendChild(downBtn);
-//
-//            cardHeader.appendChild(cardText);
-//            cardHeader.appendChild(arrows);
-//
-//            // Due date
-//            const dueDateDiv = document.createElement('div');
-//            dueDateDiv.className = 'card-due-date';
-//            dueDateDiv.textContent = card.dueDate ? `Finaliza: ${card.dueDate}` : "Sin fecha de finalización";
-//
-//            cardDiv.appendChild(cardHeader);
-//            cardDiv.appendChild(dueDateDiv);
-//
-//            // Drag & drop and events
-//            cardDiv.draggable = true;
-//            cardDiv.addEventListener('click', (e) => {
-//                if (e.target.closest('.card-arrows')) return;
-//                openCardModal(blockIdx, cardIdx);
-//            });
-//            cardDiv.addEventListener('dragstart', e => {
-//                dragged = { blockIdx, cardIdx, cardElem: cardDiv };
-//                setTimeout(() => {
-//                    cardDiv.style.visibility = 'hidden';
-//                }, 0);
-//            });
-//            cardDiv.addEventListener('dragend', e => {
-//                cardDiv.style.visibility = '';
-//                clearPlaceholder();
-//                dragged = { blockIdx: null, cardIdx: null, cardElem: null };
-//            });
-//
-//            listDiv.appendChild(cardDiv);
-//        });
+        // --- Cards ---
+        if (Array.isArray(list.cards)) {
+            list.cards.forEach((card, cardIdx) => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card';
+                cardDiv.style.display = "flex";
+                cardDiv.style.flexDirection = "column";
+                cardDiv.style.justifyContent = "space-between";
+
+                // Card header
+                const cardHeader = document.createElement('div');
+                cardHeader.style.display = "flex";
+                cardHeader.style.alignItems = "center";
+                cardHeader.style.justifyContent = "space-between";
+
+                const cardText = document.createElement('span');
+                cardText.textContent = card.title;
+                cardText.style.flex = "1";
+                cardText.style.cursor = "pointer";
+
+                // Move arrows
+                const arrows = document.createElement('div');
+                arrows.className = 'card-arrows';
+                arrows.style.display = "flex";
+                arrows.style.flexDirection = "column";
+                arrows.style.gap = "2px";
+
+                const upBtn = document.createElement('button');
+                upBtn.textContent = "↑";
+                upBtn.disabled = cardIdx === 0;
+                upBtn.style.cursor = upBtn.disabled ? "not-allowed" : "pointer";
+                upBtn.onclick = e => {
+                    e.stopPropagation();
+                    moveCard(blockIdx, cardIdx, -1);
+                };
+
+                const downBtn = document.createElement('button');
+                downBtn.textContent = "↓";
+                downBtn.disabled = cardIdx === list.cards.length - 1;
+                downBtn.style.cursor = downBtn.disabled ? "not-allowed" : "pointer";
+                downBtn.onclick = e => {
+                    e.stopPropagation();
+                    moveCard(blockIdx, cardIdx, 1);
+                };
+
+                arrows.appendChild(upBtn);
+                arrows.appendChild(downBtn);
+
+                cardHeader.appendChild(cardText);
+                cardHeader.appendChild(arrows);
+
+                // Due date
+                const dueDateDiv = document.createElement('div');
+                dueDateDiv.className = 'card-due-date';
+                dueDateDiv.textContent = card.dueDate ? `Finaliza: ${card.dueDate}` : "Sin fecha de finalización";
+
+                cardDiv.appendChild(cardHeader);
+                cardDiv.appendChild(dueDateDiv);
+
+                // Drag & drop and events
+                cardDiv.draggable = true;
+                cardDiv.addEventListener('click', (e) => {
+                    if (e.target.closest('.card-arrows')) return;
+                    openCardModal(blockIdx, cardIdx);
+                });
+                cardDiv.addEventListener('dragstart', e => {
+                    dragged = { blockIdx, cardIdx, cardElem: cardDiv };
+                    setTimeout(() => {
+                        cardDiv.style.visibility = 'hidden';
+                    }, 0);
+                });
+                cardDiv.addEventListener('dragend', e => {
+                    cardDiv.style.visibility = '';
+                    clearPlaceholder();
+                    dragged = { blockIdx: null, cardIdx: null, cardElem: null };
+                });
+
+                listDiv.appendChild(cardDiv);
+            });
+        }
 
         // Add card button
         const addCardDiv = document.createElement('div');
@@ -323,14 +312,14 @@ document.addEventListener('DOMContentLoaded', function() {
         let pedirBlocks = async() => {
             event.preventDefault();
             const respuesta = await fetch(`/user/loadBlocks?email=${emailUser}&workspaceid=${workSpaceID}`,
-            {
-                method: "GET",
-                headers:
                 {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                }
-            });
+                    method: "GET",
+                    headers:
+                        {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json",
+                        }
+                });
             if (respuesta.ok)
             {
                 const bloques = await respuesta.json();
@@ -353,10 +342,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const dueDate = dueDateRaw ? formatDateToDDMMYYYY(dueDateRaw) : '';
                 const today = getTodayFormatted();
                 if (title !== "") {
-
-
-
-
                     if (editingBlockIdx !== null && editingCardIdx !== null) {
                         let card = blocks[editingBlockIdx].cards[editingCardIdx];
                         card.title = title;
@@ -395,7 +380,6 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         }
 
-
         // --- Handle new block form ---
         const blockForm = document.getElementById('createBlockForm');
         if (blockForm) {
@@ -403,7 +387,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 const title = document.getElementById('blockTitleInput').value.trim();
                 if (title !== "") {
-
                     let crearBlock = async () => {
                         const Block = {
                             id: null,
@@ -418,11 +401,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             body: JSON.stringify(Block)
                         });
                         if (petition.ok) {
-                            const id = await petition.json();
+                            const block = await petition.json();
                             blocks.push({
-                                id: id,
-                                title: name,
-                                cards: [] });
+                                id: block.id,
+                                title: block.name,
+                                cards: []
+                            });
                             closeBlockModal();
                             renderBoard(blocks);
                         }
@@ -432,14 +416,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                     crearBlock();
-
                 } else {
                     document.getElementById('blockTitleInput').focus();
                 }
             };
         }
     }
-
 });
 
 renderBoard(blocks);
@@ -447,7 +429,6 @@ renderBoard(blocks);
 const userName = "Juan Pérez";
 document.getElementById('userName').textContent = userName;
 document.title = `Espacio de trabajo de ${userName}`;
-
 
 function comprobarLogIn()
 {
