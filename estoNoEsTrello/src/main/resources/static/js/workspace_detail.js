@@ -61,18 +61,26 @@ function renderBoard(blocks) {
 
         // --- Block title bar and edit button ---
         const listTitleBar = document.createElement('div');
-        listTitleBar.className = 'list-title-bar';
+        listTitleBar.style.display = "flex";
+        listTitleBar.style.justifyContent = "space-between";
+        listTitleBar.style.alignItems = "center";
 
         // Block title (soporta title o name)
         const listTitle = document.createElement('div');
         listTitle.className = 'list-title';
         listTitle.textContent = list.title || list.name || "Sin título";
+        listTitle.style.flex = "1";
 
         // Edit button
         const editBtn = document.createElement('button');
         editBtn.textContent = "✎";
         editBtn.title = "Edit block name";
         editBtn.className = 'edit-block-title-btn';
+        editBtn.style.marginLeft = "8px";
+        editBtn.style.background = "none";
+        editBtn.style.border = "none";
+        editBtn.style.cursor = "pointer";
+        editBtn.style.fontSize = "1.1em";
         editBtn.onclick = function(e) {
             e.stopPropagation();
             // Replace title with input
@@ -80,6 +88,11 @@ function renderBoard(blocks) {
             input.type = "text";
             input.value = list.title || list.name || "";
             input.className = "edit-block-title-input";
+            input.style.flex = "1";
+            input.style.fontSize = "1em";
+            input.style.padding = "2px 6px";
+            input.style.borderRadius = "6px";
+            input.style.border = "1px solid #ccc";
             listTitleBar.replaceChild(input, listTitle);
             input.focus();
             input.select();
@@ -106,25 +119,33 @@ function renderBoard(blocks) {
         if (Array.isArray(list.cards)) {
             list.cards.forEach((card, cardIdx) => {
                 const cardDiv = document.createElement('div');
-                cardDiv.className = 'card card-flex-col';
+                cardDiv.className = 'card';
+                cardDiv.style.display = "flex";
+                cardDiv.style.flexDirection = "column";
+                cardDiv.style.justifyContent = "space-between";
 
                 // Card header
                 const cardHeader = document.createElement('div');
-                cardHeader.className = 'card-header-flex';
+                cardHeader.style.display = "flex";
+                cardHeader.style.alignItems = "center";
+                cardHeader.style.justifyContent = "space-between";
 
                 const cardText = document.createElement('span');
                 cardText.textContent = card.title;
-                cardText.className = 'card-title-span';
+                cardText.style.flex = "1";
+                cardText.style.cursor = "pointer";
 
                 // Move arrows
                 const arrows = document.createElement('div');
                 arrows.className = 'card-arrows';
+                arrows.style.display = "flex";
+                arrows.style.flexDirection = "column";
+                arrows.style.gap = "2px";
 
                 const upBtn = document.createElement('button');
                 upBtn.textContent = "↑";
                 upBtn.disabled = cardIdx === 0;
-                upBtn.className = 'card-arrow-btn';
-                if (upBtn.disabled) upBtn.classList.add('card-arrow-btn-disabled');
+                upBtn.style.cursor = upBtn.disabled ? "not-allowed" : "pointer";
                 upBtn.onclick = e => {
                     e.stopPropagation();
                     moveCard(blockIdx, cardIdx, -1);
@@ -133,8 +154,7 @@ function renderBoard(blocks) {
                 const downBtn = document.createElement('button');
                 downBtn.textContent = "↓";
                 downBtn.disabled = cardIdx === list.cards.length - 1;
-                downBtn.className = 'card-arrow-btn';
-                if (downBtn.disabled) downBtn.classList.add('card-arrow-btn-disabled');
+                downBtn.style.cursor = downBtn.disabled ? "not-allowed" : "pointer";
                 downBtn.onclick = e => {
                     e.stopPropagation();
                     moveCard(blockIdx, cardIdx, 1);
@@ -218,6 +238,16 @@ function renderBoard(blocks) {
     // --- Add block ghost button at the end ---
     const addBlockDiv = document.createElement('div');
     addBlockDiv.className = 'list add-block-ghost';
+    addBlockDiv.style.display = 'flex';
+    addBlockDiv.style.alignItems = 'center';
+    addBlockDiv.style.justifyContent = 'center';
+    addBlockDiv.style.border = '2px dashed #2a387c';
+    addBlockDiv.style.background = 'transparent';
+    addBlockDiv.style.color = '#2a387c';
+    addBlockDiv.style.cursor = 'pointer';
+    addBlockDiv.style.minWidth = '220px';
+    addBlockDiv.style.height = '60px';
+    addBlockDiv.style.marginLeft = '8px';
     addBlockDiv.innerHTML = `<span class="add-plus" style="font-size:2em;">+</span>`;
     addBlockDiv.onclick = openBlockModal;
     board.appendChild(addBlockDiv);
@@ -308,29 +338,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         pedirBlocks();
 
-        let pedirCards = async() => {
-            event.preventDefault();
-            const respuesta = await fetch(`/user/loadCards?email=${emailUser}&blockId=${blocks[currentAddBlockIdx].id}&workspaceid=${workSpaceID}`,
-                {
-                    method: "GET",
-                    headers:
-                        {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                        }
-                });
-            if (respuesta.ok)
-            {
-                const bloques = await respuesta.json();
-                blocks = bloques;
-                renderBoard(blocks);
-            }
-            else{
-                alert ("Un error inesperado","No sé que","error");
-            }
-        }
-//        pedirCards();
-
         const form = document.getElementById('createCardForm');
         if (form) {
             form.onsubmit = async function(e) {
@@ -350,12 +357,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Crear tarjeta en backend y obtener id
                         const cardData = {
                             id: null,
-                            name: title,
-                            description: desc,
-                            creationDate: today,
-                            finalDate: dueDate
+                            title: title,
+                            desc: desc,
+                            createdAt: today,
+                            dueDate: dueDate
                         };
-                        console.log(`workspaceid=${workSpaceID}`);
                         const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
                             method: 'POST',
                             headers: {
