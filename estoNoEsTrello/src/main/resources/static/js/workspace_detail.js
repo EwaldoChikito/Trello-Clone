@@ -1,7 +1,36 @@
+// --- Date utilities ---
+function getTodayFormatted() {
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+function formatDateToDDMMYYYY(dateStr) {
+    if (!dateStr) return '';
+    const [year, month, day] = dateStr.split('-');
+    return `${day}/${month}/${year}`;
+}
+function formatDateToYYYYMMDD(dateStr) {
+    // Formats DD/MM/YYYY into YYYY-MM-DD
+    if (!dateStr) return '';
+    const [day, month, year] = dateStr.split('/');
+    return `${year}-${month}-${day}`;
+}
+
 let blocks = [
-    { title: "Pendientes", cards: [{title: "Tarea 1", desc: ""}, {title: "Tarea 2", desc: ""}, {title: "Tarea 3", desc: ""}] },
-    { title: "En Progreso", cards: [{title: "Tarea 4", desc: ""}, {title: "Tarea 5", desc: ""}] },
-    { title: "Completadas", cards: [{title: "Tarea 6", desc: ""}] }
+    { title: "Pendientes", cards: [
+            {title: "Tarea 1", desc: "", createdAt: "01/06/2024", dueDate: "10/06/2024"},
+            {title: "Tarea 2", desc: "", createdAt: "02/06/2024", dueDate: "12/06/2024"},
+            {title: "Tarea 3", desc: "", createdAt: "03/06/2024", dueDate: "15/06/2024"}
+        ] },
+    { title: "En Progreso", cards: [
+            {title: "Tarea 4", desc: "", createdAt: "04/06/2024", dueDate: "16/06/2024"},
+            {title: "Tarea 5", desc: "", createdAt: "05/06/2024", dueDate: "18/06/2024"}
+        ] },
+    { title: "Completadas", cards: [
+            {title: "Tarea 6", desc: "", createdAt: "06/06/2024", dueDate: "20/06/2024"}
+        ] }
 ];
 
 let dragged = { blockIdx: null, cardIdx: null, cardElem: null };
@@ -38,15 +67,14 @@ function renderBoard(blocks) {
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card';
             cardDiv.style.display = "flex";
-            cardDiv.style.alignItems = "center";
+            cardDiv.style.flexDirection = "column";
             cardDiv.style.justifyContent = "space-between";
 
-            // Abrir modal en modo edición
-            cardDiv.addEventListener('click', (e) => {
-                // Evita abrir modal si se hace clic en las flechas
-                if (e.target.closest('.card-arrows')) return;
-                openCardModal(blockIdx, cardIdx);
-            });
+            // Preview principal
+            const cardHeader = document.createElement('div');
+            cardHeader.style.display = "flex";
+            cardHeader.style.alignItems = "center";
+            cardHeader.style.justifyContent = "space-between";
 
             const cardText = document.createElement('span');
             cardText.textContent = card.title;
@@ -81,11 +109,23 @@ function renderBoard(blocks) {
             arrows.appendChild(upBtn);
             arrows.appendChild(downBtn);
 
-            cardDiv.appendChild(cardText);
-            cardDiv.appendChild(arrows);
+            cardHeader.appendChild(cardText);
+            cardHeader.appendChild(arrows);
 
-            // Drag & drop solo entre bloques
+            // Due Date
+            const dueDateDiv = document.createElement('div');
+            dueDateDiv.className = 'card-due-date';
+            dueDateDiv.textContent = card.dueDate ? `Finaliza: ${card.dueDate}` : "Sin fecha de finalización";
+
+            cardDiv.appendChild(cardHeader);
+            cardDiv.appendChild(dueDateDiv);
+
+            // Drag & drop and event listeners
             cardDiv.draggable = true;
+            cardDiv.addEventListener('click', (e) => {
+                if (e.target.closest('.card-arrows')) return;
+                openCardModal(blockIdx, cardIdx);
+            });
             cardDiv.addEventListener('dragstart', e => {
                 dragged = { blockIdx, cardIdx, cardElem: cardDiv };
                 setTimeout(() => {
@@ -101,7 +141,7 @@ function renderBoard(blocks) {
             listDiv.appendChild(cardDiv);
         });
 
-        // Botón para añadir nueva tarjeta (abre el modal)
+        // New Card button
         const addCardDiv = document.createElement('div');
         addCardDiv.className = 'card add-card-ghost';
         addCardDiv.innerHTML = `<span class="add-plus">+</span>`;
@@ -111,10 +151,8 @@ function renderBoard(blocks) {
         };
         listDiv.appendChild(addCardDiv);
 
-        // Drag & drop solo para soltar tarjetas de otros bloques
-        listDiv.addEventListener('dragover', e => {
-            e.preventDefault();
-        });
+        // Drag & drop to drop cards into this list
+        listDiv.addEventListener('dragover', e => { e.preventDefault(); });
         listDiv.addEventListener('dragenter', e => {
             if (
                 dragged.cardElem &&
@@ -143,30 +181,42 @@ function renderBoard(blocks) {
     });
 }
 
-// Modal lógica
+// Modal logic for creating/editing cards
 function openCardModal(blockIdx = null, cardIdx = null) {
     document.getElementById('cardModal').style.display = 'flex';
+    const modalTitle = document.querySelector('#cardModal h2');
+    const dueDateInput = document.getElementById('cardDueDateInput');
+    const createdAtDiv = document.getElementById('cardCreatedAt');
     if (blockIdx !== null && cardIdx !== null) {
-        // Modo edición
+        // Addition mode
         editingBlockIdx = blockIdx;
         editingCardIdx = cardIdx;
         const card = blocks[blockIdx].cards[cardIdx];
         document.getElementById('cardTitleInput').value = card.title;
         document.getElementById('cardDescInput').value = card.desc || '';
+        // Show due date if exists
+        dueDateInput.value = formatDateToYYYYMMDD(card.dueDate);
+        createdAtDiv.textContent = card.createdAt ? `Creada: ${card.createdAt}` : '';
+        modalTitle.textContent = card.title;
     } else {
-        // Modo crear
+        // Create new card mode
         editingBlockIdx = null;
         editingCardIdx = null;
         document.getElementById('cardTitleInput').value = '';
         document.getElementById('cardDescInput').value = '';
+        dueDateInput.value = '';
+        createdAtDiv.textContent = '';
+        modalTitle.textContent = "Crear nueva tarjeta";
     }
     document.getElementById('cardTitleInput').focus();
 }
+
+// Close the modal card
 function closeCardModal() {
     document.getElementById('cardModal').style.display = 'none';
 }
 
-// Manejar el submit del formulario del modal
+// Modal form handler
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('createCardForm');
     if (form) {
@@ -174,13 +224,25 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const title = document.getElementById('cardTitleInput').value.trim();
             const desc = document.getElementById('cardDescInput').value.trim();
+            const dueDateRaw = document.getElementById('cardDueDateInput').value; // YYYY-MM-DD
+            const dueDate = dueDateRaw ? formatDateToDDMMYYYY(dueDateRaw) : '';
+            const today = getTodayFormatted();
             if (title) {
                 if (editingBlockIdx !== null && editingCardIdx !== null) {
-                    // Editar tarjeta existente
-                    blocks[editingBlockIdx].cards[editingCardIdx] = { title, desc };
+                    // Edit existing card
+                    let card = blocks[editingBlockIdx].cards[editingCardIdx];
+                    card.title = title;
+                    card.desc = desc;
+                    card.dueDate = dueDate;
+                    // Does not change createdAt
                 } else if (currentAddBlockIdx !== null) {
-                    // Crear nueva tarjeta
-                    blocks[currentAddBlockIdx].cards.push({ title, desc });
+                    // New card in existing block
+                    blocks[currentAddBlockIdx].cards.push({
+                        title,
+                        desc,
+                        createdAt: today,
+                        dueDate
+                    });
                 }
                 closeCardModal();
                 renderBoard(blocks);
