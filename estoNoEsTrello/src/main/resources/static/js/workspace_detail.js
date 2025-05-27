@@ -201,7 +201,7 @@ function renderBoard(blocks) {
         addCardDiv.className = 'card add-card-ghost';
         addCardDiv.innerHTML = `<span class="add-plus">+</span>`;
         addCardDiv.onclick = function() {
-            currentAddBlockIdx = blockIdx;
+            currentAddBlockIdx = blockIdx; // Solo aquí se setea
             openCardModal();
         };
         listDiv.appendChild(addCardDiv);
@@ -262,7 +262,7 @@ function openCardModal(blockIdx = null, cardIdx = null) {
     if (blockIdx !== null && cardIdx !== null) {
         editingBlockIdx = blockIdx;
         editingCardIdx = cardIdx;
-        currentAddBlockIdx = null; // <-- IMPORTANTE: resetea para evitar conflictos
+        // NO modificar currentAddBlockIdx aquí
         const card = blocks[blockIdx].cards[cardIdx];
         document.getElementById('cardTitleInput').value = card.title;
         document.getElementById('cardDescInput').value = card.desc || '';
@@ -272,7 +272,7 @@ function openCardModal(blockIdx = null, cardIdx = null) {
     } else {
         editingBlockIdx = null;
         editingCardIdx = null;
-        // currentAddBlockIdx se setea desde el botón "+"
+        // currentAddBlockIdx se setea solo desde el botón "+"
         document.getElementById('cardTitleInput').value = '';
         document.getElementById('cardDescInput').value = '';
         dueDateInput.value = '';
