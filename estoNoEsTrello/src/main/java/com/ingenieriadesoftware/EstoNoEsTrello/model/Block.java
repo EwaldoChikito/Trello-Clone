@@ -47,6 +47,9 @@ public class Block {
     }
 
     public ArrayList<Card> getCards() {
+        if (this.cards == null){
+            return cards = new ArrayList<Card>();
+        }
         return cards;
     }
 
