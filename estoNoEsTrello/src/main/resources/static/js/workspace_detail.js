@@ -402,7 +402,7 @@ document.addEventListener('DOMContentLoaded', function() {
             blockForm.onsubmit = async function(e) {
                 e.preventDefault();
                 const title = document.getElementById('blockTitleInput').value.trim();
-                if (title) {
+                if (title !== "") {
 
                     let crearBlock = async () => {
                         const Block = {
@@ -418,7 +418,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             body: JSON.stringify(Block)
                         });
                         if (petition.ok) {
-                            alert("BELLACO", errorRespuesta, "error");
                             const id = await petition.json();
                             blocks.push({
                                 id: id,
@@ -432,6 +431,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             alert("CREAR BLOQUE FALLO", errorRespuesta, "error");
                         }
                     }
+                    crearBlock();
 
                 } else {
                     document.getElementById('blockTitleInput').focus();
