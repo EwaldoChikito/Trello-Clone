@@ -4,7 +4,8 @@ function getTodayFormatted() {
     const day = String(today.getDate()).padStart(2, '0');
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const year = today.getFullYear();
-    return `${day}/${month}/${year}`;
+    // Devuelve en formato yyyy-MM-dd
+    return `${year}-${month}-${day}`;
 }
 function formatDateToDDMMYYYY(dateStr) {
     if (!dateStr) return '';
@@ -13,6 +14,8 @@ function formatDateToDDMMYYYY(dateStr) {
 }
 function formatDateToYYYYMMDD(dateStr) {
     if (!dateStr) return '';
+    // Si ya está en formato yyyy-MM-dd, retorna igual
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
     const [day, month, year] = dateStr.split('/');
     return `${year}-${month}-${day}`;
 }
