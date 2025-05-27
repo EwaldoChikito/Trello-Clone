@@ -23,7 +23,7 @@ public class WorkSpaceController {
                 UserJsonController.deleteUser(user.getEmail());
             }
         }
-        currentUser.getWorkspaces(user.getEmail()).add(workSpace);
+        currentUser.getWorkspaces().add(workSpace);
         UserJsonController.saveUser(currentUser);
     }
 }

@@ -9,7 +9,8 @@ public class WorkSpace {
     private String name;
     private String description;
     private ArrayList<Block> blocks;
-    private static long idCounter = 1L;
+    private static long idCounter = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+
 
     public WorkSpace() {
     }

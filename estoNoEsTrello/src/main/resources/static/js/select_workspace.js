@@ -11,7 +11,7 @@ function comprobarLogIn()
 }
 
 // Array de boards (puedes reemplazarlo por fetch en el futuro)
-const boards = [
+let boards = [
 //    { title: "Proyecto Web", desc: "Tareas y seguimiento del proyecto web." },
 //    { title: "Marketing", desc: "Campañas y estrategias de marketing." },
 //    { title: "Personal", desc: "Organiza tus tareas personales." },
@@ -84,7 +84,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (respuesta.ok)
             {
                 const workspaces = await respuesta.json();
-                renderBoards(workspaces);
+                boards = workspaces;
+                renderBoards(boards);
             }
             else{
                 alert ("Un error inesperado","No sé que","error");
@@ -119,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (petition.ok) {
                             const id = await petition.json(); // El backend retorna el id
                             // Agrega el nuevo workspace al array con su id
+
                             boards.push({
                                 id: id,
                                 name: name,
