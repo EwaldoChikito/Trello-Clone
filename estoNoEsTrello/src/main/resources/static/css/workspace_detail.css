@@ -421,3 +421,30 @@ body {
     width: 100%;
 }
 
+/* Barra de título del bloque */
+.list-title-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Cabecera de la tarjeta (título + flechas) */
+.card-header-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Contenedor de la tarjeta en columna */
+.card-flex-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Título de la tarjeta */
+.card-title-span {
+    flex: 1;
+    cursor: pointer;
+}
+
