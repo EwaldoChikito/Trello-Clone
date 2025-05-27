@@ -24,9 +24,15 @@ public class WorkSpaceController {
                 UserJsonController.deleteUser(u.getEmail());
                 UserJsonController.saveUser(u);
                 break;
+        for (int i=0;i<usersList.size();i++)
+        {
+            if (usersList.get(i).getEmail().equals(user.getEmail()))
+            {
+                currentUser=usersList.get(i);
+                UserJsonController.deleteUser(user.getEmail());
             }
         }
-        currentUser.getWorkspaces(user.getEmail()).add(workSpace);
+        currentUser.getWorkspaces().add(workSpace);
         UserJsonController.saveUser(currentUser);
     }
 }
