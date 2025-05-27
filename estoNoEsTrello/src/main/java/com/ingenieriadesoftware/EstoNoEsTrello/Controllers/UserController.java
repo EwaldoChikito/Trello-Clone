@@ -2,6 +2,7 @@ package com.ingenieriadesoftware.EstoNoEsTrello.Controllers;
 
 import com.ingenieriadesoftware.EstoNoEsTrello.JsonControllers.UserJsonController;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.Block;
+import com.ingenieriadesoftware.EstoNoEsTrello.model.Card;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.User;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.WorkSpace;
 import org.springframework.http.HttpStatus;
@@ -24,8 +25,8 @@ public class UserController {
         return new ResponseEntity<ArrayList<WorkSpace>>(user.getWorkspaces(),HttpStatus.OK);
     }
 
-    @PostMapping("/loadBlocks")
-    public ResponseEntity<ArrayList<Block>> loadBlocks(@RequestBody Long id, @RequestParam("email") String email) throws IOException {
+    @GetMapping("/loadBlocks")
+    public ResponseEntity<ArrayList<Block>> loadBlocks(@RequestParam("email") String email, @RequestParam("workspaceid") Long id) throws IOException {
         User user = new User().findUser(email);
         WorkSpace workSpace = WorkSpaceController.findWorkSpace(id, user);
         return new ResponseEntity<ArrayList<Block>>(workSpace.getBlocks(),HttpStatus.OK);
@@ -41,6 +42,17 @@ public class UserController {
         WorkSpaceController.addWorkSpace(workSpace1, user);
 
         return new ResponseEntity<Long>(workSpace1.getId(), HttpStatus.OK);
+    }
+
+    @PostMapping("/createBlock")
+    public ResponseEntity<Long> createBlock(@RequestBody Block block, @RequestParam("email") String email, @RequestParam("workspaceid") Long workSpaceId) throws IOException{
+        User user = new User().findUser(email);
+
+        Block block1 = new Block(null, block.getName(), block.getCards());
+        block1.setCards(new ArrayList<Card>());
+        BlockController.addBlock(block1, user, workSpaceId);
+
+        return new ResponseEntity<Long>(block1.getId(), HttpStatus.OK);
     }
 
     @PostMapping("/registro")

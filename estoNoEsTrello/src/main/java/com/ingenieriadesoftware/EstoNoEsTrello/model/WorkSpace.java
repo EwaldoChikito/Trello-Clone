@@ -57,6 +57,9 @@ public class WorkSpace {
     }
 
     public ArrayList<Block> getBlocks() {
+        if (this.blocks == null){
+            return blocks = new ArrayList<Block>();
+        }
         return blocks;
     }
 

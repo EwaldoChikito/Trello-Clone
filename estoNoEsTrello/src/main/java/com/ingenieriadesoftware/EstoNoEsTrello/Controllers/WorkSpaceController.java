@@ -32,6 +32,7 @@ public class WorkSpaceController {
         WorkSpace workSpacesAux = new WorkSpace();
         for (int i=0;i<workSpacesList.size();i++) {
             if (workSpacesList.get(i).getId().equals(id)){
+                workSpacesAux = workSpacesList.get(i);
                 return workSpacesAux;
             }
         }
