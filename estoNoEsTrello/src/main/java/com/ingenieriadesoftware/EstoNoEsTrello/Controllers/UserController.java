@@ -33,7 +33,7 @@ public class UserController {
         return new ResponseEntity<ArrayList<WorkSpace>>(user.getWorkspaces(),HttpStatus.OK);
     }
 
-    @GetMapping("/loadBlocks")
+    @PostMapping("/loadBlocks")
     public ResponseEntity<ArrayList<Block>> loadBlocks(@RequestBody Long id, @RequestParam("email") String email) throws IOException {
         User user = new User().findUser(email);
         WorkSpace workSpace = WorkSpaceController.findWorkSpace(id, user);
@@ -74,4 +74,5 @@ public class UserController {
         else
             return new ResponseEntity<String>("Datos invalidos", HttpStatus.BAD_REQUEST);
     }
+
 }

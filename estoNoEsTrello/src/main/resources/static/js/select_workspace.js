@@ -62,6 +62,7 @@ function openWorkspaceModal() {
 function closeWorkspaceModal() {
     document.getElementById('workspaceModal').style.display = 'none';
 }
+
 var name;
 var desc;
 const emailUser = localStorage.getItem("email");
@@ -150,11 +151,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     window.location.href = "../workspace_detail.html";
                 }
             }
-
-
-
-
-
         })
 
     }

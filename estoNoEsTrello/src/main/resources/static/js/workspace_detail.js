@@ -19,18 +19,18 @@ function formatDateToYYYYMMDD(dateStr) {
 
 // --- Initial data with dates in DD/MM/YYYY ---
 let blocks = [
-    { title: "Pendientes", cards: [
-            {title: "Tarea 1", desc: "", createdAt: "01/06/2024", dueDate: "10/06/2024"},
-            {title: "Tarea 2", desc: "", createdAt: "02/06/2024", dueDate: "12/06/2024"},
-            {title: "Tarea 3", desc: "", createdAt: "03/06/2024", dueDate: "15/06/2024"}
-        ] },
-    { title: "En Progreso", cards: [
-            {title: "Tarea 4", desc: "", createdAt: "04/06/2024", dueDate: "16/06/2024"},
-            {title: "Tarea 5", desc: "", createdAt: "05/06/2024", dueDate: "18/06/2024"}
-        ] },
-    { title: "Completadas", cards: [
-            {title: "Tarea 6", desc: "", createdAt: "06/06/2024", dueDate: "20/06/2024"}
-        ] }
+//    { title: "Pendientes", cards: [
+//            {title: "Tarea 1", desc: "", createdAt: "01/06/2024", dueDate: "10/06/2024"},
+//            {title: "Tarea 2", desc: "", createdAt: "02/06/2024", dueDate: "12/06/2024"},
+//            {title: "Tarea 3", desc: "", createdAt: "03/06/2024", dueDate: "15/06/2024"}
+//        ] },
+//    { title: "En Progreso", cards: [
+//            {title: "Tarea 4", desc: "", createdAt: "04/06/2024", dueDate: "16/06/2024"},
+//            {title: "Tarea 5", desc: "", createdAt: "05/06/2024", dueDate: "18/06/2024"}
+//        ] },
+//    { title: "Completadas", cards: [
+//            {title: "Tarea 6", desc: "", createdAt: "06/06/2024", dueDate: "20/06/2024"}
+//        ] }
 ];
 
 let dragged = { blockIdx: null, cardIdx: null, cardElem: null };
@@ -318,49 +318,108 @@ if (!document.getElementById('blockModal')) {
 
 // Modal form handler
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('createCardForm');
-    if (form) {
-        form.onsubmit = function(e) {
-            e.preventDefault();
-            const title = document.getElementById('cardTitleInput').value.trim();
-            const desc = document.getElementById('cardDescInput').value.trim();
-            const dueDateRaw = document.getElementById('cardDueDateInput').value;
-            const dueDate = dueDateRaw ? formatDateToDDMMYYYY(dueDateRaw) : '';
-            const today = getTodayFormatted();
-            if (title) {
-                if (editingBlockIdx !== null && editingCardIdx !== null) {
-                    let card = blocks[editingBlockIdx].cards[editingCardIdx];
-                    card.title = title;
-                    card.desc = desc;
-                    card.dueDate = dueDate;
-                } else if (currentAddBlockIdx !== null) {
-                    blocks[currentAddBlockIdx].cards.push({
-                        title,
-                        desc,
-                        createdAt: today,
-                        dueDate
-                    });
+    if(login){
+
+        let pedirBlocks = async() => {
+            event.preventDefault();
+            const respuesta = await fetch(`/user/loadBlocks?email=${emailUser}`,
+            {
+                method: "POST",
+                headers:
+                {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(workSpaceID)
+            });
+            if (respuesta.ok)
+            {
+                const bloques = await respuesta.json();
+                blocks = bloques;
+                renderBoards(blocks);
+            }
+            else{
+                alert ("Un error inesperado","No sé que","error");
+            }
+        }
+        pedirBlocks();
+
+        const form = document.getElementById('createCardForm');
+        if (form) {
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                const title = document.getElementById('cardTitleInput').value.trim();
+                const desc = document.getElementById('cardDescInput').value.trim();
+                const dueDateRaw = document.getElementById('cardDueDateInput').value;
+                const dueDate = dueDateRaw ? formatDateToDDMMYYYY(dueDateRaw) : '';
+                const today = getTodayFormatted();
+                if (title !== "") {
+
+
+
+
+                    if (editingBlockIdx !== null && editingCardIdx !== null) {
+                        let card = blocks[editingBlockIdx].cards[editingCardIdx];
+                        card.title = title;
+                        card.desc = desc;
+                        card.dueDate = dueDate;
+                    } else if (currentAddBlockIdx !== null) {
+                        blocks[currentAddBlockIdx].cards.push({
+                            title,
+                            desc,
+                            createdAt: today,
+                            dueDate
+                        });
+                    }
+                    closeCardModal();
+                    renderBoard(blocks);
                 }
-                closeCardModal();
-                renderBoard(blocks);
-            }
-        };
+            };
+        }
+
+
+        // --- Handle new block form ---
+        const blockForm = document.getElementById('createBlockForm');
+        if (blockForm) {
+            blockForm.onsubmit = function(e) {
+                e.preventDefault();
+                const title = document.getElementById('blockTitleInput').value.trim();
+                if (title) {
+
+                    let crearBlock = async () => {
+                        const Block = {
+                            id: null,
+                            name: title,
+                        };
+                        const petition = await fetch(`/user/createBlock?email=${emailUser}`, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(Block)
+                        });
+                        if (petition.ok) {
+                            const id = await petition.json();
+                            blocks.push({
+                                id: id,
+                                title: name,
+                                cards: [] });
+                            closeBlockModal();
+                            renderBoard(blocks);
+                        }
+                        else {
+
+                        }
+                    }
+
+                } else {
+                    document.getElementById('blockTitleInput').focus();
+                }
+            };
+        }
     }
-    // --- Handle new block form ---
-    const blockForm = document.getElementById('createBlockForm');
-    if (blockForm) {
-        blockForm.onsubmit = function(e) {
-            e.preventDefault();
-            const title = document.getElementById('blockTitleInput').value.trim();
-            if (title) {
-                blocks.push({ title, cards: [] });
-                closeBlockModal();
-                renderBoard(blocks);
-            } else {
-                document.getElementById('blockTitleInput').focus();
-            }
-        };
-    }
+
 });
 
 renderBoard(blocks);
@@ -368,3 +427,20 @@ renderBoard(blocks);
 const userName = "Juan Pérez";
 document.getElementById('userName').textContent = userName;
 document.title = `Espacio de trabajo de ${userName}`;
+
+
+function comprobarLogIn()
+{
+    if (localStorage.getItem("login") !== null)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+const emailUser = localStorage.getItem("email");
+const workSpaceID = localStorage.getItem("workSpaceID");
+var login = comprobarLogIn();
