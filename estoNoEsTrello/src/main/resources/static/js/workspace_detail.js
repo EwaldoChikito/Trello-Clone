@@ -344,8 +344,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 const title = document.getElementById('cardTitleInput').value.trim();
                 const desc = document.getElementById('cardDescInput').value.trim();
+//                const dueDateRaw = document.getElementById('cardDueDateInput').value;
+//                const dueDate = dueDateRaw ? formatDateToDDMMYYYY(dueDateRaw) : '';
                 const dueDateRaw = document.getElementById('cardDueDateInput').value;
-                const dueDate = dueDateRaw ? formatDateToDDMMYYYY(dueDateRaw) : '';
+                const dueDate = dueDateRaw ? formatDateToYYYYMMDD(dueDateRaw) : '';
                 const today = getTodayFormatted();
                 if (title) {
                     if (editingBlockIdx !== null && editingCardIdx !== null) {
@@ -357,10 +359,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Crear tarjeta en backend y obtener id
                         const cardData = {
                             id: null,
-                            title: title,
-                            desc: desc,
-                            createdAt: today,
-                            dueDate: dueDate
+                            name: title,
+                            description: desc,
+                            creationDate: today,
+                            finalDate: dueDate
                         };
                         const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
                             method: 'POST',
@@ -370,7 +372,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             },
                             body: JSON.stringify(cardData)
                         });
+//                        alert('coño ya1');
                         if (petition.ok) {
+                            alert('coño ya');
                             const card = await petition.json();
                             blocks[currentAddBlockIdx].cards.push({
                                 id: card.id,
@@ -379,6 +383,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                 createdAt: card.createdAt,
                                 dueDate: card.dueDate
                             });
+                        }
+                        else{
+                            const errorRespuesta = await petition.text();
+                            alert("Un error inesperado", errorRespuesta, "error");
                         }
                     }
                     closeCardModal();
