@@ -11,7 +11,7 @@ public class Card {
     private String description;
     private LocalDate creationDate;
     private LocalDate finalDate;
-    private boolean status;
+//    private boolean status;
 
     public Card() {
     }
@@ -24,14 +24,13 @@ public class Card {
         this.finalDate = finalDate;
     }
 
-    public Card(Long id, String name, String description, LocalDate creationDate, LocalDate finalDate, boolean status) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.creationDate = creationDate;
-        this.finalDate = finalDate;
-        this.status = status;
-    }
+//    public Card(Long id, String name, String description, LocalDate creationDate, LocalDate finalDate, boolean status) {
+//        this.id = id;
+//        this.name = name;
+//        this.description = description;
+//        this.creationDate = creationDate;
+//        this.finalDate = finalDate;
+//    }
 
     public LocalDate getCreationDate() {
         return creationDate;
@@ -49,13 +48,13 @@ public class Card {
         this.finalDate = finalDate;
     }
 
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
+//    public boolean isStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(boolean status) {
+//        this.status = status;
+//    }
 
     public Card(Long id, String name, String description) {
         this.id = id;
