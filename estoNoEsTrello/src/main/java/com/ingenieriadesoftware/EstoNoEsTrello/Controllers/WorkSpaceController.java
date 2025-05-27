@@ -26,4 +26,14 @@ public class WorkSpaceController {
         currentUser.getWorkspaces().add(workSpace);
         UserJsonController.saveUser(currentUser);
     }
+
+    static public WorkSpace findWorkSpace(Long id, User user) throws IOException {
+        ArrayList<WorkSpace> workSpacesList = user.getWorkspaces();
+        for (int i=0;i<workSpacesList.size();i++) {
+            if (workSpacesList.get(i).getId().equals(id)){
+                return 
+            }
+        }
+
+    }
 }
