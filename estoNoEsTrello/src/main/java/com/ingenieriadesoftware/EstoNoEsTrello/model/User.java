@@ -3,6 +3,8 @@ package com.ingenieriadesoftware.EstoNoEsTrello.model;
 import com.ingenieriadesoftware.EstoNoEsTrello.JsonControllers.UserJsonController;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class User {
     private String email;
@@ -74,18 +76,24 @@ public class User {
         return userSelected;
     }
 
-    public boolean verifyEmail(String email){
+    public boolean emailValidation(String email){
+        Pattern pattern = Pattern.compile("[a-z]+\\.[0-9]{2}(@est.ucab.edu.ve)");
+        Matcher matcher = pattern.matcher(email);
+        return matcher.find();
+    }
+
+    public boolean isEmailAlreadyUsed(String email){
         ArrayList<User> usersList = UserJsonController.findTotalUsers();
         boolean verificationResult = false;
         if(usersList == null){
-        usersList = new ArrayList<User>();
-    }
-    for (int i=0; i<usersList.size();i++){
-        if(usersList.get(i).getEmail().equals(email)){
-            verificationResult = true;
+            usersList = new ArrayList<User>();
         }
-    }
-    return verificationResult;
+        for (int i=0; i<usersList.size();i++){
+            if(usersList.get(i).getEmail().equals(email)){
+                verificationResult = true;
+            }
+        }
+        return verificationResult;
     }
 
     public boolean verifyLogIn(String email, String password){
