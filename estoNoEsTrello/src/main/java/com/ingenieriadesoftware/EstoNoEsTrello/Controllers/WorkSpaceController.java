@@ -29,11 +29,12 @@ public class WorkSpaceController {
 
     static public WorkSpace findWorkSpace(Long id, User user) throws IOException {
         ArrayList<WorkSpace> workSpacesList = user.getWorkspaces();
+        WorkSpace workSpacesAux = new WorkSpace();
         for (int i=0;i<workSpacesList.size();i++) {
             if (workSpacesList.get(i).getId().equals(id)){
-                return 
+                return workSpacesAux;
             }
         }
-
+        return workSpacesAux;
     }
 }

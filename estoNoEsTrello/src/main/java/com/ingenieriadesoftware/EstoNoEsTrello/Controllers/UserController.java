@@ -34,8 +34,10 @@ public class UserController {
     }
 
     @GetMapping("/loadBlocks")
-    public ResponseEntity<ArrayList<Block>> loadBlocks(@RequestBody Long id, @RequestParam("email") String email){
+    public ResponseEntity<ArrayList<Block>> loadBlocks(@RequestBody Long id, @RequestParam("email") String email) throws IOException {
         User user = new User().findUser(email);
+        WorkSpace workSpace = WorkSpaceController.findWorkSpace(id, user);
+        return new ResponseEntity<ArrayList<Block>>(workSpace.getBlocks(),HttpStatus.OK);
 
     }
 

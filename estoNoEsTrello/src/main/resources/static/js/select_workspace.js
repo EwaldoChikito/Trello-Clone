@@ -150,8 +150,8 @@ document.addEventListener('DOMContentLoaded', function() {
     searchInput.addEventListener('input', function() {
         const filter = searchInput.value.toLowerCase();
         const filteredBoards = boards.filter(board =>
-            board.title.toLowerCase().includes(filter) ||
-            board.desc.toLowerCase().includes(filter)
+            (board.name && board.name.toLowerCase().includes(filter)) ||
+            (board.description && board.description.toLowerCase().includes(filter))
         );
         renderBoards(filteredBoards);
     });
