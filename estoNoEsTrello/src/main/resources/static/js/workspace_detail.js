@@ -338,6 +338,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         pedirBlocks();
 
+        let pedirCards = async() => {
+            event.preventDefault();
+            const respuesta = await fetch(`/user/loadCards?email=${emailUser}&blockId=${blocks[currentAddBlockIdx].id}&workspaceid=${workSpaceID}`,
+                {
+                    method: "GET",
+                    headers:
+                        {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json",
+                        }
+                });
+            if (respuesta.ok)
+            {
+                const bloques = await respuesta.json();
+                blocks = bloques;
+                renderBoard(blocks);
+            }
+            else{
+                alert ("Un error inesperado","No sé que","error");
+            }
+        }
+//        pedirCards();
+
         const form = document.getElementById('createCardForm');
         if (form) {
             form.onsubmit = async function(e) {
@@ -357,11 +380,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Crear tarjeta en backend y obtener id
                         const cardData = {
                             id: null,
-                            title: title,
-                            desc: desc,
-                            createdAt: today,
-                            dueDate: dueDate
+                            name: title,
+                            description: desc,
+                            creationDate: today,
+                            finalDate: dueDate
                         };
+                        console.log(`workspaceid=${workSpaceID}`);
                         const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
                             method: 'POST',
                             headers: {
