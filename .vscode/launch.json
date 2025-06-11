@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-EstoNoEsTrelloApplication<EstoNoEsTrello>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.ingenieriadesoftware.EstoNoEsTrello.EstoNoEsTrelloApplication",
+            "projectName": "EstoNoEsTrello",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

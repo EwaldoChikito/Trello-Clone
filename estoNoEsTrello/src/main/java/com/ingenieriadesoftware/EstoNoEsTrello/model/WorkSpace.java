@@ -1,19 +1,34 @@
 package com.ingenieriadesoftware.EstoNoEsTrello.model;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class WorkSpace {
     private Long id;
     private String name;
-    private Block[] blocks;
+    private String description;
+    private ArrayList<Block> blocks;
+
+    private static long idCounter = generate12DigitId();
+    private static long generate12DigitId() {
+        long id = UUID.randomUUID().getMostSignificantBits();
+        return Math.abs(id % 999_999_999_999L) + 1; // +1 para evitar cero
+    }
 
     public WorkSpace() {
     }
 
-    public WorkSpace(Long id, String name, Block[] boards) {
-        this.id = id;
+    public WorkSpace(String name, String description) {
+        this.id = id != null ? id : idCounter++;
         this.name = name;
-        this.blocks = boards;
+        this.description = description;
+    }
+
+    public WorkSpace(Long id, String name, String description, ArrayList<Block> blocks) {
+        this.id = id != null ? id : idCounter++;
+        this.name = name;
+        this.description = description;
+        this.blocks = blocks;
     }
 
     public Long getId() {
@@ -24,28 +39,26 @@ public class WorkSpace {
         return name;
     }
 
-    public Block[] getBoards() {
-        return blocks;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setBoards(Block[] boards) {
-        this.blocks = boards;
+    public String getDescription() {
+        return description;
     }
 
-    @Override
-    public String toString() {
-        return "WorkSpace{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", boards=" + Arrays.toString(blocks) +
-                '}';
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ArrayList<Block> getBlocks() {
+        if (this.blocks == null){
+            return blocks = new ArrayList<Block>();
+        }
+        return blocks;
+    }
+
+    public void setBlocks(ArrayList<Block> blocks) {
+        this.blocks = blocks;
     }
 }

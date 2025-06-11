@@ -1,9 +1,7 @@
 package com.ingenieriadesoftware.EstoNoEsTrello.model;
 
-
-import org.springframework.cglib.core.Local;
-
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class Card {
     private Long id;
@@ -11,19 +9,31 @@ public class Card {
     private String description;
     private LocalDate creationDate;
     private LocalDate finalDate;
-    private boolean status;
+//    private boolean status;
+    private static long idCounter = generate12DigitId();
+    private static long generate12DigitId() {
+        long id = UUID.randomUUID().getMostSignificantBits();
+        return Math.abs(id % 999_999_999_999L) + 1; // +1 para evitar cero
+    }
 
     public Card() {
     }
 
-    public Card(Long id, String name, String description, LocalDate creationDate, LocalDate finalDate, boolean status) {
-        this.id = id;
+    public Card(Long id, String name, String description, LocalDate creationDate, LocalDate finalDate) {
+        this.id = id != null ? id : idCounter++;
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
         this.finalDate = finalDate;
-        this.status = status;
     }
+
+//    public Card(Long id, String name, String description, LocalDate creationDate, LocalDate finalDate, boolean status) {
+//        this.id = id;
+//        this.name = name;
+//        this.description = description;
+//        this.creationDate = creationDate;
+//        this.finalDate = finalDate;
+//    }
 
     public LocalDate getCreationDate() {
         return creationDate;
@@ -41,13 +51,13 @@ public class Card {
         this.finalDate = finalDate;
     }
 
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
+//    public boolean isStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(boolean status) {
+//        this.status = status;
+//    }
 
     public Card(Long id, String name, String description) {
         this.id = id;

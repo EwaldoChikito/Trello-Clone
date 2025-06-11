@@ -35,6 +35,15 @@ public class Validation {
         }
     }
 
+//    public static boolean isUsernameAlreadyUsed(String username, UsersAdministrator usersList) throws UsernameAlreadyUsed {
+//        for (User user : usersList.getUsers()) {
+//            if (user.getUsername().equals(username)) {
+//                throw new UsernameAlreadyUsed();
+//            }
+//        }
+//        return false;
+//    }
+
     public static boolean isEmailAlreadyUsed(String email, UsersAdministrator usersList) throws EmailAlreadyUsed {
         for (User user : usersList.getUsers()) {
             if (user.getEmail().equals(email)) {
