@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         let card = blocks[editingBlockIdx].cards[editingCardIdx];
                         card.title = title;
                         card.desc = desc;
-                        card.dueDate = dueDate;
+                        card.dueDate = dueDateRaw;
 
                         let cardData = {
                             id: null,
@@ -401,6 +401,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         }
                         else{
+                            console.log(petition.status);
+                            console.log(petition);
                             const errorRespuesta = await petition.text();
                             alert("Un error inesperado", errorRespuesta, "error");
                         }

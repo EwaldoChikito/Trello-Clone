@@ -1,6 +1,7 @@
 package com.ingenieriadesoftware.EstoNoEsTrello.model;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class Card {
     private Long id;
@@ -9,12 +10,17 @@ public class Card {
     private LocalDate creationDate;
     private LocalDate finalDate;
 //    private boolean status;
+    private static long idCounter = generate12DigitId();
+    private static long generate12DigitId() {
+        long id = UUID.randomUUID().getMostSignificantBits();
+        return Math.abs(id % 999_999_999_999L) + 1; // +1 para evitar cero
+    }
 
     public Card() {
     }
 
     public Card(Long id, String name, String description, LocalDate creationDate, LocalDate finalDate) {
-        this.id = id;
+        this.id = id != null ? id : idCounter++;
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;

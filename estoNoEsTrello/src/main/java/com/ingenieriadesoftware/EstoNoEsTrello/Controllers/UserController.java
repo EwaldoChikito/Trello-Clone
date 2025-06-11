@@ -70,7 +70,7 @@ public class UserController {
         Card card1 = new Card(null,card.getName(),card.getDescription(),card.getCreationDate(),card.getFinalDate());
 
         CardController.addCard(card1, user, blockID,workSpaceId);
-
+        System.out.println("Card created with ID: " + card1.getId());
         return new ResponseEntity<Long>(card1.getId(), HttpStatus.OK);
     }
 
