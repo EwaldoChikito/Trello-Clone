@@ -67,9 +67,9 @@ function moveCard(blockIdx, cardIdx, direction) {
 }
 
 function renderBoard(blocks) {
-    const board = document.getElementById('board');
-    board.innerHTML = "";
-    blocks.forEach((list, blockIdx) => {
+        const board = document.getElementById('board');
+        board.innerHTML = "";
+        blocks.forEach((list, blockIdx) => {
         const listDiv = document.createElement('div');
         listDiv.className = 'list';
 
@@ -352,16 +352,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         pedirBlocks();
 
+        let pedirCards = async() => {
+                    event.preventDefault();
+                    const respuesta = await fetch(`/user/loadCards`?email=${emailUser}&blockId=${blocks[currentAddBlockIdx].id}&workspaceid=${workSpaceID}`,
+                        {
+                            method: "GET",
+                            headers:
+                                {
+                                    "Accept": "application/json",
+                                    "Content-Type": "application/json",
+                                }
+                        });
+                    if (respuesta.ok)
+                    {
+                        const bloques = await respuesta.json();
+                        blocks = bloques;
+                        renderBoard(blocks);
+                    }
+                    else{
+                        alert ("Un error inesperado","No sé que","error");
+                    }
+                }
+                pedirCards();
+
         const form = document.getElementById('createCardForm');
         if (form) {
             form.onsubmit = async function(e) {
                 e.preventDefault();
                 const title = document.getElementById('cardTitleInput').value.trim();
                 const desc = document.getElementById('cardDescInput').value.trim();
-//                const dueDateRaw = document.getElementById('cardDueDateInput').value;
-//                const dueDate = dueDateRaw ? formatDateToDDMMYYYY(dueDateRaw) : '';
                 const dueDateRaw = document.getElementById('cardDueDateInput').value;
-//                const dueDate = dueDateRaw ? formatDateToYYYYMMDD(dueDateRaw) : '';
                 const today = new Date();
                 if (title) {
                     if (editingBlockIdx !== null && editingCardIdx !== null) {
@@ -385,11 +405,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             },
                             body: JSON.stringify(cardData)
                         });
-//                        alert('coño ya1');
                         if (petition.ok) {
                             const text = await petition.text();
                             const card = text ? JSON.parse(text) : null;
-//                            const card = await petition.json();
                             if(card) {
                                 blocks[currentAddBlockIdx].cards.push({
                                     id: card.id,

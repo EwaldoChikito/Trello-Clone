@@ -24,7 +24,7 @@ public class CardController {
             }
         }
 //        WorkSpaceController.findWorkSpace(workSpaceId,currentUser).getBlocks().add(block);
-        BlockController.findBlock(blockID,user,workSpaceId).getCards().add(card);
+        BlockController.findBlock(blockID,currentUser,workSpaceId).getCards().add(card);
         UserJsonController.saveUser(currentUser);
     }
 }
