@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.User;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.WorkSpace;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;

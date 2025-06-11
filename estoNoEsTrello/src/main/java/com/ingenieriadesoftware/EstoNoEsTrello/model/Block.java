@@ -1,8 +1,6 @@
 package com.ingenieriadesoftware.EstoNoEsTrello.model;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.UUID;
 
 public class Block {
@@ -32,10 +30,6 @@ public class Block {
 
     public Long getId() {
         return id;
-    }
-
-    private void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

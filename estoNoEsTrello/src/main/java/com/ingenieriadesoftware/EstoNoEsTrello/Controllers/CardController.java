@@ -1,7 +1,6 @@
 package com.ingenieriadesoftware.EstoNoEsTrello.Controllers;
 
 import com.ingenieriadesoftware.EstoNoEsTrello.JsonControllers.UserJsonController;
-import com.ingenieriadesoftware.EstoNoEsTrello.model.Block;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.Card;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.User;
 
