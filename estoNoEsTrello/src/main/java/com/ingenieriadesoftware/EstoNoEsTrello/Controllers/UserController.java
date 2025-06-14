@@ -58,7 +58,7 @@ public class UserController {
         Block block1 = new Block(null, block.getName(), block.getCards());
         block1.setCards(new ArrayList<Card>());
         BlockController.addBlock(block1, user, workSpaceId);
-
+        System.out.println("Block created with Name: " + block1.getName());
         return new ResponseEntity<Long>(block1.getId(), HttpStatus.OK);
     }
 

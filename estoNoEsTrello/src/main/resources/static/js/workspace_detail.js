@@ -1,5 +1,5 @@
 // --- Date utilities ---
-<<<<<<< HEAD
+
 function getTodayFormatted() {
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
@@ -8,7 +8,7 @@ function getTodayFormatted() {
     // Devuelve en formato yyyy-MM-dd
     return `${year}-${month}-${day}`;
 }
-=======
+
 //function getTodayFormatted() {
 //    const today = new Date();
 //    const day = today.getDate();
@@ -17,7 +17,7 @@ function getTodayFormatted() {
 //    return `${day}/${month}/${year};
 //}
 
->>>>>>> 67079d687caad23fa9f905451889096b9a050544
+//>>>>>>> 67079d687caad23fa9f905451889096b9a050544
 function formatDateToDDMMYYYY(dateStr) {
     if (!dateStr) return '';
     const [year, month, day] = dateStr.split('-');
@@ -70,183 +70,184 @@ function renderBoard(blocks) {
         const board = document.getElementById('board');
         board.innerHTML = "";
         blocks.forEach((list, blockIdx) => {
-        const listDiv = document.createElement('div');
-        listDiv.className = 'list';
+            const listDiv = document.createElement('div');
+            listDiv.className = 'list';
 
-        // --- Block title bar and edit button ---
-        const listTitleBar = document.createElement('div');
-        listTitleBar.style.display = "flex";
-        listTitleBar.style.justifyContent = "space-between";
-        listTitleBar.style.alignItems = "center";
+            // --- Block title bar and edit button ---
+            const listTitleBar = document.createElement('div');
+            listTitleBar.style.display = "flex";
+            listTitleBar.style.justifyContent = "space-between";
+            listTitleBar.style.alignItems = "center";
+            console.log(list.name);
+            // Block title (soporta title o name)
+            const listTitle = document.createElement('div');
+            listTitle.className = 'list-title';
+            listTitle.textContent = `${list.name}`;
+            listTitle.style.flex = "1";
 
-        // Block title (soporta title o name)
-        const listTitle = document.createElement('div');
-        listTitle.className = 'list-title';
-        listTitle.textContent = list.title || list.name || "Sin título";
-        listTitle.style.flex = "1";
+            // Edit button
+            const editBtn = document.createElement('button');
+            editBtn.textContent = "✎";
+            editBtn.title = "Edit block name";
+            editBtn.className = 'edit-block-title-btn';
+            editBtn.style.marginLeft = "8px";
+            editBtn.style.background = "none";
+            editBtn.style.border = "none";
+            editBtn.style.cursor = "pointer";
+            editBtn.style.fontSize = "1.1em";
+            editBtn.onclick = function(e) {
+                e.stopPropagation();
+                // Replace title with input
+                const input = document.createElement('input');
+                input.type = "text";
+                input.value = list.title || list.name || "";
+                input.className = "edit-block-title-input";
+                input.style.flex = "1";
+                input.style.fontSize = "1em";
+                input.style.padding = "2px 6px";
+                input.style.borderRadius = "6px";
+                input.style.border = "1px solid #ccc";
+                listTitleBar.replaceChild(input, listTitle);
+                input.focus();
+                input.select();
 
-        // Edit button
-        const editBtn = document.createElement('button');
-        editBtn.textContent = "✎";
-        editBtn.title = "Edit block name";
-        editBtn.className = 'edit-block-title-btn';
-        editBtn.style.marginLeft = "8px";
-        editBtn.style.background = "none";
-        editBtn.style.border = "none";
-        editBtn.style.cursor = "pointer";
-        editBtn.style.fontSize = "1.1em";
-        editBtn.onclick = function(e) {
-            e.stopPropagation();
-            // Replace title with input
-            const input = document.createElement('input');
-            input.type = "text";
-            input.value = list.title || list.name || "";
-            input.className = "edit-block-title-input";
-            input.style.flex = "1";
-            input.style.fontSize = "1em";
-            input.style.padding = "2px 6px";
-            input.style.borderRadius = "6px";
-            input.style.border = "1px solid #ccc";
-            listTitleBar.replaceChild(input, listTitle);
-            input.focus();
-            input.select();
-
-            // Save on blur or Enter
-            input.onblur = save;
-            input.onkeydown = function(ev) {
-                if (ev.key === "Enter") {
-                    save();
+                // Save on blur or Enter
+                input.onblur = save;
+                input.onkeydown = function(ev) {
+                    if (ev.key === "Enter") {
+                        save();
+                    }
+                };
+                function save() {
+                    const newTitle = input.value.trim() || "Sin título";
+                    blocks[blockIdx].title = newTitle;
+                    renderBoard(blocks);
                 }
             };
-            function save() {
-                const newTitle = input.value.trim() || "Sin título";
-                blocks[blockIdx].title = newTitle;
-                renderBoard(blocks);
+
+            listTitleBar.appendChild(listTitle);
+            listTitleBar.appendChild(editBtn);
+            listDiv.appendChild(listTitleBar);
+
+            // --- Cards ---
+            console.log(list);
+            if (Array.isArray(list.cards)) {
+                list.cards.forEach((card, cardIdx) => {
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'card';
+                    cardDiv.style.display = "flex";
+                    cardDiv.style.flexDirection = "column";
+                    cardDiv.style.justifyContent = "space-between";
+
+                    // Card header
+                    const cardHeader = document.createElement('div');
+                    cardHeader.style.display = "flex";
+                    cardHeader.style.alignItems = "center";
+                    cardHeader.style.justifyContent = "space-between";
+
+                    const cardText = document.createElement('span');
+                    cardText.textContent = card.title || card.name || "Sin título";
+                    cardText.style.flex = "1";
+                    cardText.style.cursor = "pointer";
+
+                    // Move arrows
+                    const arrows = document.createElement('div');
+                    arrows.className = 'card-arrows';
+                    arrows.style.display = "flex";
+                    arrows.style.flexDirection = "column";
+                    arrows.style.gap = "2px";
+
+                    const upBtn = document.createElement('button');
+                    upBtn.textContent = "↑";
+                    upBtn.disabled = cardIdx === 0;
+                    upBtn.style.cursor = upBtn.disabled ? "not-allowed" : "pointer";
+                    upBtn.onclick = e => {
+                        e.stopPropagation();
+                        moveCard(blockIdx, cardIdx, -1);
+                    };
+
+                    const downBtn = document.createElement('button');
+                    downBtn.textContent = "↓";
+                    downBtn.disabled = cardIdx === list.cards.length - 1;
+                    downBtn.style.cursor = downBtn.disabled ? "not-allowed" : "pointer";
+                    downBtn.onclick = e => {
+                        e.stopPropagation();
+                        moveCard(blockIdx, cardIdx, 1);
+                    };
+
+                    arrows.appendChild(upBtn);
+                    arrows.appendChild(downBtn);
+
+                    cardHeader.appendChild(cardText);
+                    cardHeader.appendChild(arrows);
+
+                    // Due date
+                    const dueDateDiv = document.createElement('div');
+                    dueDateDiv.className = 'card-due-date';
+                    dueDateDiv.textContent = card.finalDate ? `Finaliza: ${card.finalDate}` : "Sin fecha de finalización";
+
+                    cardDiv.appendChild(cardHeader);
+                    cardDiv.appendChild(dueDateDiv);
+
+                    // Drag & drop and events
+                    cardDiv.draggable = true;
+                    cardDiv.addEventListener('click', (e) => {
+                        if (e.target.closest('.card-arrows')) return;
+                        openCardModal(blockIdx, cardIdx);
+                    });
+                    cardDiv.addEventListener('dragstart', e => {
+                        dragged = { blockIdx, cardIdx, cardElem: cardDiv };
+                        setTimeout(() => {
+                            cardDiv.style.visibility = 'hidden';
+                        }, 0);
+                    });
+                    cardDiv.addEventListener('dragend', e => {
+                        cardDiv.style.visibility = '';
+                        clearPlaceholder();
+                        dragged = { blockIdx: null, cardIdx: null, cardElem: null };
+                    });
+
+                    listDiv.appendChild(cardDiv);
+                });
             }
-        };
 
-        listTitleBar.appendChild(listTitle);
-        listTitleBar.appendChild(editBtn);
-        listDiv.appendChild(listTitleBar);
+            // Add card button
+            const addCardDiv = document.createElement('div');
+            addCardDiv.className = 'card add-card-ghost';
+            addCardDiv.innerHTML = `<span class="add-plus">+</span>`;
+            addCardDiv.onclick = function() {
+                currentAddBlockIdx = blockIdx; // Solo aquí se setea
+                openCardModal();
+            };
+            listDiv.appendChild(addCardDiv);
 
-        // --- Cards ---
-        if (Array.isArray(list.cards)) {
-            list.cards.forEach((card, cardIdx) => {
-                const cardDiv = document.createElement('div');
-                cardDiv.className = 'card';
-                cardDiv.style.display = "flex";
-                cardDiv.style.flexDirection = "column";
-                cardDiv.style.justifyContent = "space-between";
-
-                // Card header
-                const cardHeader = document.createElement('div');
-                cardHeader.style.display = "flex";
-                cardHeader.style.alignItems = "center";
-                cardHeader.style.justifyContent = "space-between";
-
-                const cardText = document.createElement('span');
-                cardText.textContent = card.title;
-                cardText.style.flex = "1";
-                cardText.style.cursor = "pointer";
-
-                // Move arrows
-                const arrows = document.createElement('div');
-                arrows.className = 'card-arrows';
-                arrows.style.display = "flex";
-                arrows.style.flexDirection = "column";
-                arrows.style.gap = "2px";
-
-                const upBtn = document.createElement('button');
-                upBtn.textContent = "↑";
-                upBtn.disabled = cardIdx === 0;
-                upBtn.style.cursor = upBtn.disabled ? "not-allowed" : "pointer";
-                upBtn.onclick = e => {
-                    e.stopPropagation();
-                    moveCard(blockIdx, cardIdx, -1);
-                };
-
-                const downBtn = document.createElement('button');
-                downBtn.textContent = "↓";
-                downBtn.disabled = cardIdx === list.cards.length - 1;
-                downBtn.style.cursor = downBtn.disabled ? "not-allowed" : "pointer";
-                downBtn.onclick = e => {
-                    e.stopPropagation();
-                    moveCard(blockIdx, cardIdx, 1);
-                };
-
-                arrows.appendChild(upBtn);
-                arrows.appendChild(downBtn);
-
-                cardHeader.appendChild(cardText);
-                cardHeader.appendChild(arrows);
-
-                // Due date
-                const dueDateDiv = document.createElement('div');
-                dueDateDiv.className = 'card-due-date';
-                dueDateDiv.textContent = card.dueDate ? `Finaliza: ${card.dueDate}` : "Sin fecha de finalización";
-
-                cardDiv.appendChild(cardHeader);
-                cardDiv.appendChild(dueDateDiv);
-
-                // Drag & drop and events
-                cardDiv.draggable = true;
-                cardDiv.addEventListener('click', (e) => {
-                    if (e.target.closest('.card-arrows')) return;
-                    openCardModal(blockIdx, cardIdx);
-                });
-                cardDiv.addEventListener('dragstart', e => {
-                    dragged = { blockIdx, cardIdx, cardElem: cardDiv };
-                    setTimeout(() => {
-                        cardDiv.style.visibility = 'hidden';
-                    }, 0);
-                });
-                cardDiv.addEventListener('dragend', e => {
-                    cardDiv.style.visibility = '';
+            // Drag & drop for dropping cards from other blocks
+            listDiv.addEventListener('dragover', e => { e.preventDefault(); });
+            listDiv.addEventListener('dragenter', e => {
+                if (
+                    dragged.cardElem &&
+                    dragged.blockIdx !== blockIdx &&
+                    (!placeholder.parentNode || placeholder.parentNode !== listDiv)
+                ) {
                     clearPlaceholder();
-                    dragged = { blockIdx: null, cardIdx: null, cardElem: null };
-                });
-
-                listDiv.appendChild(cardDiv);
+                    listDiv.insertBefore(placeholder, addCardDiv);
+                }
             });
-        }
+            listDiv.addEventListener('dragleave', e => {
+                if (!listDiv.contains(e.relatedTarget)) {
+                    clearPlaceholder();
+                }
+            });
+            listDiv.addEventListener('drop', e => {
+                e.preventDefault();
+                if (dragged.blockIdx !== null && dragged.cardIdx !== null && dragged.blockIdx !== blockIdx) {
+                    const [cardMoved] = blocks[dragged.blockIdx].cards.splice(dragged.cardIdx, 1);
+                    blocks[blockIdx].cards.push(cardMoved);
+                    renderBoard(blocks);
+                }
+            });
 
-        // Add card button
-        const addCardDiv = document.createElement('div');
-        addCardDiv.className = 'card add-card-ghost';
-        addCardDiv.innerHTML = `<span class="add-plus">+</span>`;
-        addCardDiv.onclick = function() {
-            currentAddBlockIdx = blockIdx; // Solo aquí se setea
-            openCardModal();
-        };
-        listDiv.appendChild(addCardDiv);
-
-        // Drag & drop for dropping cards from other blocks
-        listDiv.addEventListener('dragover', e => { e.preventDefault(); });
-        listDiv.addEventListener('dragenter', e => {
-            if (
-                dragged.cardElem &&
-                dragged.blockIdx !== blockIdx &&
-                (!placeholder.parentNode || placeholder.parentNode !== listDiv)
-            ) {
-                clearPlaceholder();
-                listDiv.insertBefore(placeholder, addCardDiv);
-            }
-        });
-        listDiv.addEventListener('dragleave', e => {
-            if (!listDiv.contains(e.relatedTarget)) {
-                clearPlaceholder();
-            }
-        });
-        listDiv.addEventListener('drop', e => {
-            e.preventDefault();
-            if (dragged.blockIdx !== null && dragged.cardIdx !== null && dragged.blockIdx !== blockIdx) {
-                const [cardMoved] = blocks[dragged.blockIdx].cards.splice(dragged.cardIdx, 1);
-                blocks[blockIdx].cards.push(cardMoved);
-                renderBoard(blocks);
-            }
-        });
-
-        board.appendChild(listDiv);
+            board.appendChild(listDiv);
     });
 
     // --- Add block ghost button at the end ---
@@ -330,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if(login){
 
         let pedirBlocks = async() => {
-            event.preventDefault();
+//            event.preventDefault();
             const respuesta = await fetch(`/user/loadBlocks?email=${emailUser}&workspaceid=${workSpaceID}`,
                 {
                     method: "GET",
@@ -342,6 +343,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             if (respuesta.ok)
             {
+                //console.log(respuesta.json());
                 const bloques = await respuesta.json();
                 blocks = bloques;
                 renderBoard(blocks);
@@ -352,28 +354,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         pedirBlocks();
 
-        let pedirCards = async() => {
-                    event.preventDefault();
-                    const respuesta = await fetch(`/user/loadCards`?email=${emailUser}&blockId=${blocks[currentAddBlockIdx].id}&workspaceid=${workSpaceID}`,
-                        {
-                            method: "GET",
-                            headers:
-                                {
-                                    "Accept": "application/json",
-                                    "Content-Type": "application/json",
-                                }
-                        });
-                    if (respuesta.ok)
-                    {
-                        const bloques = await respuesta.json();
-                        blocks = bloques;
-                        renderBoard(blocks);
-                    }
-                    else{
-                        alert ("Un error inesperado","No sé que","error");
-                    }
-                }
-                pedirCards();
+//        let pedirCards = async() => {
+//                    event.preventDefault();
+//                    const respuesta = await fetch(`/user/loadCards`?email=${emailUser}&blockId=${blocks[currentAddBlockIdx].id}&workspaceid=${workSpaceID}`,
+//                        {
+//                            method: "GET",
+//                            headers:
+//                                {
+//                                    "Accept": "application/json",
+//                                    "Content-Type": "application/json",
+//                                }
+//                        });
+//                    if (respuesta.ok)
+//                    {
+//                        const bloques = await respuesta.json();
+//                        blocks = bloques;
+//                        renderBoard(blocks);
+//                    }
+//                    else{
+//                        alert ("Un error inesperado","No sé que","error");
+//                    }
+//                }
+//                pedirCards();
 
         const form = document.getElementById('createCardForm');
         if (form) {
@@ -460,6 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     closeCardModal();
                     renderBoard(blocks);
+                    pedirBlocks();
                 }
             };
         }
@@ -486,10 +489,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             body: JSON.stringify(Block)
                         });
                         if (petition.ok) {
-                            const block = await petition.json();
+//                            console.log(petition.json());
+                            const text = await petition.text();
+                            const block = text ? JSON.parse(text) : null;
+                            console.log(block);
                             blocks.push({
-                                id: block.id,
-                                title: block.name,
+                                id: block,
+                                name: title,
                                 cards: []
                             });
                             closeBlockModal();
@@ -502,11 +508,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     crearBlock();
+                    pedirBlocks();
+
 
                 } else {
                     document.getElementById('blockTitleInput').focus();
                 }
             };
+            pedirBlocks();
         }
     }
 });
