@@ -29,26 +29,8 @@
     </div>
 </div>
 
-<script src="js/workspace_detail.js?v=1.0.1"></script>
-<div id="cardModal" class="modal-overlay" style="display:none;">
-    <div class="modal-card">
-        <button class="close-modal" onclick="closeCardModal()">×</button>
-        <h2>Crear nueva tarjeta</h2>
-        <form id="createCardForm">
-            <label>
-                <input id="cardTitleInput" type="text" placeholder="Título de la tarjeta" required>
-            </label>
-            <label>
-                <textarea id="cardDescInput" placeholder="Descripción"></textarea>
-            </label>
-            <label>
-                <span>Fecha de finalización:</span>
-                <input id="cardDueDateInput" type="date">
-            </label>
-            <div id="cardCreatedAt" class="card-created-at"></div>
-            <button type="submit">Guardar</button>
-        </form>
-    </div>
-</div>
+<!-- Load JavaScript files -->
+<script src="js/workspace_detail.js"></script>
+<script src="js/modal_management.js"></script>
 </body>
 </html>
