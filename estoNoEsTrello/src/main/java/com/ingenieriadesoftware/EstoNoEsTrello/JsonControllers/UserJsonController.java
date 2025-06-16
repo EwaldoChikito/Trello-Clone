@@ -3,6 +3,8 @@ package com.ingenieriadesoftware.EstoNoEsTrello.JsonControllers;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
@@ -10,8 +12,7 @@ import java.time.format.DateTimeFormatter;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.User;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.WorkSpace;
 
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +42,8 @@ class LocalDateAdapter implements JsonSerializer<LocalDate>, JsonDeserializer<Lo
 
 public class UserJsonController extends User {
 
+    private static final String USERS_JSON_PATH = "JSONs/Users.json";
+
     public UserJsonController(String email, String password, ArrayList<WorkSpace> workspaces) {
         super(email, password, workspaces);
     }
@@ -48,13 +51,16 @@ public class UserJsonController extends User {
     static public void saveUser(User user){
         try {
             Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
-            JsonReader reader = new JsonReader(new FileReader("C://Users//alber//Documents//GitHub//Trello-Clone//estoNoEsTrello//src//main//resources//JSONs//Users.json"));
+            Resource resource = new ClassPathResource(USERS_JSON_PATH);
+            JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
             User[] users = gson.fromJson(reader, User[].class);
             List<User> userList= new ArrayList<>(Arrays.asList(users));
 
             userList.add(user);
 
-            FileWriter fw = new FileWriter("C://Users//alber//Documents//GitHub//Trello-Clone//estoNoEsTrello//src//main//resources//JSONs//Users.json");
+            // Write to the same file in resources
+            File file = resource.getFile();
+            FileWriter fw = new FileWriter(file);
             StringWriter sw = new StringWriter();
             sw.write(gson.toJson(userList));
             fw.write(sw.toString());
@@ -68,7 +74,8 @@ public class UserJsonController extends User {
     static public ArrayList<User> findTotalUsers(){
         try {
             Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
-            JsonReader reader = new JsonReader(new FileReader("C://Users//alber//Documents//GitHub//Trello-Clone//estoNoEsTrello//src//main//resources//JSONs//Users.json"));
+            Resource resource = new ClassPathResource(USERS_JSON_PATH);
+            JsonReader reader = new JsonReader(new InputStreamReader(resource.getInputStream()));
             User[] users = gson.fromJson(reader, User[].class);
             return new ArrayList<>(Arrays.asList(users));
         } catch (IOException e) {
@@ -78,7 +85,8 @@ public class UserJsonController extends User {
 
     static public void deleteUser(String email) throws IOException{
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
-        List<User> users = gson.fromJson(new FileReader("C://Users//alber//Documents//GitHub//Trello-Clone//estoNoEsTrello//src//main//resources//JSONs//Users.json"), new TypeToken<List<User>>() {}.getType());
+        Resource resource = new ClassPathResource(USERS_JSON_PATH);
+        List<User> users = gson.fromJson(new InputStreamReader(resource.getInputStream()), new TypeToken<List<User>>() {}.getType());
 
         // Eliminar el producto
         List<User> updatedClients = new ArrayList<>();
@@ -89,7 +97,8 @@ public class UserJsonController extends User {
         }
 
         // Escribir el JSON actualizado
-        try (FileWriter writer = new FileWriter("C://Users//alber//Documents//GitHub//Trello-Clone//estoNoEsTrello//src//main//resources//JSONs//Users.json")) {
+        File file = resource.getFile();
+        try (FileWriter writer = new FileWriter(file)) {
             gson.toJson(updatedClients, writer);
         }
     }

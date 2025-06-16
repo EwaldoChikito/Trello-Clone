@@ -78,7 +78,7 @@ function renderBoard(blocks) {
             listTitleBar.style.display = "flex";
             listTitleBar.style.justifyContent = "space-between";
             listTitleBar.style.alignItems = "center";
-            console.log(list.name);
+            //console.log(list.name);
             // Block title (soporta title o name)
             const listTitle = document.createElement('div');
             listTitle.className = 'list-title';
@@ -130,7 +130,7 @@ function renderBoard(blocks) {
             listDiv.appendChild(listTitleBar);
 
             // --- Cards ---
-            console.log(list);
+            //console.log(list);
             if (Array.isArray(list.cards)) {
                 list.cards.forEach((card, cardIdx) => {
                     const cardDiv = document.createElement('div');
@@ -146,7 +146,8 @@ function renderBoard(blocks) {
                     cardHeader.style.justifyContent = "space-between";
 
                     const cardText = document.createElement('span');
-                    cardText.textContent = card.title || card.name || "Sin título";
+                    //console.log(card.name);
+                    cardText.textContent = `${card.name}`;
                     cardText.style.flex = "1";
                     cardText.style.cursor = "pointer";
 
@@ -410,15 +411,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (petition.ok) {
                             const text = await petition.text();
                             const card = text ? JSON.parse(text) : null;
-                            if(card) {
-                                blocks[currentAddBlockIdx].cards.push({
-                                    id: card.id,
-                                    name: card.name,
-                                    desc: card.description,
-                                    createdAt: card.creationDate,
-                                    dueDate: card.finalDate
-                                });
-                            }
+                            console.log(card);
+                            blocks[currentAddBlockIdx].cards.push({
+                                id: text,
+                                name: title,
+                                desc: desc,
+                                createdAt: today,
+                                dueDate: dueDateRaw
+                            });
+                            
                         }
                         else{
                             console.log(petition.status);
@@ -446,15 +447,15 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (petition.ok) {
                                 const text = await petition.text();
                                 const card = text ? JSON.parse(text) : null;
-                                if(card) {
+                                
                                     blocks[currentAddBlockIdx].cards.push({
-                                        id: card.id,
-                                        name: card.name,
-                                        desc: card.description,
-                                        createdAt: card.creationDate,
-                                        dueDate: card.finalDate
+                                        id: text,
+                                        name: title,
+                                        desc: desc,
+                                        createdAt: today,
+                                        dueDate: dueDateRaw
                                     });
-                                }
+                                
                             } else {
                                 const errorRespuesta = await petition.text();
                                 alert("Un error inesperado", errorRespuesta, "error");
@@ -492,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function() {
 //                            console.log(petition.json());
                             const text = await petition.text();
                             const block = text ? JSON.parse(text) : null;
-                            console.log(block);
+                            
                             blocks.push({
                                 id: block,
                                 name: title,
