@@ -17,16 +17,28 @@ const modals = {
             const createdAtDiv = document.getElementById('cardCreatedAt');
             
             modal.style.display = 'flex';
-            state.editingBlockIdx = blockIdx;
-            state.editingCardIdx = cardIdx;
+            editingBlockIdx = blockIdx;
+            editingCardIdx = cardIdx;
             
             if (blockIdx !== null && cardIdx !== null) {
-                const card = state.blocks[blockIdx].cards[cardIdx];
-                titleInput.value = card.title;
-                descInput.value = card.desc || '';
-                dueDateInput.value = formatDate(card.dueDate, 'YYYYMMDD');
-                createdAtDiv.textContent = card.createdAt ? `Creada: ${card.createdAt}` : '';
-                document.querySelector('#cardModal h2').textContent = card.title;
+                const card = blocks[blockIdx].cards[cardIdx];
+                titleInput.value = card.name || card.title || '';
+                descInput.value = card.desc || card.description || '';
+                dueDateInput.value = formatDateToYYYYMMDD(card.dueDate || card.finalDate);
+                
+                // Handle creation date - check for both properties and format properly
+                const creationDate = card.createdAt || card.creationDate;
+                if (creationDate) {
+                    // If it's a Date object, format it; if it's a string, use as is
+                    const formattedDate = creationDate instanceof Date 
+                        ? creationDate.toLocaleDateString('es-ES') 
+                        : creationDate;
+                    createdAtDiv.textContent = `Creada: ${formattedDate}`;
+                } else {
+                    createdAtDiv.textContent = '';
+                }
+                
+                document.querySelector('#cardModal h2').textContent = card.name || card.title || 'Editar tarjeta';
             } else {
                 titleInput.value = descInput.value = dueDateInput.value = '';
                 createdAtDiv.textContent = '';
@@ -36,7 +48,9 @@ const modals = {
         },
         close: () => {
             document.getElementById('cardModal').style.display = 'none';
-            state.editingBlockIdx = state.editingCardIdx = state.currentAddBlockIdx = null;
+            editingBlockIdx = null;
+            editingCardIdx = null;
+            currentAddBlockIdx = null;
         }
     }
 };
@@ -48,17 +62,61 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('createCardForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const title = document.getElementById('cardTitleInput').value.trim();
+            const desc = document.getElementById('cardDescInput').value.trim();
+            const dueDateRaw = document.getElementById('cardDueDateInput').value;
+            const today = new Date();
+            
             if (!title) return;
             
-            const cardData = {
-                id: null,
-                name: title,
-                description: document.getElementById('cardDescInput').value.trim(),
-                creationDate: new Date(),
-                finalDate: document.getElementById('cardDueDateInput').value
-            };
+            if (editingBlockIdx !== null && editingCardIdx !== null) {
+                let card = blocks[editingBlockIdx].cards[editingCardIdx];
+                card.name = title;
+                card.desc = desc;
+                card.dueDate = dueDateRaw;
+                card.finalDate = dueDateRaw;
+                
+                renderBoard(blocks);
+            } else if (currentAddBlockIdx !== null) {
+                let cardData = {
+                    id: null,
+                    name: title,
+                    description: desc,
+                    creationDate: today,
+                    finalDate: dueDateRaw
+                };
+                
+                try {
+                    const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(cardData)
+                    });
+                    
+                    if (petition.ok) {
+                        const text = await petition.text();
+                        blocks[currentAddBlockIdx].cards.push({
+                            id: text,
+                            name: title,
+                            desc: desc,
+                            createdAt: today,
+                            creationDate: today,
+                            dueDate: dueDateRaw,
+                            finalDate: dueDateRaw
+                        });
+                        renderBoard(blocks);
+                    } else {
+                        const errorRespuesta = await petition.text();
+                        alert("Un error inesperado", errorRespuesta, "error");
+                    }
+                } catch (error) {
+                    console.error('Error creating card:', error);
+                    alert("Error al crear la tarjeta", error.message, "error");
+                }
+            }
             
-            await createCard(cardData);
             modals.card.close();
         });
         
@@ -71,7 +129,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            await createBlock({ id: null, name: title });
+            try {
+                const Block = {
+                    id: null,
+                    name: title,
+                };
+                const petition = await fetch(`/user/createBlock?email=${emailUser}&workspaceid=${workSpaceID}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(Block)
+                });
+                
+                if (petition.ok) {
+                    const text = await petition.text();
+                    const block = text ? JSON.parse(text) : null;
+                    
+                    blocks.push({
+                        id: block,
+                        name: title,
+                        cards: []
+                    });
+                    renderBoard(blocks);
+                } else {
+                    const errorRespuesta = await petition.text();
+                    alert("CREAR BLOQUE FALLO", errorRespuesta, "error");
+                }
+            } catch (error) {
+                console.error('Error creating block:', error);
+                alert("Error al crear el bloque", error.message, "error");
+            }
+            
             modals.block.close();
         });
     }

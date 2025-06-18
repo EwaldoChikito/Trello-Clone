@@ -42,16 +42,6 @@ let currentAddBlockIdx = null;
 let editingBlockIdx = null;
 let editingCardIdx = null;
 
-// --- Modal logic for creating a new block ---
-function openBlockModal() {
-    document.getElementById('blockModal').style.display = 'flex';
-    document.getElementById('blockTitleInput').value = '';
-    document.getElementById('blockTitleInput').focus();
-}
-function closeBlockModal() {
-    document.getElementById('blockModal').style.display = 'none';
-}
-
 function clearPlaceholder() {
     if (placeholder.parentNode) {
         placeholder.parentNode.removeChild(placeholder);
@@ -185,7 +175,8 @@ function renderBoard(blocks) {
                     // Due date
                     const dueDateDiv = document.createElement('div');
                     dueDateDiv.className = 'card-due-date';
-                    dueDateDiv.textContent = card.finalDate ? `Finaliza: ${card.finalDate}` : "Sin fecha de finalización";
+                    const dueDate = card.dueDate || card.finalDate;
+                    dueDateDiv.textContent = dueDate ? `Finaliza: ${dueDate}` : "Sin fecha de finalización";
 
                     cardDiv.appendChild(cardHeader);
                     cardDiv.appendChild(dueDateDiv);
@@ -194,7 +185,10 @@ function renderBoard(blocks) {
                     cardDiv.draggable = true;
                     cardDiv.addEventListener('click', (e) => {
                         if (e.target.closest('.card-arrows')) return;
-                        openCardModal(blockIdx, cardIdx);
+                        // Use modal management functions
+                        if (typeof modals !== 'undefined' && modals.card && modals.card.open) {
+                            modals.card.open(blockIdx, cardIdx);
+                        }
                     });
                     cardDiv.addEventListener('dragstart', e => {
                         dragged = { blockIdx, cardIdx, cardElem: cardDiv };
@@ -218,7 +212,10 @@ function renderBoard(blocks) {
             addCardDiv.innerHTML = `<span class="add-plus">+</span>`;
             addCardDiv.onclick = function() {
                 currentAddBlockIdx = blockIdx; // Solo aquí se setea
-                openCardModal();
+                // Use modal management functions
+                if (typeof modals !== 'undefined' && modals.card && modals.card.open) {
+                    modals.card.open();
+                }
             };
             listDiv.appendChild(addCardDiv);
 
@@ -265,74 +262,19 @@ function renderBoard(blocks) {
     addBlockDiv.style.height = '60px';
     addBlockDiv.style.marginLeft = '8px';
     addBlockDiv.innerHTML = `<span class="add-plus" style="font-size:2em;">+</span>`;
-    addBlockDiv.onclick = openBlockModal;
+    addBlockDiv.onclick = function() {
+        // Use modal management functions
+        if (typeof modals !== 'undefined' && modals.block && modals.block.open) {
+            modals.block.open();
+        }
+    };
     board.appendChild(addBlockDiv);
 }
 
-// Modal logic for create/edit cards
-function openCardModal(blockIdx = null, cardIdx = null) {
-    document.getElementById('cardModal').style.display = 'flex';
-    const modalTitle = document.querySelector('#cardModal h2');
-    const dueDateInput = document.getElementById('cardDueDateInput');
-    const createdAtDiv = document.getElementById('cardCreatedAt');
-    if (blockIdx !== null && cardIdx !== null) {
-        editingBlockIdx = blockIdx;
-        editingCardIdx = cardIdx;
-        // NO modificar currentAddBlockIdx aquí
-        const card = blocks[blockIdx].cards[cardIdx];
-        document.getElementById('cardTitleInput').value = card.title;
-        document.getElementById('cardDescInput').value = card.desc || '';
-        dueDateInput.value = formatDateToYYYYMMDD(card.dueDate);
-        createdAtDiv.textContent = card.createdAt ? `Creada: ${card.createdAt}` : '';
-        modalTitle.textContent = card.title;
-    } else {
-        editingBlockIdx = null;
-        editingCardIdx = null;
-        // currentAddBlockIdx se setea solo desde el botón "+"
-        document.getElementById('cardTitleInput').value = '';
-        document.getElementById('cardDescInput').value = '';
-        dueDateInput.value = '';
-        createdAtDiv.textContent = '';
-        modalTitle.textContent = "Crear nueva tarjeta";
-    }
-    document.getElementById('cardTitleInput').focus();
-}
-
-function closeCardModal() {
-    document.getElementById('cardModal').style.display = 'none';
-    // Limpia los índices para evitar efectos residuales
-    editingBlockIdx = null;
-    editingCardIdx = null;
-    currentAddBlockIdx = null;
-}
-
-// --- Modal for new block (add at the end of your HTML if not present) ---
-if (!document.getElementById('blockModal')) {
-    const modal = document.createElement('div');
-    modal.id = 'blockModal';
-    modal.className = 'modal-overlay';
-    modal.style.display = 'none';
-    modal.innerHTML = `
-        <div class="modal-card" style="min-height:180px;">
-            <button class="close-modal" onclick="closeBlockModal()">×</button>
-            <h2>Crear nuevo bloque</h2>
-            <form id="createBlockForm">
-                <label>
-                    <input id="blockTitleInput" type="text" placeholder="Título del bloque" required>
-                </label>
-                <button type="submit">Crear</button>
-            </form>
-        </div>
-    `;
-    document.body.appendChild(modal);
-}
-
-// Modal form handler
+// --- Data loading and initialization ---
 document.addEventListener('DOMContentLoaded', function() {
     if(login){
-
         let pedirBlocks = async() => {
-//            event.preventDefault();
             const respuesta = await fetch(`/user/loadBlocks?email=${emailUser}&workspaceid=${workSpaceID}`,
                 {
                     method: "GET",
@@ -344,7 +286,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             if (respuesta.ok)
             {
-                //console.log(respuesta.json());
                 const bloques = await respuesta.json();
                 blocks = bloques;
                 renderBoard(blocks);
@@ -354,170 +295,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         pedirBlocks();
-
-//        let pedirCards = async() => {
-//                    event.preventDefault();
-//                    const respuesta = await fetch(`/user/loadCards`?email=${emailUser}&blockId=${blocks[currentAddBlockIdx].id}&workspaceid=${workSpaceID}`,
-//                        {
-//                            method: "GET",
-//                            headers:
-//                                {
-//                                    "Accept": "application/json",
-//                                    "Content-Type": "application/json",
-//                                }
-//                        });
-//                    if (respuesta.ok)
-//                    {
-//                        const bloques = await respuesta.json();
-//                        blocks = bloques;
-//                        renderBoard(blocks);
-//                    }
-//                    else{
-//                        alert ("Un error inesperado","No sé que","error");
-//                    }
-//                }
-//                pedirCards();
-
-        const form = document.getElementById('createCardForm');
-        if (form) {
-            form.onsubmit = async function(e) {
-                e.preventDefault();
-                const title = document.getElementById('cardTitleInput').value.trim();
-                const desc = document.getElementById('cardDescInput').value.trim();
-                const dueDateRaw = document.getElementById('cardDueDateInput').value;
-                const today = new Date();
-                if (title) {
-                    if (editingBlockIdx !== null && editingCardIdx !== null) {
-                        let card = blocks[editingBlockIdx].cards[editingCardIdx];
-                        card.title = title;
-                        card.desc = desc;
-                        card.dueDate = dueDateRaw;
-
-                        let cardData = {
-                            id: null,
-                            name: title,
-                            description: desc,
-                            creationDate: today,
-                            finalDate: dueDateRaw
-                        };
-                        const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(cardData)
-                        });
-                        if (petition.ok) {
-                            const text = await petition.text();
-                            const card = text ? JSON.parse(text) : null;
-                            console.log(card);
-                            blocks[currentAddBlockIdx].cards.push({
-                                id: text,
-                                name: title,
-                                desc: desc,
-                                createdAt: today,
-                                dueDate: dueDateRaw
-                            });
-                            
-                        }
-                        else{
-                            console.log(petition.status);
-                            console.log(petition);
-                            const errorRespuesta = await petition.text();
-                            alert("Un error inesperado", errorRespuesta, "error");
-                        }
-                    } else if (currentAddBlockIdx !== null) {
-                        // Crear tarjeta en backend y obtener id
-                        let cardData = {
-                                id: null,
-                                name: title,
-                                description: desc,
-                                creationDate: today,
-                                finalDate: dueDateRaw
-                            };
-                            const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
-                                method: 'POST',
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify(cardData)
-                            });
-                            if (petition.ok) {
-                                const text = await petition.text();
-                                const card = text ? JSON.parse(text) : null;
-                                
-                                    blocks[currentAddBlockIdx].cards.push({
-                                        id: text,
-                                        name: title,
-                                        desc: desc,
-                                        createdAt: today,
-                                        dueDate: dueDateRaw
-                                    });
-                                
-                            } else {
-                                const errorRespuesta = await petition.text();
-                                alert("Un error inesperado", errorRespuesta, "error");
-                            }
-                    }
-                    closeCardModal();
-                    renderBoard(blocks);
-                    pedirBlocks();
-                }
-            };
-        }
-
-        // --- Handle new block form ---
-        const blockForm = document.getElementById('createBlockForm');
-        if (blockForm) {
-            blockForm.onsubmit = async function(e) {
-                e.preventDefault();
-                const title = document.getElementById('blockTitleInput').value.trim();
-                if (title !== "") {
-
-                    let crearBlock = async () => {
-                        const Block = {
-                            id: null,
-                            name: title,
-                        };
-                        const petition = await fetch(`/user/createBlock?email=${emailUser}&workspaceid=${workSpaceID}`, {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(Block)
-                        });
-                        if (petition.ok) {
-//                            console.log(petition.json());
-                            const text = await petition.text();
-                            const block = text ? JSON.parse(text) : null;
-                            
-                            blocks.push({
-                                id: block,
-                                name: title,
-                                cards: []
-                            });
-                            closeBlockModal();
-                            renderBoard(blocks);
-                        }
-                        else {
-                            const errorRespuesta = await petition.text();
-                            alert("CREAR BLOQUE FALLO", errorRespuesta, "error");
-                        }
-                    }
-
-                    crearBlock();
-                    pedirBlocks();
-
-
-                } else {
-                    document.getElementById('blockTitleInput').focus();
-                }
-            };
-            pedirBlocks();
-        }
     }
 });
 
