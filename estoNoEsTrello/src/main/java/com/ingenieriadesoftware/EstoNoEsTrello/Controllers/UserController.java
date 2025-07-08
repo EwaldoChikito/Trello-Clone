@@ -35,7 +35,7 @@ public class UserController {
     @GetMapping("/loadCards")
     public ResponseEntity<ArrayList<Card>> loadCards(@RequestParam("email") String email, @RequestParam("blockId") Long id, @RequestParam("workspaceid") Long workSpaceId) throws IOException {
         User user = new User().findUser(email);
-        Block block = BlockController.findBlock(id, user, workSpaceId);
+        Block block = BlockController.findBlock(id, workSpaceId, user );
         return new ResponseEntity<ArrayList<Card>>(block.getCards(),HttpStatus.OK);
 
     }
@@ -57,6 +57,7 @@ public class UserController {
 
         Block block1 = new Block(null, block.getName(), block.getCards());
         block1.setCards(new ArrayList<Card>());
+//        WorkSpaceController.findWorkSpace(workSpaceId, user).getBlocks().add(block1);
         BlockController.addBlock(block1, user, workSpaceId);
         System.out.println("Block created with Name: " + block1.getName());
         return new ResponseEntity<Long>(block1.getId(), HttpStatus.OK);
@@ -72,6 +73,30 @@ public class UserController {
         CardController.addCard(card1, user, blockID,workSpaceId);
         System.out.println("Card created with ID: " + card1.getId());
         return new ResponseEntity<Long>(card1.getId(), HttpStatus.OK);
+    }
+
+    @PostMapping("deleteWorkSpace")
+    public ResponseEntity<Long> deleteWorkSpace(@RequestParam("workspaceid") Long workSpaceId, @RequestParam("email") String email) throws IOException {
+        User user = new User().findUser(email);
+
+        WorkSpaceController.deleteWorkSpace(workSpaceId, user);
+        System.out.println("WorkSpace eliminado con exito");
+        return new ResponseEntity<Long>(HttpStatus.OK);
+
+    }
+
+    @PostMapping("deleteBlock")
+    public ResponseEntity<Long> deleteBlock(@RequestParam("blockId") Long blockID,@RequestParam("workspaceid") Long workSpaceId,@RequestParam("email") String email) throws IOException {
+        User user = new User().findUser(email);
+        BlockController.deleteBlock(blockID,workSpaceId, user);
+        return new ResponseEntity<Long>(HttpStatus.OK);
+    }
+
+    @PostMapping("deleteCard")
+    public ResponseEntity<Long> deleteCard(@RequestParam("cardId") Long cardID,@RequestParam("blockId") Long blockID,@RequestParam("workspaceid") Long workSpaceId,@RequestParam("email") String email) throws IOException {
+        User user = new User().findUser(email);
+        CardController.deleteCard(cardID,blockID,workSpaceId, user);
+        return new ResponseEntity<Long>(HttpStatus.OK);
     }
 
     @PostMapping("/registro")
