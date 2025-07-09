@@ -42,7 +42,7 @@ class LocalDateAdapter implements JsonSerializer<LocalDate>, JsonDeserializer<Lo
 
 public class UserJsonController extends User {
 
-    private static final String USERS_JSON_PATH = "com/ingenieriadesoftware/EstoNoEsTrello/JSONs/Users.json";
+    private static final String USERS_JSON_PATH = "JSONs/Users.json";
 
     public UserJsonController(String email, String password, ArrayList<WorkSpace> workspaces) {
         super(email, password, workspaces);

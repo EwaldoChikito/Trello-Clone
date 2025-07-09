@@ -13,7 +13,7 @@ import java.util.LinkedList;
 
 public class UsersAdministrator {
     private LinkedList<User> users;
-    final String FILE="src/main/java/com/ingenieriadesoftware/EstoNoEsTrello/JSONs/Users.json";
+    final String FILE="src/main/resources/JSONs/Users.json";
 
     public LinkedList<User> getUsers() {
         return users;
