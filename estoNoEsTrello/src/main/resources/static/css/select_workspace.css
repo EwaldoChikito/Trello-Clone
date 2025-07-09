@@ -120,6 +120,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
 }
 
 .board-card:hover {
@@ -136,6 +137,54 @@ body {
 .board-desc {
     color: #5e6c84;
     font-size: 0.95em;
+}
+
+.delete-workspace-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #e0e7ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 50%;
+    color: #2a387c;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    padding: 0;
+    font-size: 0.8em;
+}
+
+.delete-workspace-btn:hover {
+    background: #c7d2fe;
+    border-color: #a5b4fc;
+}
+
+.edit-workspace-btn {
+    position: absolute;
+    top: 8px;
+    right: 40px;
+    background: #e0e7ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 50%;
+    color: #2a387c;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    padding: 0;
+    font-size: 0.8em;
+}
+
+.edit-workspace-btn:hover {
+    background: #c7d2fe;
+    border-color: #a5b4fc;
 }
 
 .add-workspace-card {
@@ -222,6 +271,47 @@ body {
     color: #ffffff;
     cursor: pointer;
     font-size: 16px;
+    margin: auto auto 16px auto;
+    max-width: 120px;
+    padding: 10px;
+    width: 100%;
+}
+
+/* Estilos para los inputs del modal de editar workspace (copiados del modal de cartas) */
+#editWorkspaceTitleInput {
+    margin-top: 10px;
+    resize: none;
+    width: 100%;
+    box-sizing: border-box;
+    height: 32px;
+    padding: 10px 0 10px 25px;
+    border: 1px solid #cccccc;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+#editWorkspaceDescInput {
+    resize: none;
+    width: 100%;
+    min-width: 250px;
+    box-sizing: border-box;
+    height: 64px;
+    padding: 10px 0 10px 25px;
+    margin-bottom: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+#editWorkspaceForm button[type="submit"] {
+    background-color: #2a387c;
+    border: none;
+    border-radius: 20px;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    font-size: 16px;
+    justify-content: center;
     margin: auto auto 16px auto;
     max-width: 120px;
     padding: 10px;

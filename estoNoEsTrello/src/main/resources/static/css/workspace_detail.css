@@ -128,6 +128,21 @@ body {
     font-size: 1.1em;
 }
 
+.card1-icon {
+    background: #e0e7ff;
+    color: #2a387c;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    margin-left: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.7rem;
+    border: 2px solid rgba(42, 56, 124, 0.31);
+}
+
 .edit-block-title-input {
     flex: 1;
     font-size: 1em;
@@ -199,6 +214,28 @@ body {
 
 .card .card-arrows button:hover:not(:disabled) {
     background: #8393b9;
+}
+
+.delete-card-btn {
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+    border-radius: 50%;
+    color: #dc2626;
+    font-size: 1em;
+    width: 26px;
+    height: 26px;
+    transition: background 0.2s, border-color 0.2s;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.delete-card-btn:hover {
+    background: #fecaca;
+    border-color: #f87171;
 }
 
 .card-drop-indicator {
