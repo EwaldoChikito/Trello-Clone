@@ -1,6 +1,7 @@
 package com.ingenieriadesoftware.EstoNoEsTrello.Controllers;
 
 import com.ingenieriadesoftware.EstoNoEsTrello.JsonControllers.UserJsonController;
+import com.ingenieriadesoftware.EstoNoEsTrello.model.Block;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.User;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.WorkSpace;
 
@@ -52,5 +53,21 @@ public class WorkSpaceController {
             }
         }
         return (new WorkSpace());
+    }
+
+    public static void updateWorkSpace(WorkSpace workSpace, User user) throws IOException {
+        ArrayList<User> usersList = UserJsonController.findTotalUsers();
+        User currentUser = new User();
+        for (int i=0;i<usersList.size();i++)
+        {
+            if (usersList.get(i).getEmail().equals(user.getEmail()))
+            {
+                currentUser=usersList.get(i);
+                UserJsonController.deleteUser(user.getEmail());
+            }
+        }
+        WorkSpace oldWorkSpace = WorkSpaceController.findWorkSpace(workSpace.getId(),currentUser);
+        oldWorkSpace.setName(workSpace.getName());
+        UserJsonController.saveUser(currentUser);
     }
 }
