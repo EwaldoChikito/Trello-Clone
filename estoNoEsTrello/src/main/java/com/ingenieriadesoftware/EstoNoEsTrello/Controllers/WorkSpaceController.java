@@ -12,6 +12,22 @@ public class WorkSpaceController {
     public WorkSpaceController() {
     }
 
+    static public void deleteWorkSpace(long workSpaceID, User user) throws IOException {
+        ArrayList<User> usersList = UserJsonController.findTotalUsers();
+        WorkSpace workSpace = WorkSpaceController.findWorkSpace(workSpaceID,user);
+        User currentUser = new User();
+        for (int i=0;i<usersList.size();i++)
+        {
+            if (usersList.get(i).getEmail().equals(user.getEmail()))
+            {
+                currentUser=usersList.get(i);
+                UserJsonController.deleteUser(user.getEmail());
+            }
+        }
+        currentUser.getWorkspaces().remove(workSpace);
+        UserJsonController.saveUser(currentUser);
+    }
+
     static public void addWorkSpace(WorkSpace workSpace , User user) throws IOException {
         ArrayList<User> usersList = UserJsonController.findTotalUsers();
         User currentUser = new User();
@@ -29,13 +45,12 @@ public class WorkSpaceController {
 
     static public WorkSpace findWorkSpace(Long id, User user) throws IOException {
         ArrayList<WorkSpace> workSpacesList = user.getWorkspaces();
-        WorkSpace workSpacesAux = new WorkSpace();
+//        WorkSpace workSpacesAux = new WorkSpace();
         for (int i=0;i<workSpacesList.size();i++) {
             if (workSpacesList.get(i).getId().equals(id)){
-                workSpacesAux = workSpacesList.get(i);
-                return workSpacesAux;
+                return workSpacesList.get(i);
             }
         }
-        return workSpacesAux;
+        return (new WorkSpace());
     }
 }
