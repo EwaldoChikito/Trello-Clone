@@ -143,21 +143,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     const errorRespuesta = await petition.text();
                     alert("Error al actualizar la tarjeta", errorRespuesta, "error");
                 }
+                modals.card.close();
+                renderBoard(blocks);
             } else if (currentAddBlockIdx !== null) {
-                // Crear nueva tarjeta
-                const cardData = {
+                // Cierra el modal primero
+                modals.card.close();
+                // Luego crea la tarjeta y refresca el board
+                await createCard({
                     id: null,
                     name: title,
                     description: desc,
                     creationDate: today,
                     finalDate: dueDateRaw
-                };
-                
-                await createCard(cardData);
+                });
             }
-            
-            modals.card.close();
-            renderBoard(blocks);
         });
         
         // Block form handler
