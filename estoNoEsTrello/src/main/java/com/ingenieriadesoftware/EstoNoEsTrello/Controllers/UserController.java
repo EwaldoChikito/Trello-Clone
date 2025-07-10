@@ -1,7 +1,7 @@
 package com.ingenieriadesoftware.EstoNoEsTrello.Controllers;
 
 import com.ingenieriadesoftware.EstoNoEsTrello.JsonControllers.UserJsonController;
-import com.ingenieriadesoftware.EstoNoEsTrello.model.*;
+import com.ingenieriadesoftware.EstoNoEsTrello.model.Classes.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

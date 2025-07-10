@@ -1,8 +1,8 @@
 package com.ingenieriadesoftware.EstoNoEsTrello.Controllers;
 
 import com.ingenieriadesoftware.EstoNoEsTrello.JsonControllers.UserJsonController;
-import com.ingenieriadesoftware.EstoNoEsTrello.model.Block;
-import com.ingenieriadesoftware.EstoNoEsTrello.model.User;
+import com.ingenieriadesoftware.EstoNoEsTrello.model.Classes.Block;
+import com.ingenieriadesoftware.EstoNoEsTrello.model.Classes.User;
 
 import java.io.IOException;
 import java.util.ArrayList;

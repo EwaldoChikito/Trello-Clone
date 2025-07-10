@@ -1,4 +1,4 @@
-package com.ingenieriadesoftware.EstoNoEsTrello.model;
+package com.ingenieriadesoftware.EstoNoEsTrello.model.Classes;
 
 import java.time.LocalDate;
 import java.util.UUID;

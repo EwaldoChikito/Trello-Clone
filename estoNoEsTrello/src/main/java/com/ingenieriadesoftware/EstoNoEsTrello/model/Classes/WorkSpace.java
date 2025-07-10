@@ -1,4 +1,4 @@
-package com.ingenieriadesoftware.EstoNoEsTrello.model;
+package com.ingenieriadesoftware.EstoNoEsTrello.model.Classes;
 
 import java.util.ArrayList;
 import java.util.UUID;

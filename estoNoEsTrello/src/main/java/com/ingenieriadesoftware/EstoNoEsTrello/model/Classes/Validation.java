@@ -1,4 +1,4 @@
-package com.ingenieriadesoftware.EstoNoEsTrello.model;
+package com.ingenieriadesoftware.EstoNoEsTrello.model.Classes;
 import com.ingenieriadesoftware.EstoNoEsTrello.JsonControllers.UserJsonController;
 import com.ingenieriadesoftware.EstoNoEsTrello.model.Exceptions.*;
 

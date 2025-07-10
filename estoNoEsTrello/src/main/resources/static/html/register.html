@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="css/login.css?v=1.0.1">
+    <link rel="stylesheet" href="../css/register.css?v=1.0.1">
     <meta charset="UTF-8" />
     <title>Login Page</title>
 </head>
 <body>
 <div class="login-container">
-    <h1>Inicio de Sesión</h1>
+    <h1>Registro de Usuario</h1>
     <form>
         <h3>Ingrese su Mail:</h3>
         <label>
@@ -15,14 +15,19 @@
         </label>
         <h3>Ingrese su contraseña:</h3>
         <label>
-            <input id="input_password" type="password" placeholder="******">
+            <input id="input_password" class="password" type="password" placeholder="******">
+        </label>
+        <h3>Confirme su contraseña:</h3>
+        <label>
+            <input id="input_password_confirm" class="confirm_password" type="password" placeholder="******">
         </label>
         <div class="buttons">
             <button type="button" class="return-button" onclick="window.location.href='index.html'">Regresar</button>
-            <button id="start_sesion_button" type="submit" class="login-button">Iniciar Sesión</button>
+            <button type="submit" class="login-button" id="boton-registrar">Registrar</button>
         </div>
+
     </form>
 </div>
-<script src="js/login.js?v=1.0.1"></script>
+<script src="../js/register.js?v=1.0.1"></script>
 </body>
 </html>
