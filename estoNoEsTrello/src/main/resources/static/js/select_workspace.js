@@ -78,6 +78,24 @@ function closeWorkspaceModal() {
     document.getElementById('workspaceModal').style.display = 'none';
 }
 
+// Abre el modal de edición de workspace
+function openEditWorkspaceModal(workspace) {
+    document.getElementById('editWorkspaceModal').style.display = 'flex';
+    document.getElementById('editWorkspaceTitleInput').value = workspace.name || workspace.title || '';
+    document.getElementById('editWorkspaceDescInput').value = workspace.description || workspace.desc || '';
+    document.getElementById('editWorkspaceTitleInput').focus();
+    document.getElementById('editWorkspaceTitleInput').select();
+
+    // Guardar referencia al workspace que se está editando
+    window.currentEditingWorkspace = workspace;
+}
+
+// Cierra el modal de edición de workspace
+function closeEditWorkspaceModal() {
+    document.getElementById('editWorkspaceModal').style.display = 'none';
+    window.currentEditingWorkspace = null;
+}
+
 var name;
 var desc;
 const emailUser = localStorage.getItem("email");
@@ -158,6 +176,27 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         }
 
+        // Formulario de edición de workspace
+        const editWorkspaceForm = document.getElementById('editWorkspaceForm');
+        if (editWorkspaceForm) {
+            editWorkspaceForm.onsubmit = function(e) {
+                e.preventDefault();
+                const newName = document.getElementById('editWorkspaceTitleInput').value.trim();
+                const newDesc = document.getElementById('editWorkspaceDescInput').value.trim() || "Sin descripción.";
+
+                if (newName !== "" && window.currentEditingWorkspace) {
+                    // Actualizar el workspace en el array local
+                    const workspaceIndex = boards.findIndex(ws => ws.id === window.currentEditingWorkspace.id);
+                    if (workspaceIndex !== -1) {
+                        boards[workspaceIndex].name = newName;
+                        boards[workspaceIndex].description = newDesc;
+                        renderBoards(boards);
+                    }
+                    closeEditWorkspaceModal();
+                }
+            };
+        }
+
         buttonContainer.addEventListener('click', (event) => {
             if (event.target.classList.contains('board-card')) {
                 idSaver = event.target.id;
@@ -171,8 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 //    renderBoards(boards);
-
-
 
     // Filtro de búsqueda
     const searchInput = document.getElementById('searchInput');
