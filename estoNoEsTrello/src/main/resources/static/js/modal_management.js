@@ -15,18 +15,29 @@ const modals = {
             const descInput = document.getElementById('cardDescInput');
             const dueDateInput = document.getElementById('cardDueDateInput');
             const createdAtDiv = document.getElementById('cardCreatedAt');
-            
+
             modal.style.display = 'flex';
-            state.editingBlockIdx = blockIdx;
-            state.editingCardIdx = cardIdx;
-            
+            editingBlockIdx = blockIdx;
+            editingCardIdx = cardIdx;
+
             if (blockIdx !== null && cardIdx !== null) {
-                const card = state.blocks[blockIdx].cards[cardIdx];
-                titleInput.value = card.title;
-                descInput.value = card.desc || '';
-                dueDateInput.value = formatDate(card.dueDate, 'YYYYMMDD');
-                createdAtDiv.textContent = card.createdAt ? `Creada: ${card.createdAt}` : '';
-                document.querySelector('#cardModal h2').textContent = card.title;
+                const card = blocks[blockIdx].cards[cardIdx];
+                titleInput.value = card.name || card.title || '';
+                descInput.value = card.desc || card.description || '';
+                dueDateInput.value = formatDateToYYYYMMDD(card.dueDate || card.finalDate);
+
+                // Handle creation date - check for both properties and format properly
+                const creationDate = card.createdAt || card.creationDate;
+                if (creationDate) {
+                    // If it's a Date object, format it; if it's a string, use as is
+                    const formattedDate = creationDate instanceof Date
+                        ? creationDate.toLocaleDateString('es-ES')
+                        : creationDate;
+                    createdAtDiv.textContent = `Creada: ${formattedDate}`;
+                } else {
+                    createdAtDiv.textContent = '';
+                }
+                document.querySelector('#cardModal h2').textContent = card.name || card.title || 'Editar tarjeta';
             } else {
                 titleInput.value = descInput.value = dueDateInput.value = '';
                 createdAtDiv.textContent = '';
@@ -36,10 +47,13 @@ const modals = {
         },
         close: () => {
             document.getElementById('cardModal').style.display = 'none';
-            state.editingBlockIdx = state.editingCardIdx = state.currentAddBlockIdx = null;
+            editingBlockIdx = null;
+            editingCardIdx = null;
+            currentAddBlockIdx = null;
         }
     }
 };
+
 
 // --- Modal form handlers ---
 document.addEventListener('DOMContentLoaded', () => {
