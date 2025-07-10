@@ -29,15 +29,31 @@ public class BlockController {
         UserJsonController.saveUser(currentUser);
     }
 
-    static public Block findBlock(Long id, User user, Long workSpaceId) throws IOException {
-       ArrayList<Block> blockArrayList = WorkSpaceController.findWorkSpace(workSpaceId,user).getBlocks();
-       Block blockAux = new Block();
+    static public Block findBlock(Long blockId, Long workSpaceId, User user) throws IOException {
+        ArrayList<Block> blockArrayList = WorkSpaceController.findWorkSpace(workSpaceId,user).getBlocks();
         for (int i=0;i<blockArrayList.size();i++) {
-            if (blockArrayList.get(i).getId().equals(id)){
-                blockAux = blockArrayList.get(i);
-                return blockAux;
+            if (blockArrayList.get(i).getId().equals(blockId)){
+                return blockArrayList.get(i);
+
             }
         }
-        return blockAux;
+        return (new Block());
+    }
+
+    public static void deleteBlock(Long blockID, Long workSpaceId, User user) throws IOException {
+        ArrayList<User> usersList = UserJsonController.findTotalUsers();
+        User currentUser = new User();
+        Block block = BlockController.findBlock(blockID,workSpaceId,user);
+        for (int i=0;i<usersList.size();i++)
+        {
+            if (usersList.get(i).getEmail().equals(user.getEmail()))
+            {
+                currentUser=usersList.get(i);
+                UserJsonController.deleteUser(user.getEmail());
+            }
+        }
+        WorkSpaceController.findWorkSpace(workSpaceId,currentUser).getBlocks().remove(block);
+        UserJsonController.saveUser(currentUser);
     }
 }
+
