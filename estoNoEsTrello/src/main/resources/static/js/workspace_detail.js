@@ -112,7 +112,36 @@ function renderBoard(blocks) {
                 };
                 function save() {
                     const newTitle = input.value.trim() || "Sin título";
+                    
+                    // Actualizar localmente
                     blocks[blockIdx].title = newTitle;
+                    blocks[blockIdx].name = newTitle;
+                    
+                    // Actualizar en el backend
+                    const block = blocks[blockIdx];
+                    if (block && block.id) {
+                        const blockData = {
+                            id: block.id,
+                            name: newTitle
+                        };
+                        
+                        fetch(`/user/updateBlock?workspaceid=${workSpaceID}&email=${emailUser}`, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(blockData)
+                        }).then(response => {
+                            if (!response.ok) {
+                                alert('Error al actualizar el bloque del servidor');
+                            }
+                        }).catch(error => {
+                            console.error('Error en la petición:', error);
+                            alert('Error al actualizar el bloque');
+                        });
+                    }
+                    
                     renderBoard(blocks);
                 }
             };
@@ -127,8 +156,35 @@ function renderBoard(blocks) {
             deleteBtn.onclick = function(e) {
                 e.stopPropagation();
                 if (confirm('¿Estás seguro de que quieres eliminar este bloque?')) {
-                    blocks.splice(blockIdx, 1);
-                    renderBoard(blocks);
+                    // Eliminar del backend primero
+                    const block = blocks[blockIdx];
+                    
+                    if (block && block.id) {
+                        const url = `/user/deleteBlock?blockId=${block.id}&workspaceid=${workSpaceID}&email=${emailUser}`;
+                        
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            }
+                        }).then(response => {
+                            if (response.ok) {
+                                // Si se eliminó correctamente del backend, eliminar visualmente
+                                blocks.splice(blockIdx, 1);
+                                renderBoard(blocks);
+                            } else {
+                                alert('Error al eliminar el bloque del servidor');
+                            }
+                        }).catch(error => {
+                            console.error('Error en la petición:', error);
+                            alert('Error al eliminar el bloque');
+                        });
+                    } else {
+                        // Si no tiene ID, solo eliminar visualmente (caso de bloques no guardados)
+                        blocks.splice(blockIdx, 1);
+                        renderBoard(blocks);
+                    }
                 }
             };
 
@@ -194,8 +250,35 @@ function renderBoard(blocks) {
                     deleteCardBtn.onclick = function(e) {
                         e.stopPropagation();
                         if (confirm('¿Estás seguro de que quieres eliminar esta tarjeta?')) {
-                            blocks[blockIdx].cards.splice(cardIdx, 1);
-                            renderBoard(blocks);
+                            // Eliminar del backend primero
+                            const card = blocks[blockIdx].cards[cardIdx];
+                            
+                            if (card && card.id) {
+                                const url = `/user/deleteCard?cardId=${card.id}&blockId=${blocks[blockIdx].id}&workspaceid=${workSpaceID}&email=${emailUser}`;
+                                
+                                fetch(url, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json',
+                                    }
+                                }).then(response => {
+                                    if (response.ok) {
+                                        // Si se eliminó correctamente del backend, eliminar visualmente
+                                        blocks[blockIdx].cards.splice(cardIdx, 1);
+                                        renderBoard(blocks);
+                                    } else {
+                                        alert('Error al eliminar la tarjeta del servidor');
+                                    }
+                                }).catch(error => {
+                                    console.error('Error en la petición:', error);
+                                    alert('Error al eliminar la tarjeta');
+                                });
+                            } else {
+                                // Si no tiene ID, solo eliminar visualmente (caso de tarjetas no guardadas)
+                                blocks[blockIdx].cards.splice(cardIdx, 1);
+                                renderBoard(blocks);
+                            }
                         }
                     };
                     arrows.appendChild(deleteCardBtn);
@@ -293,41 +376,13 @@ function renderBoard(blocks) {
     board.appendChild(addBlockDiv);
 }
 
-// Modal logic for create/edit cards
+// Modal logic for create/edit cards - using modal_management.js
 function openCardModal(blockIdx = null, cardIdx = null) {
-    document.getElementById('cardModal').style.display = 'flex';
-    const modalTitle = document.querySelector('#cardModal h2');
-    const dueDateInput = document.getElementById('cardDueDateInput');
-    const createdAtDiv = document.getElementById('cardCreatedAt');
-    if (blockIdx !== null && cardIdx !== null) {
-        editingBlockIdx = blockIdx;
-        editingCardIdx = cardIdx;
-        // NO modificar currentAddBlockIdx aquí
-        const card = blocks[blockIdx].cards[cardIdx];
-        document.getElementById('cardTitleInput').value = card.title;
-        document.getElementById('cardDescInput').value = card.desc || '';
-        dueDateInput.value = formatDateToYYYYMMDD(card.dueDate);
-        createdAtDiv.textContent = card.createdAt ? `Creada: ${card.createdAt}` : '';
-        modalTitle.textContent = card.title;
-    } else {
-        editingBlockIdx = null;
-        editingCardIdx = null;
-        // currentAddBlockIdx se setea solo desde el botón "+"
-        document.getElementById('cardTitleInput').value = '';
-        document.getElementById('cardDescInput').value = '';
-        dueDateInput.value = '';
-        createdAtDiv.textContent = '';
-        modalTitle.textContent = "Crear nueva tarjeta";
-    }
-    document.getElementById('cardTitleInput').focus();
+    modals.card.open(blockIdx, cardIdx);
 }
 
 function closeCardModal() {
-    document.getElementById('cardModal').style.display = 'none';
-    // Limpia los índices para evitar efectos residuales
-    editingBlockIdx = null;
-    editingCardIdx = null;
-    currentAddBlockIdx = null;
+    modals.card.close();
 }
 
 // --- Modal for new block (add at the end of your HTML if not present) ---
@@ -402,95 +457,7 @@ document.addEventListener('DOMContentLoaded', function() {
 //                }
 //                pedirCards();
 
-        const form = document.getElementById('createCardForm');
-        if (form) {
-            form.onsubmit = async function(e) {
-                e.preventDefault();
-                const title = document.getElementById('cardTitleInput').value.trim();
-                const desc = document.getElementById('cardDescInput').value.trim();
-                const dueDateRaw = document.getElementById('cardDueDateInput').value;
-                const today = new Date();
-                if (title) {
-                    if (editingBlockIdx !== null && editingCardIdx !== null) {
-                        let card = blocks[editingBlockIdx].cards[editingCardIdx];
-                        card.title = title;
-                        card.desc = desc;
-                        card.dueDate = dueDateRaw;
-
-                        let cardData = {
-                            id: null,
-                            name: title,
-                            description: desc,
-                            creationDate: today,
-                            finalDate: dueDateRaw
-                        };
-                        const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(cardData)
-                        });
-                        if (petition.ok) {
-                            const text = await petition.text();
-                            const card = text ? JSON.parse(text) : null;
-                            if(card) {
-                                blocks[currentAddBlockIdx].cards.push({
-                                    id: card.id,
-                                    name: card.name,
-                                    desc: card.description,
-                                    createdAt: card.creationDate,
-                                    dueDate: card.finalDate
-                                });
-                            }
-                        }
-                        else{
-                            console.log(petition.status);
-                            console.log(petition);
-                            const errorRespuesta = await petition.text();
-                            alert("Un error inesperado", errorRespuesta, "error");
-                        }
-                    } else if (currentAddBlockIdx !== null) {
-                        // Crear tarjeta en backend y obtener id
-                        let cardData = {
-                                id: null,
-                                name: title,
-                                description: desc,
-                                creationDate: today,
-                                finalDate: dueDateRaw
-                            };
-                            const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
-                                method: 'POST',
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify(cardData)
-                            });
-                            if (petition.ok) {
-                                const text = await petition.text();
-                                const card = text ? JSON.parse(text) : null;
-                                if(card) {
-                                    blocks[currentAddBlockIdx].cards.push({
-                                        id: card.id,
-                                        name: card.name,
-                                        desc: card.description,
-                                        createdAt: card.creationDate,
-                                        dueDate: card.finalDate
-                                    });
-                                }
-                            } else {
-                                const errorRespuesta = await petition.text();
-                                alert("Un error inesperado", errorRespuesta, "error");
-                            }
-                    }
-                    closeCardModal();
-                    renderBoard(blocks);
-                    pedirBlocks();
-                }
-            };
-        }
+        // Card form handling is now managed in modal_management.js
 
         // --- Handle new block form ---
         const blockForm = document.getElementById('createBlockForm');

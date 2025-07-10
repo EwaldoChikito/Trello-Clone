@@ -14,7 +14,6 @@ public class WorkSpaceController {
 
     static public void deleteWorkSpace(long workSpaceID, User user) throws IOException {
         ArrayList<User> usersList = UserJsonController.findTotalUsers();
-        WorkSpace workSpace = WorkSpaceController.findWorkSpace(workSpaceID,user);
         User currentUser = new User();
         for (int i=0;i<usersList.size();i++)
         {
@@ -24,7 +23,22 @@ public class WorkSpaceController {
                 UserJsonController.deleteUser(user.getEmail());
             }
         }
-        currentUser.getWorkspaces().remove(workSpace);
+        
+        // Buscar y eliminar el workspace por índice
+        ArrayList<WorkSpace> workspaces = currentUser.getWorkspaces();
+        boolean workspaceFound = false;
+        for (int i = 0; i < workspaces.size(); i++) {
+            if (workspaces.get(i).getId().equals(workSpaceID)) {
+                workspaces.remove(i);
+                workspaceFound = true;
+                break;
+            }
+        }
+        
+        if (!workspaceFound) {
+            System.out.println("Warning: WorkSpace with ID " + workSpaceID + " not found for user " + user.getEmail());
+        }
+        
         UserJsonController.saveUser(currentUser);
     }
 
@@ -66,9 +80,21 @@ public class WorkSpaceController {
                 UserJsonController.deleteUser(user.getEmail());
             }
         }
-        WorkSpace oldWorkSpace = WorkSpaceController.findWorkSpace(workSpace.getId(),currentUser);
-        oldWorkSpace.setName(workSpace.getName());
-        oldWorkSpace.setDescription(workSpace.getDescription());
+        // Buscar y actualizar el workspace por índice
+        ArrayList<WorkSpace> workspaces = currentUser.getWorkspaces();
+        boolean found = false;
+        for (int i = 0; i < workspaces.size(); i++) {
+            if (workspaces.get(i).getId().equals(workSpace.getId())) {
+                WorkSpace ws = workspaces.get(i);
+                ws.setName(workSpace.getName());
+                ws.setDescription(workSpace.getDescription());
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Warning: Workspace with ID " + workSpace.getId() + " not found for user " + user.getEmail());
+        }
         UserJsonController.saveUser(currentUser);
     }
 }

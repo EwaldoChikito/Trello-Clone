@@ -1,3 +1,44 @@
+// --- Helper functions ---
+async function createCard(cardData) {
+    const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cardData)
+    });
+    
+    if (petition.ok) {
+        // Después de crear, refresca los bloques desde el backend
+        await pedirBlocks();
+        renderBoard(blocks);
+    } else {
+        const errorRespuesta = await petition.text();
+        alert("Error al crear la tarjeta", errorRespuesta, "error");
+    }
+}
+
+async function createBlock(blockData) {
+    const petition = await fetch(`/user/createBlock?email=${emailUser}&workspaceid=${workSpaceID}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(blockData)
+    });
+    
+    if (petition.ok) {
+        // Después de crear, refresca los bloques desde el backend
+        await pedirBlocks();
+        renderBoard(blocks);
+    } else {
+        const errorRespuesta = await petition.text();
+        alert("Error al crear el bloque", errorRespuesta, "error");
+    }
+}
+
 // --- Modal management ---
 const modals = {
     block: {
@@ -64,16 +105,58 @@ document.addEventListener('DOMContentLoaded', () => {
             const title = document.getElementById('cardTitleInput').value.trim();
             if (!title) return;
             
-            const cardData = {
-                id: null,
-                name: title,
-                description: document.getElementById('cardDescInput').value.trim(),
-                creationDate: new Date(),
-                finalDate: document.getElementById('cardDueDateInput').value
-            };
+            const desc = document.getElementById('cardDescInput').value.trim();
+            const dueDateRaw = document.getElementById('cardDueDateInput').value;
+            const today = new Date();
             
-            await createCard(cardData);
-            modals.card.close();
+            if (editingBlockIdx !== null && editingCardIdx !== null) {
+                // Actualizar tarjeta existente
+                let card = blocks[editingBlockIdx].cards[editingCardIdx];
+                
+                // Actualizar propiedades locales
+                card.name = title;
+                card.title = title;
+                card.description = desc;
+                card.desc = desc;
+                card.finalDate = dueDateRaw;
+                card.dueDate = dueDateRaw;
+
+                // Actualizar en el backend
+                let cardData = {
+                    id: card.id,
+                    name: title,
+                    description: desc,
+                    creationDate: card.creationDate || card.createdAt || today,
+                    finalDate: dueDateRaw
+                };
+                
+                const petition = await fetch(`/user/updateCard?blockId=${blocks[editingBlockIdx].id}&workspaceid=${workSpaceID}&email=${emailUser}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(cardData)
+                });
+                
+                if (!petition.ok) {
+                    const errorRespuesta = await petition.text();
+                    alert("Error al actualizar la tarjeta", errorRespuesta, "error");
+                }
+                modals.card.close();
+                renderBoard(blocks);
+            } else if (currentAddBlockIdx !== null) {
+                // Cierra el modal primero
+                modals.card.close();
+                // Luego crea la tarjeta y refresca el board
+                await createCard({
+                    id: null,
+                    name: title,
+                    description: desc,
+                    creationDate: today,
+                    finalDate: dueDateRaw
+                });
+            }
         });
         
         // Block form handler
