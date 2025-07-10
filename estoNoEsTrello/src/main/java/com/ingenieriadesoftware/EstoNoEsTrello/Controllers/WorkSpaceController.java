@@ -68,6 +68,7 @@ public class WorkSpaceController {
         }
         WorkSpace oldWorkSpace = WorkSpaceController.findWorkSpace(workSpace.getId(),currentUser);
         oldWorkSpace.setName(workSpace.getName());
+        oldWorkSpace.setDescription(workSpace.getDescription());
         UserJsonController.saveUser(currentUser);
     }
 }
