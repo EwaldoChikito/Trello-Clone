@@ -80,11 +80,26 @@ public class CardController {
                 UserJsonController.deleteUser(user.getEmail());
             }
         }
-        Card oldCard = CardController.findCard(card.getId(),blockID,workSpaceId,currentUser);
-        oldCard.setName(card.getName());
-        oldCard.setDescription(card.getDescription());
-        oldCard.setCreationDate(card.getCreationDate());
-        oldCard.setCreationDate(card.getFinalDate());
+        
+        // Buscar y actualizar la tarjeta por índice
+        ArrayList<Card> cards = BlockController.findBlock(blockID,workSpaceId,currentUser).getCards();
+        boolean cardFound = false;
+        for (int i = 0; i < cards.size(); i++) {
+            if (cards.get(i).getId().equals(card.getId())) {
+                Card oldCard = cards.get(i);
+                oldCard.setName(card.getName());
+                oldCard.setDescription(card.getDescription());
+                oldCard.setCreationDate(card.getCreationDate());
+                oldCard.setFinalDate(card.getFinalDate());
+                cardFound = true;
+                break;
+            }
+        }
+        
+        if (!cardFound) {
+            System.out.println("Warning: Card with ID " + card.getId() + " not found in block " + blockID);
+        }
+        
         UserJsonController.saveUser(currentUser);
     }
 }

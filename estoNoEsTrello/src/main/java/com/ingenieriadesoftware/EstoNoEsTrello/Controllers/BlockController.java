@@ -81,8 +81,23 @@ public class BlockController {
                 UserJsonController.deleteUser(user.getEmail());
             }
         }
-        Block oldBlock = BlockController.findBlock(block.getId(),workSpaceId,currentUser);
-        oldBlock.setName(block.getName());
+        
+        // Buscar y actualizar el bloque por índice
+        ArrayList<Block> blocks = WorkSpaceController.findWorkSpace(workSpaceId,currentUser).getBlocks();
+        boolean blockFound = false;
+        for (int i = 0; i < blocks.size(); i++) {
+            if (blocks.get(i).getId().equals(block.getId())) {
+                Block oldBlock = blocks.get(i);
+                oldBlock.setName(block.getName());
+                blockFound = true;
+                break;
+            }
+        }
+        
+        if (!blockFound) {
+            System.out.println("Warning: Block with ID " + block.getId() + " not found in workspace " + workSpaceId);
+        }
+        
         UserJsonController.saveUser(currentUser);
     }
 }

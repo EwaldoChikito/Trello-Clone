@@ -112,7 +112,36 @@ function renderBoard(blocks) {
                 };
                 function save() {
                     const newTitle = input.value.trim() || "Sin título";
+                    
+                    // Actualizar localmente
                     blocks[blockIdx].title = newTitle;
+                    blocks[blockIdx].name = newTitle;
+                    
+                    // Actualizar en el backend
+                    const block = blocks[blockIdx];
+                    if (block && block.id) {
+                        const blockData = {
+                            id: block.id,
+                            name: newTitle
+                        };
+                        
+                        fetch(`/user/updateBlock?workspaceid=${workSpaceID}&email=${emailUser}`, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(blockData)
+                        }).then(response => {
+                            if (!response.ok) {
+                                alert('Error al actualizar el bloque del servidor');
+                            }
+                        }).catch(error => {
+                            console.error('Error en la petición:', error);
+                            alert('Error al actualizar el bloque');
+                        });
+                    }
+                    
                     renderBoard(blocks);
                 }
             };
