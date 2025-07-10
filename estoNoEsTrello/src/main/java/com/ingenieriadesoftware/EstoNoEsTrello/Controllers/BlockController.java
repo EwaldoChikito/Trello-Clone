@@ -55,5 +55,21 @@ public class BlockController {
         WorkSpaceController.findWorkSpace(workSpaceId,currentUser).getBlocks().remove(block);
         UserJsonController.saveUser(currentUser);
     }
+
+    public static void updateBlock(Block block, Long workSpaceId, User user) throws IOException {
+        ArrayList<User> usersList = UserJsonController.findTotalUsers();
+        User currentUser = new User();
+        for (int i=0;i<usersList.size();i++)
+        {
+            if (usersList.get(i).getEmail().equals(user.getEmail()))
+            {
+                currentUser=usersList.get(i);
+                UserJsonController.deleteUser(user.getEmail());
+            }
+        }
+        Block oldBlock = BlockController.findBlock(block.getId(),workSpaceId,currentUser);
+        oldBlock.setName(block.getName());
+        UserJsonController.saveUser(currentUser);
+    }
 }
 

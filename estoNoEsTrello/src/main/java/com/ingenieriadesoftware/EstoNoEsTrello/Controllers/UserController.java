@@ -74,7 +74,7 @@ public class UserController {
         return new ResponseEntity<Long>(card1.getId(), HttpStatus.OK);
     }
 
-    @PostMapping("deleteWorkSpace")
+    @PostMapping("/deleteWorkSpace")
     public ResponseEntity<Long> deleteWorkSpace(@RequestParam("workspaceid") Long workSpaceId, @RequestParam("email") String email) throws IOException {
         User user = new User().findUser(email);
 
@@ -84,18 +84,39 @@ public class UserController {
 
     }
 
-    @PostMapping("deleteBlock")
+    @PostMapping("/deleteBlock")
     public ResponseEntity<Long> deleteBlock(@RequestParam("blockId") Long blockID,@RequestParam("workspaceid") Long workSpaceId,@RequestParam("email") String email) throws IOException {
         User user = new User().findUser(email);
         BlockController.deleteBlock(blockID,workSpaceId, user);
         return new ResponseEntity<Long>(HttpStatus.OK);
     }
 
-    @PostMapping("deleteCard")
+    @PostMapping("/deleteCard")
     public ResponseEntity<Long> deleteCard(@RequestParam("cardId") Long cardID,@RequestParam("blockId") Long blockID,@RequestParam("workspaceid") Long workSpaceId,@RequestParam("email") String email) throws IOException {
         User user = new User().findUser(email);
         CardController.deleteCard(cardID,blockID,workSpaceId, user);
         return new ResponseEntity<Long>(HttpStatus.OK);
+    }
+
+    @PostMapping("/updateCard")
+    public ResponseEntity<Long> updateCard(@RequestBody Card card, @RequestParam("blockId") Long blockID, @RequestParam("workspaceid") Long workSpaceId, @RequestParam("email") String email) throws IOException {
+        User user = new User().findUser(email);
+        CardController.updateCard(card, blockID, workSpaceId, user);
+        return new ResponseEntity<Long>(card.getId(), HttpStatus.OK);
+    }
+
+    @PostMapping("/updateBlock")
+    public ResponseEntity<Long> updateBlock(@RequestBody Block block, @RequestParam("workspaceid") Long workSpaceId, @RequestParam("email") String email) throws IOException {
+        User user = new User().findUser(email);
+        BlockController.updateBlock(block, workSpaceId, user);
+        return new ResponseEntity<Long>(block.getId(), HttpStatus.OK);
+    }
+
+    @PostMapping("/updateWorkSpace")
+    public ResponseEntity<Long> updateWorkSpace(@RequestBody WorkSpace workSpace,@RequestParam("email") String email) throws IOException {
+        User user = new User().findUser(email);
+        WorkSpaceController.updateWorkSpace(workSpace, user);
+        return new ResponseEntity<Long>(workSpace.getId(), HttpStatus.OK);
     }
 
     @PostMapping("/registro")

@@ -54,4 +54,23 @@ public class CardController {
         BlockController.findBlock(blockID,workSpaceId,currentUser).getCards().remove(card);
         UserJsonController.saveUser(currentUser);
     }
+
+    public static void updateCard(Card card, Long blockID, Long workSpaceId, User user) throws IOException {
+        ArrayList<User> usersList = UserJsonController.findTotalUsers();
+        User currentUser = new User();
+        for (int i=0;i<usersList.size();i++)
+        {
+            if (usersList.get(i).getEmail().equals(user.getEmail()))
+            {
+                currentUser=usersList.get(i);
+                UserJsonController.deleteUser(user.getEmail());
+            }
+        }
+        Card oldCard = CardController.findCard(card.getId(),blockID,workSpaceId,currentUser);
+        oldCard.setName(card.getName());
+        oldCard.setDescription(card.getDescription());
+        oldCard.setCreationDate(card.getCreationDate());
+        oldCard.setCreationDate(card.getFinalDate());
+        UserJsonController.saveUser(currentUser);
+    }
 }
