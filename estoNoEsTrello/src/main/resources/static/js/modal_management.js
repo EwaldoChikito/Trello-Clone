@@ -1,3 +1,56 @@
+// --- Helper functions ---
+async function createCard(cardData) {
+    const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cardData)
+    });
+    
+    if (petition.ok) {
+        const text = await petition.text();
+        const card = text ? JSON.parse(text) : null;
+        if(card) {
+            blocks[currentAddBlockIdx].cards.push({
+                id: card.id,
+                name: card.name,
+                desc: card.description,
+                createdAt: card.creationDate,
+                dueDate: card.finalDate
+            });
+        }
+    } else {
+        const errorRespuesta = await petition.text();
+        alert("Error al crear la tarjeta", errorRespuesta, "error");
+    }
+}
+
+async function createBlock(blockData) {
+    const petition = await fetch(`/user/createBlock?email=${emailUser}&workspaceid=${workSpaceID}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(blockData)
+    });
+    
+    if (petition.ok) {
+        const text = await petition.text();
+        const block = text ? JSON.parse(text) : null;
+        blocks.push({
+            id: block,
+            name: blockData.name,
+            cards: []
+        });
+    } else {
+        const errorRespuesta = await petition.text();
+        alert("Error al crear el bloque", errorRespuesta, "error");
+    }
+}
+
 // --- Modal management ---
 const modals = {
     block: {
@@ -64,16 +117,59 @@ document.addEventListener('DOMContentLoaded', () => {
             const title = document.getElementById('cardTitleInput').value.trim();
             if (!title) return;
             
-            const cardData = {
-                id: null,
-                name: title,
-                description: document.getElementById('cardDescInput').value.trim(),
-                creationDate: new Date(),
-                finalDate: document.getElementById('cardDueDateInput').value
-            };
+            const desc = document.getElementById('cardDescInput').value.trim();
+            const dueDateRaw = document.getElementById('cardDueDateInput').value;
+            const today = new Date();
             
-            await createCard(cardData);
+            if (editingBlockIdx !== null && editingCardIdx !== null) {
+                // Actualizar tarjeta existente
+                let card = blocks[editingBlockIdx].cards[editingCardIdx];
+                
+                // Actualizar propiedades locales
+                card.name = title;
+                card.title = title;
+                card.description = desc;
+                card.desc = desc;
+                card.finalDate = dueDateRaw;
+                card.dueDate = dueDateRaw;
+
+                // Actualizar en el backend
+                let cardData = {
+                    id: card.id,
+                    name: title,
+                    description: desc,
+                    creationDate: card.creationDate || card.createdAt || today,
+                    finalDate: dueDateRaw
+                };
+                
+                const petition = await fetch(`/user/updateCard?blockId=${blocks[editingBlockIdx].id}&workspaceid=${workSpaceID}&email=${emailUser}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(cardData)
+                });
+                
+                if (!petition.ok) {
+                    const errorRespuesta = await petition.text();
+                    alert("Error al actualizar la tarjeta", errorRespuesta, "error");
+                }
+            } else if (currentAddBlockIdx !== null) {
+                // Crear nueva tarjeta
+                const cardData = {
+                    id: null,
+                    name: title,
+                    description: desc,
+                    creationDate: today,
+                    finalDate: dueDateRaw
+                };
+                
+                await createCard(cardData);
+            }
+            
             modals.card.close();
+            renderBoard(blocks);
         });
         
         // Block form handler

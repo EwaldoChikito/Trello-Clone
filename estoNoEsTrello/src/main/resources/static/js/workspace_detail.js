@@ -347,41 +347,13 @@ function renderBoard(blocks) {
     board.appendChild(addBlockDiv);
 }
 
-// Modal logic for create/edit cards
+// Modal logic for create/edit cards - using modal_management.js
 function openCardModal(blockIdx = null, cardIdx = null) {
-    document.getElementById('cardModal').style.display = 'flex';
-    const modalTitle = document.querySelector('#cardModal h2');
-    const dueDateInput = document.getElementById('cardDueDateInput');
-    const createdAtDiv = document.getElementById('cardCreatedAt');
-    if (blockIdx !== null && cardIdx !== null) {
-        editingBlockIdx = blockIdx;
-        editingCardIdx = cardIdx;
-        // NO modificar currentAddBlockIdx aquí
-        const card = blocks[blockIdx].cards[cardIdx];
-        document.getElementById('cardTitleInput').value = card.title;
-        document.getElementById('cardDescInput').value = card.desc || '';
-        dueDateInput.value = formatDateToYYYYMMDD(card.dueDate);
-        createdAtDiv.textContent = card.createdAt ? `Creada: ${card.createdAt}` : '';
-        modalTitle.textContent = card.title;
-    } else {
-        editingBlockIdx = null;
-        editingCardIdx = null;
-        // currentAddBlockIdx se setea solo desde el botón "+"
-        document.getElementById('cardTitleInput').value = '';
-        document.getElementById('cardDescInput').value = '';
-        dueDateInput.value = '';
-        createdAtDiv.textContent = '';
-        modalTitle.textContent = "Crear nueva tarjeta";
-    }
-    document.getElementById('cardTitleInput').focus();
+    modals.card.open(blockIdx, cardIdx);
 }
 
 function closeCardModal() {
-    document.getElementById('cardModal').style.display = 'none';
-    // Limpia los índices para evitar efectos residuales
-    editingBlockIdx = null;
-    editingCardIdx = null;
-    currentAddBlockIdx = null;
+    modals.card.close();
 }
 
 // --- Modal for new block (add at the end of your HTML if not present) ---
@@ -456,95 +428,7 @@ document.addEventListener('DOMContentLoaded', function() {
 //                }
 //                pedirCards();
 
-        const form = document.getElementById('createCardForm');
-        if (form) {
-            form.onsubmit = async function(e) {
-                e.preventDefault();
-                const title = document.getElementById('cardTitleInput').value.trim();
-                const desc = document.getElementById('cardDescInput').value.trim();
-                const dueDateRaw = document.getElementById('cardDueDateInput').value;
-                const today = new Date();
-                if (title) {
-                    if (editingBlockIdx !== null && editingCardIdx !== null) {
-                        let card = blocks[editingBlockIdx].cards[editingCardIdx];
-                        card.title = title;
-                        card.desc = desc;
-                        card.dueDate = dueDateRaw;
-
-                        let cardData = {
-                            id: null,
-                            name: title,
-                            description: desc,
-                            creationDate: today,
-                            finalDate: dueDateRaw
-                        };
-                        const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(cardData)
-                        });
-                        if (petition.ok) {
-                            const text = await petition.text();
-                            const card = text ? JSON.parse(text) : null;
-                            if(card) {
-                                blocks[currentAddBlockIdx].cards.push({
-                                    id: card.id,
-                                    name: card.name,
-                                    desc: card.description,
-                                    createdAt: card.creationDate,
-                                    dueDate: card.finalDate
-                                });
-                            }
-                        }
-                        else{
-                            console.log(petition.status);
-                            console.log(petition);
-                            const errorRespuesta = await petition.text();
-                            alert("Un error inesperado", errorRespuesta, "error");
-                        }
-                    } else if (currentAddBlockIdx !== null) {
-                        // Crear tarjeta en backend y obtener id
-                        let cardData = {
-                                id: null,
-                                name: title,
-                                description: desc,
-                                creationDate: today,
-                                finalDate: dueDateRaw
-                            };
-                            const petition = await fetch(`/user/createCard?blockId=${blocks[currentAddBlockIdx].id}&email=${emailUser}&workspaceid=${workSpaceID}`, {
-                                method: 'POST',
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify(cardData)
-                            });
-                            if (petition.ok) {
-                                const text = await petition.text();
-                                const card = text ? JSON.parse(text) : null;
-                                if(card) {
-                                    blocks[currentAddBlockIdx].cards.push({
-                                        id: card.id,
-                                        name: card.name,
-                                        desc: card.description,
-                                        createdAt: card.creationDate,
-                                        dueDate: card.finalDate
-                                    });
-                                }
-                            } else {
-                                const errorRespuesta = await petition.text();
-                                alert("Un error inesperado", errorRespuesta, "error");
-                            }
-                    }
-                    closeCardModal();
-                    renderBoard(blocks);
-                    pedirBlocks();
-                }
-            };
-        }
+        // Card form handling is now managed in modal_management.js
 
         // --- Handle new block form ---
         const blockForm = document.getElementById('createBlockForm');
