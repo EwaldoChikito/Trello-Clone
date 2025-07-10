@@ -1,10 +1,7 @@
 package com.ingenieriadesoftware.EstoNoEsTrello.Controllers;
 
 import com.ingenieriadesoftware.EstoNoEsTrello.JsonControllers.UserJsonController;
-import com.ingenieriadesoftware.EstoNoEsTrello.model.Block;
-import com.ingenieriadesoftware.EstoNoEsTrello.model.Card;
-import com.ingenieriadesoftware.EstoNoEsTrello.model.User;
-import com.ingenieriadesoftware.EstoNoEsTrello.model.WorkSpace;
+import com.ingenieriadesoftware.EstoNoEsTrello.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -124,8 +121,8 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.badRequest().body("Datos de usuario no proporcionados");
         }
-        if (user.emailValidation(user.getEmail())){
-            if (!(user.isEmailAlreadyUsed(user.getEmail()))) {
+        if (Validation.emailValidation(user.getEmail())){
+            if (!(Validation.isEmailAlreadyUsed(user.getEmail()))) {
                 user.setWorkspaces(new ArrayList<WorkSpace>());
                 UserJsonController.saveUser(user);
                 return new ResponseEntity<String>("Datos Ingresados", HttpStatus.OK);
@@ -137,7 +134,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user) {
-        if (user.verifyLogIn(user.getEmail(), user.getPassword()))
+        if (Validation.verifyLogIn(user.getEmail(), user.getPassword()))
             return new ResponseEntity<String>("Inicio de sesion valido", HttpStatus.OK);
         else
             return new ResponseEntity<String>("Datos invalidos", HttpStatus.BAD_REQUEST);

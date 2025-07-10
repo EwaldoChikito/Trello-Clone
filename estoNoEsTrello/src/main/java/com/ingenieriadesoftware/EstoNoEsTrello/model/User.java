@@ -3,8 +3,6 @@ package com.ingenieriadesoftware.EstoNoEsTrello.model;
 import com.ingenieriadesoftware.EstoNoEsTrello.JsonControllers.UserJsonController;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class User {
     private String email;
