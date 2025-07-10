@@ -14,7 +14,6 @@ public class WorkSpaceController {
 
     static public void deleteWorkSpace(long workSpaceID, User user) throws IOException {
         ArrayList<User> usersList = UserJsonController.findTotalUsers();
-        WorkSpace workSpace = WorkSpaceController.findWorkSpace(workSpaceID,user);
         User currentUser = new User();
         for (int i=0;i<usersList.size();i++)
         {
@@ -24,7 +23,22 @@ public class WorkSpaceController {
                 UserJsonController.deleteUser(user.getEmail());
             }
         }
-        currentUser.getWorkspaces().remove(workSpace);
+        
+        // Buscar y eliminar el workspace por índice
+        ArrayList<WorkSpace> workspaces = currentUser.getWorkspaces();
+        boolean workspaceFound = false;
+        for (int i = 0; i < workspaces.size(); i++) {
+            if (workspaces.get(i).getId().equals(workSpaceID)) {
+                workspaces.remove(i);
+                workspaceFound = true;
+                break;
+            }
+        }
+        
+        if (!workspaceFound) {
+            System.out.println("Warning: WorkSpace with ID " + workSpaceID + " not found for user " + user.getEmail());
+        }
+        
         UserJsonController.saveUser(currentUser);
     }
 

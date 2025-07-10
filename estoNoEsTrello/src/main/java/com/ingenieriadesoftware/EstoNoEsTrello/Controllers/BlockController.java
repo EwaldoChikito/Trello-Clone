@@ -43,7 +43,6 @@ public class BlockController {
     public static void deleteBlock(Long blockID, Long workSpaceId, User user) throws IOException {
         ArrayList<User> usersList = UserJsonController.findTotalUsers();
         User currentUser = new User();
-        Block block = BlockController.findBlock(blockID,workSpaceId,user);
         for (int i=0;i<usersList.size();i++)
         {
             if (usersList.get(i).getEmail().equals(user.getEmail()))
@@ -52,7 +51,22 @@ public class BlockController {
                 UserJsonController.deleteUser(user.getEmail());
             }
         }
-        WorkSpaceController.findWorkSpace(workSpaceId,currentUser).getBlocks().remove(block);
+        
+        // Buscar y eliminar el bloque por índice
+        ArrayList<Block> blocks = WorkSpaceController.findWorkSpace(workSpaceId,currentUser).getBlocks();
+        boolean blockFound = false;
+        for (int i = 0; i < blocks.size(); i++) {
+            if (blocks.get(i).getId().equals(blockID)) {
+                blocks.remove(i);
+                blockFound = true;
+                break;
+            }
+        }
+        
+        if (!blockFound) {
+            System.out.println("Warning: Block with ID " + blockID + " not found in workspace " + workSpaceId);
+        }
+        
         UserJsonController.saveUser(currentUser);
     }
 
