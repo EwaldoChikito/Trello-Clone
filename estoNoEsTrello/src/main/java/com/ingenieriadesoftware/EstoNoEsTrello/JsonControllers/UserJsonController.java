@@ -50,7 +50,7 @@ public class UserJsonController extends User {
     static public void saveUser(User user){
         try {
             Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
-            JsonReader reader = new JsonReader(new FileReader("C://Users//2samd//Proyectos//Proyecto Software//estoNoEsTrello//src//main//resources//JSONs//Users.json"));
+            JsonReader reader = new JsonReader(new FileReader("C://Users//2samd//Proyectos//Proyecto Software//estoNoEsTrello//src//main//resources//JSONs"));
 //            JsonReader reader = new JsonReader(new FileReader(USERS_JSON_PATH));
             User[] users = gson.fromJson(reader, User[].class);
             List<User> userList= new ArrayList<>(Arrays.asList(users));
