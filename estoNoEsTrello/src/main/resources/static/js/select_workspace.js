@@ -45,11 +45,47 @@ function renderBoards(boardsToRender) {
         deleteBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             if (confirm('¿Estás seguro de que quieres eliminar este workspace?')) {
-                // Encontrar el índice del workspace en el array
-                const workspaceIndex = boards.findIndex(ws => ws.id === board.id);
-                if (workspaceIndex !== -1) {
-                    boards.splice(workspaceIndex, 1);
-                    renderBoards(boards);
+                // Eliminar del backend primero
+                console.log('Intentando eliminar workspace:', board);
+                console.log('Workspace ID:', board.id);
+                console.log('Email:', emailUser);
+                
+                if (board && board.id) {
+                    const url = `/user/deleteWorkSpace?workspaceid=${board.id}&email=${emailUser}`;
+                    console.log('URL de eliminación de workspace:', url);
+                    
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        }
+                    }).then(response => {
+                        console.log('Respuesta del servidor (workspace):', response.status, response.statusText);
+                        if (response.ok) {
+                            console.log('Workspace eliminado exitosamente del backend');
+                            // Si se eliminó correctamente del backend, eliminar visualmente
+                            const workspaceIndex = boards.findIndex(ws => ws.id === board.id);
+                            if (workspaceIndex !== -1) {
+                                boards.splice(workspaceIndex, 1);
+                                renderBoards(boards);
+                            }
+                        } else {
+                            console.error('Error en la respuesta del servidor (workspace):', response.status);
+                            alert('Error al eliminar el workspace del servidor');
+                        }
+                    }).catch(error => {
+                        console.error('Error en la petición (workspace):', error);
+                        alert('Error al eliminar el workspace');
+                    });
+                } else {
+                    console.log('Workspace sin ID, eliminando solo visualmente');
+                    // Si no tiene ID, solo eliminar visualmente (caso de workspaces no guardados)
+                    const workspaceIndex = boards.findIndex(ws => ws.id === board.id);
+                    if (workspaceIndex !== -1) {
+                        boards.splice(workspaceIndex, 1);
+                        renderBoards(boards);
+                    }
                 }
             }
         });

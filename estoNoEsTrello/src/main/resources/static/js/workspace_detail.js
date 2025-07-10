@@ -232,15 +232,9 @@ function renderBoard(blocks) {
                         if (confirm('¿Estás seguro de que quieres eliminar esta tarjeta?')) {
                             // Eliminar del backend primero
                             const card = blocks[blockIdx].cards[cardIdx];
-                            console.log('Intentando eliminar tarjeta:', card);
-                            console.log('Block ID:', blocks[blockIdx].id);
-                            console.log('Card ID:', card.id);
-                            console.log('Workspace ID:', workSpaceID);
-                            console.log('Email:', emailUser);
                             
                             if (card && card.id) {
                                 const url = `/user/deleteCard?cardId=${card.id}&blockId=${blocks[blockIdx].id}&workspaceid=${workSpaceID}&email=${emailUser}`;
-                                console.log('URL de eliminación:', url);
                                 
                                 fetch(url, {
                                     method: 'POST',
@@ -249,14 +243,11 @@ function renderBoard(blocks) {
                                         'Content-Type': 'application/json',
                                     }
                                 }).then(response => {
-                                    console.log('Respuesta del servidor:', response.status, response.statusText);
                                     if (response.ok) {
-                                        console.log('Tarjeta eliminada exitosamente del backend');
                                         // Si se eliminó correctamente del backend, eliminar visualmente
                                         blocks[blockIdx].cards.splice(cardIdx, 1);
                                         renderBoard(blocks);
                                     } else {
-                                        console.error('Error en la respuesta del servidor:', response.status);
                                         alert('Error al eliminar la tarjeta del servidor');
                                     }
                                 }).catch(error => {
@@ -264,7 +255,6 @@ function renderBoard(blocks) {
                                     alert('Error al eliminar la tarjeta');
                                 });
                             } else {
-                                console.log('Tarjeta sin ID, eliminando solo visualmente');
                                 // Si no tiene ID, solo eliminar visualmente (caso de tarjetas no guardadas)
                                 blocks[blockIdx].cards.splice(cardIdx, 1);
                                 renderBoard(blocks);
