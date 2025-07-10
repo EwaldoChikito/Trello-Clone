@@ -51,18 +51,10 @@ public class User {
         return workspaces;
     }
 
-    public ArrayList<WorkSpace> getWorkspaces(String email) {
-        this.workspaces = findUser(email).workspaces;
-        if (workspaces==null){
-            workspaces=new ArrayList<WorkSpace>();
-        }
-        return workspaces;
-    }
-
     public void setWorkspaces(ArrayList<WorkSpace> workspaces) {
         this.workspaces = workspaces;
     }
-
+//Debe irse este metodo de acá
     public User findUser(String email) {
         ArrayList<User> usersList = UserJsonController.findTotalUsers();
         User userSelected = new User("","");
@@ -75,47 +67,5 @@ public class User {
         }
         return userSelected;
     }
-
-    public boolean emailValidation(String email){
-        Pattern pattern = Pattern.compile("[a-z]+\\.[0-9]{2}(@est.ucab.edu.ve)");
-        Matcher matcher = pattern.matcher(email);
-        return matcher.find();
-    }
-
-    public boolean isEmailAlreadyUsed(String email){
-        ArrayList<User> usersList = UserJsonController.findTotalUsers();
-        boolean verificationResult = false;
-        if(usersList == null){
-            usersList = new ArrayList<User>();
-        }
-        for (int i=0; i<usersList.size();i++){
-            if(usersList.get(i).getEmail().equals(email)){
-                verificationResult = true;
-            }
-        }
-        return verificationResult;
-    }
-
-    public boolean verifyLogIn(String email, String password){
-        ArrayList<User> usersList = UserJsonController.findTotalUsers();
-        boolean verificationResult = false;
-        if(usersList == null){
-            usersList = new ArrayList<User>();
-        }
-        for (int i=0; i<usersList.size();i++){
-            if(usersList.get(i).getEmail().equals(email) && usersList.get(i).getPassword().equals(password)){
-                verificationResult = true;
-            }
-        }
-        return verificationResult;
-    }
-
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "email: " + email + '\'' +
-//                "Workspaces=" + Arrays.toString(workspaces) +
-//                '}';
-
 
 }
