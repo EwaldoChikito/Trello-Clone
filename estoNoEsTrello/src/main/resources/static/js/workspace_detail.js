@@ -129,14 +129,9 @@ function renderBoard(blocks) {
                 if (confirm('¿Estás seguro de que quieres eliminar este bloque?')) {
                     // Eliminar del backend primero
                     const block = blocks[blockIdx];
-                    console.log('Intentando eliminar bloque:', block);
-                    console.log('Block ID:', block.id);
-                    console.log('Workspace ID:', workSpaceID);
-                    console.log('Email:', emailUser);
                     
                     if (block && block.id) {
                         const url = `/user/deleteBlock?blockId=${block.id}&workspaceid=${workSpaceID}&email=${emailUser}`;
-                        console.log('URL de eliminación de bloque:', url);
                         
                         fetch(url, {
                             method: 'POST',
@@ -145,22 +140,18 @@ function renderBoard(blocks) {
                                 'Content-Type': 'application/json',
                             }
                         }).then(response => {
-                            console.log('Respuesta del servidor (bloque):', response.status, response.statusText);
                             if (response.ok) {
-                                console.log('Bloque eliminado exitosamente del backend');
                                 // Si se eliminó correctamente del backend, eliminar visualmente
                                 blocks.splice(blockIdx, 1);
                                 renderBoard(blocks);
                             } else {
-                                console.error('Error en la respuesta del servidor (bloque):', response.status);
                                 alert('Error al eliminar el bloque del servidor');
                             }
                         }).catch(error => {
-                            console.error('Error en la petición (bloque):', error);
+                            console.error('Error en la petición:', error);
                             alert('Error al eliminar el bloque');
                         });
                     } else {
-                        console.log('Bloque sin ID, eliminando solo visualmente');
                         // Si no tiene ID, solo eliminar visualmente (caso de bloques no guardados)
                         blocks.splice(blockIdx, 1);
                         renderBoard(blocks);
