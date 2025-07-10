@@ -80,9 +80,21 @@ public class WorkSpaceController {
                 UserJsonController.deleteUser(user.getEmail());
             }
         }
-        WorkSpace oldWorkSpace = WorkSpaceController.findWorkSpace(workSpace.getId(),currentUser);
-        oldWorkSpace.setName(workSpace.getName());
-        oldWorkSpace.setDescription(workSpace.getDescription());
+        // Buscar y actualizar el workspace por índice
+        ArrayList<WorkSpace> workspaces = currentUser.getWorkspaces();
+        boolean found = false;
+        for (int i = 0; i < workspaces.size(); i++) {
+            if (workspaces.get(i).getId().equals(workSpace.getId())) {
+                WorkSpace ws = workspaces.get(i);
+                ws.setName(workSpace.getName());
+                ws.setDescription(workSpace.getDescription());
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            System.out.println("Warning: Workspace with ID " + workSpace.getId() + " not found for user " + user.getEmail());
+        }
         UserJsonController.saveUser(currentUser);
     }
 }

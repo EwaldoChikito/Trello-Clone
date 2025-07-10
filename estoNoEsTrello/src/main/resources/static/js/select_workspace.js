@@ -206,20 +206,40 @@ document.addEventListener('DOMContentLoaded', function() {
         // Formulario de edición de workspace
         const editWorkspaceForm = document.getElementById('editWorkspaceForm');
         if (editWorkspaceForm) {
-            editWorkspaceForm.onsubmit = function(e) {
+            editWorkspaceForm.onsubmit = async function(e) {
                 e.preventDefault();
                 const newName = document.getElementById('editWorkspaceTitleInput').value.trim();
                 const newDesc = document.getElementById('editWorkspaceDescInput').value.trim() || "Sin descripción.";
 
                 if (newName !== "" && window.currentEditingWorkspace) {
-                    // Actualizar el workspace en el array local
-                    const workspaceIndex = boards.findIndex(ws => ws.id === window.currentEditingWorkspace.id);
-                    if (workspaceIndex !== -1) {
-                        boards[workspaceIndex].name = newName;
-                        boards[workspaceIndex].description = newDesc;
-                        renderBoards(boards);
+                    // Actualizar en el backend primero
+                    const workspaceId = window.currentEditingWorkspace.id;
+                    const workspaceData = {
+                        id: workspaceId,
+                        name: newName,
+                        description: newDesc
+                    };
+                    const petition = await fetch(`/user/updateWorkSpace?email=${emailUser}`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(workspaceData)
+                    });
+                    if (petition.ok) {
+                        // Actualizar el workspace en el array local solo si el backend responde OK
+                        const workspaceIndex = boards.findIndex(ws => ws.id === workspaceId);
+                        if (workspaceIndex !== -1) {
+                            boards[workspaceIndex].name = newName;
+                            boards[workspaceIndex].description = newDesc;
+                            renderBoards(boards);
+                        }
+                        closeEditWorkspaceModal();
+                    } else {
+                        const errorRespuesta = await petition.text();
+                        alert("Error al actualizar el workspace", errorRespuesta, "error");
                     }
-                    closeEditWorkspaceModal();
                 }
             };
         }
