@@ -10,17 +10,9 @@ async function createCard(cardData) {
     });
     
     if (petition.ok) {
-        const text = await petition.text();
-        const card = text ? JSON.parse(text) : null;
-        if(card) {
-            blocks[currentAddBlockIdx].cards.push({
-                id: card.id,
-                name: card.name,
-                desc: card.description,
-                createdAt: card.creationDate,
-                dueDate: card.finalDate
-            });
-        }
+        // Después de crear, refresca los bloques desde el backend
+        await pedirBlocks();
+        renderBoard(blocks);
     } else {
         const errorRespuesta = await petition.text();
         alert("Error al crear la tarjeta", errorRespuesta, "error");
@@ -38,13 +30,9 @@ async function createBlock(blockData) {
     });
     
     if (petition.ok) {
-        const text = await petition.text();
-        const block = text ? JSON.parse(text) : null;
-        blocks.push({
-            id: block,
-            name: blockData.name,
-            cards: []
-        });
+        // Después de crear, refresca los bloques desde el backend
+        await pedirBlocks();
+        renderBoard(blocks);
     } else {
         const errorRespuesta = await petition.text();
         alert("Error al crear el bloque", errorRespuesta, "error");
