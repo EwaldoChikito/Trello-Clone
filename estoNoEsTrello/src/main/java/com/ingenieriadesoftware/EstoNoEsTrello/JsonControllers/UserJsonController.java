@@ -7,8 +7,8 @@ import com.google.gson.stream.JsonReader;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import com.ingenieriadesoftware.EstoNoEsTrello.model.User;
-import com.ingenieriadesoftware.EstoNoEsTrello.model.WorkSpace;
+import com.ingenieriadesoftware.EstoNoEsTrello.model.Classes.User;
+import com.ingenieriadesoftware.EstoNoEsTrello.model.Classes.WorkSpace;
 
 import java.io.FileReader;
 import java.io.FileWriter;
